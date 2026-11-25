@@ -1,0 +1,14 @@
+# host-setup.sh rewrites After= and Requires= for WOW_VOLUME_MOUNT.
+# The unit name below matches the default mount path /mnt/wow-nvme.
+[Unit]
+Description=Bind the WoW disk onto its udisks media paths
+After=mnt-wow-nvme.mount wow-volume-share.service
+Requires=mnt-wow-nvme.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/wow-media-alias.sh
+
+[Install]
+WantedBy=multi-user.target

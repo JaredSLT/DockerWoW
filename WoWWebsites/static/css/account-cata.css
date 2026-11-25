@@ -1,0 +1,221 @@
+/* Cataclysm Services account panel. Stone field, red accent. */
+
+body.cata .acct-cata {
+  color: #efc9a0;
+  font: 12px/1.5 Arial, Verdana, sans-serif;
+}
+
+body.cata .acct-cata .acct-brand {
+  margin: 0 0 4px;
+  color: #7ec8ea;
+  font: 700 14px/1 Arial, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+body.cata .acct-cata .acct-kicker {
+  margin: 0 0 4px;
+  color: #c4a078;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+body.cata .acct-cata .acct-title {
+  margin: 0 0 14px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid #5a3214;
+  box-shadow: inset 0 -2px 0 #a32020;
+  color: #efe3d2;
+  font: 400 28px/1.1 Palatino, Georgia, "Times New Roman", serif;
+  letter-spacing: -0.03em;
+}
+
+body.cata .acct-cata .acct-error {
+  margin: 0 0 12px;
+  color: #e24b3b;
+  font-weight: 700;
+}
+
+body.cata .acct-cata .acct-notice {
+  margin: 0 0 12px;
+  color: #d5c4a1;
+  font-weight: 700;
+}
+
+body.cata .acct-cata .acct-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+body.cata .acct-cata .acct-nav {
+  flex: 0 0 210px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.28)),
+    #1a0f08;
+  border: 1px solid #5a3214;
+  box-shadow: inset 0 0 0 1px #2a160e;
+}
+
+body.cata .acct-cata .acct-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.cata .acct-cata .acct-item {
+  border-top: 1px solid #3a2818;
+}
+
+body.cata .acct-cata .acct-item:first-child {
+  border-top: 0;
+}
+
+body.cata .acct-cata .acct-link {
+  display: block;
+  padding: 11px 12px 11px 14px;
+  border-left: 3px solid transparent;
+  color: #c4a078;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+body.cata .acct-cata .acct-link:hover,
+body.cata .acct-cata .acct-active {
+  background: #24160e;
+  border-left-color: #a32020;
+  color: #fff;
+}
+
+body.cata .acct-cata .acct-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+body.cata .acct-cata .acct-panel {
+  margin: 0 0 16px;
+  padding: 14px 16px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.22)),
+    #1a0f08;
+  border: 1px solid #5a3214;
+  border-top: 2px solid #a32020;
+}
+
+body.cata .acct-cata .acct-heading {
+  margin: 0 0 10px;
+  color: #efe3d2;
+  font: 400 18px/1.2 Palatino, Georgia, "Times New Roman", serif;
+}
+
+body.cata .acct-cata .acct-signed,
+body.cata .acct-cata .acct-note,
+body.cata .acct-cata .acct-empty,
+body.cata .acct-cata .acct-switch,
+body.cata .acct-cata .acct-actions {
+  margin: 0 0 8px;
+  color: #c4a078;
+}
+
+body.cata .acct-cata .acct-user {
+  color: #efc9a0;
+}
+
+body.cata .acct-cata a {
+  color: #efc9a0;
+  text-decoration: none;
+}
+
+body.cata .acct-cata a:hover {
+  color: #fff;
+}
+
+body.cata .acct-cata .acct-actions a {
+  margin-right: 16px;
+}
+
+body.cata .acct-cata .acct-chars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.cata .acct-cata .acct-char {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid #3a2818;
+}
+
+body.cata .acct-cata .acct-name {
+  color: #efc9a0;
+  font-weight: 700;
+}
+
+body.cata .acct-cata .acct-level {
+  color: #c4a078;
+}
+
+body.cata .acct-cata .acct-class {
+  color: #e24b3b;
+}
+
+body.cata .acct-cata .acct-form label {
+  display: block;
+  margin: 0 0 10px;
+  color: #c4a078;
+}
+
+body.cata .acct-cata .acct-form input {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 4px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+  background: #24160e;
+  border: 1px solid #5a3214;
+  color: #efc9a0;
+  font: 12px Arial, Verdana, sans-serif;
+}
+
+body.cata .acct-cata .acct-form input:focus {
+  outline: none;
+  border-color: #a32020;
+}
+
+body.cata .acct-cata .acct-form button {
+  margin-top: 4px;
+  padding: 7px 16px;
+  background: #7a1c1c;
+  border: 1px solid #c4453c;
+  color: #fff8f2;
+  font: 700 11px Arial, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+body.cata .acct-cata .acct-form button:hover {
+  background: #a32020;
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  body.cata .acct-cata .acct-layout {
+    display: block;
+  }
+
+  body.cata .acct-cata .acct-nav {
+    margin: 0 0 14px;
+  }
+
+  body.cata .acct-cata .acct-char {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

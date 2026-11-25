@@ -1,0 +1,13 @@
+[Unit]
+Description=Loopback addresses for WoW realm hostnames
+DefaultDependencies=no
+After=local-fs.target
+Before=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/wow-loopback.sh
+
+[Install]
+WantedBy=docker.service

@@ -1,0 +1,247 @@
+/* BfA Battle.net account overview. No account screenshot is on file.
+   Bar blue is a dark #009ae4; cards stay light against the July 2019 shell. */
+
+body.era-bfa .acct.acct-bfa {
+  display: block;
+  max-width: none;
+  width: auto;
+  margin: 0;
+  background: #f4f6f8;
+  color: #0b0d12;
+  font: 15px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  gap: 0;
+}
+
+.acct-bfa .acct-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 14px 28px;
+  background: #06304a;
+  color: #fff;
+  border-bottom: 3px solid #009ae4;
+  box-sizing: border-box;
+}
+
+.acct-bfa .acct-brand {
+  margin: 0;
+  color: #009ae4;
+  font: 700 18px/1 Helvetica, Arial, sans-serif;
+}
+
+.acct-bfa .acct-title {
+  margin: 0;
+  color: #fff;
+  font: 600 22px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.acct-bfa .acct-meta {
+  margin: 0 0 0 auto;
+  color: rgba(255, 255, 255, .7);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.acct-bfa .acct-body {
+  padding: 22px 28px 28px;
+}
+
+.acct-bfa .acct-error,
+.acct-bfa .acct-notice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  font-weight: 700;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.acct-bfa .acct-error {
+  color: #9f1600;
+  border: 1px solid #ea3012;
+}
+
+.acct-bfa .acct-notice {
+  color: #0b0d12;
+  border: 1px solid #009ae4;
+}
+
+.acct-bfa .acct-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(240px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.acct-bfa .acct-card {
+  background: #fff;
+  color: #0b0d12;
+  border: 1px solid rgba(11, 13, 18, .12);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(11, 13, 18, .12);
+  padding: 22px 24px 24px;
+  box-sizing: border-box;
+}
+
+.acct-bfa .acct-security {
+  border-top: 3px solid #009ae4;
+}
+
+.acct-bfa .acct-card-title {
+  margin: 0 0 12px;
+  color: #0b0d12;
+  font: 600 18px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.acct-bfa .acct-copy,
+.acct-bfa .acct-empty,
+.acct-bfa .acct-hint {
+  margin: 0 0 14px;
+  color: rgba(11, 13, 18, .78);
+}
+
+.acct-bfa .acct-hint {
+  margin-top: -6px;
+  font-size: 13px;
+}
+
+.acct-bfa .acct-form label {
+  display: block;
+  margin: 0 0 14px;
+  color: #0b0d12;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+body.era-bfa .acct-bfa input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #0b0d12;
+  border: 1px solid rgba(11, 13, 18, .28);
+  border-radius: 3px;
+  font: 15px/1.3 Helvetica, Arial, sans-serif;
+  height: auto;
+}
+
+body.era-bfa .acct-bfa input:focus {
+  outline: 2px solid #009ae4;
+  border-color: #009ae4;
+}
+
+body.era-bfa .acct-bfa button {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  margin-top: 4px;
+  padding: 11px 22px;
+  background: #009ae4;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+  font: 700 14px/1 Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+body.era-bfa .acct-bfa button:hover {
+  background: #007fbf;
+  color: #fff;
+}
+
+body.era-bfa .acct-bfa a {
+  color: #009ae4;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+body.era-bfa .acct-bfa a:hover {
+  color: #007fbf;
+  text-decoration: underline;
+}
+
+.acct-bfa .acct-links {
+  margin: 16px 0 0;
+}
+
+.acct-bfa .acct-facts {
+  margin: 0 0 18px;
+}
+
+.acct-bfa .acct-fact {
+  padding: 0 0 12px;
+  margin: 0 0 12px;
+  border-bottom: 1px solid rgba(11, 13, 18, .08);
+}
+
+.acct-bfa .acct-fact dt {
+  margin: 0 0 2px;
+  color: rgba(11, 13, 18, .62);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.acct-bfa .acct-fact dd {
+  margin: 0;
+  color: #0b0d12;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.acct-bfa .acct-subhead {
+  margin: 4px 0 8px;
+  color: rgba(11, 13, 18, .62);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.acct-bfa .acct-chars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.acct-bfa .acct-char {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(11, 13, 18, .08);
+}
+
+.acct-bfa .acct-char-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.acct-bfa .acct-char-meta {
+  color: rgba(11, 13, 18, .72);
+  white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .acct-bfa .acct-bar {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+  .acct-bfa .acct-meta {
+    margin-left: 0;
+    white-space: normal;
+  }
+  .acct-bfa .acct-body {
+    padding: 16px;
+  }
+  .acct-bfa .acct-layout {
+    grid-template-columns: 1fr;
+  }
+  .acct-bfa .acct-char {
+    flex-wrap: wrap;
+  }
+}

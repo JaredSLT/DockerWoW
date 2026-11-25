@@ -1,0 +1,381 @@
+@import url("/static/css/gen1.css");
+@import url("/static/css/era-dark.css");
+/* Cataclysm, Mists, and Warlords: us.battle.net/wow, 2012–2016.
+   Page #000, links #ffb100, menu #ffa400, 1006px column.
+   Header, service-bar, and login art are not on disk. */
+
+body.gen2 {
+  --accent: #ffb100;
+  --line: #5a3214;
+  --panel: #1a0f08;
+  --field: #24160e;
+  --ink: #efc9a0;
+  --muted: #c4a078;
+  --date: #ffb100;
+  --bg: #000;
+  margin: 0;
+  /* wow.css: background #000 plus body-bg-baked.jpg, which is not shipped. */
+  background: #000;
+  color: #efc9a0;
+  font: 12px/1.5 Arial, Verdana, sans-serif;
+}
+body.gen2 a { color: #ffb100; }
+body.gen2 a:hover { color: #fff; }
+
+.service-bar {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: stretch;
+  height: 39px;
+  background: #101114; /* service-bar/background.png is not shipped */
+  color: #8694a1;
+  font: 11px/32px "Lucida Sans Unicode", "Lucida Grande", Arial, sans-serif;
+}
+body.gen2 .service-bar a { color: #00b6ff; text-decoration: none; }
+body.gen2 .service-bar a:hover { color: #fff; }
+.service-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+}
+.service-home::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #00b6ff;
+  border: 1px solid #000;
+}
+.service-home span { color: #fff; font-weight: 700; letter-spacing: 0.04em; }
+.service-welcome { padding: 0 15px; line-height: 32px; color: #8694a1; }
+.service-link {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5em;
+  border-left: 1px solid #33373b;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+body.gen2 a.service-explore {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+body.wod .service-bar.nav-client {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, .05);
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  font-size: 13px;
+  line-height: 44px;
+}
+body.wod .service-bar.nav-client a,
+body.gen2 .service-bar.nav-client a.service-link {
+  color: rgba(255, 255, 255, .7);
+  font-size: 13px;
+  text-transform: none;
+  border-left: 0;
+  padding: 0 14px;
+}
+.service-spacer { flex: 1; }
+
+.bnet { width: 1006px; margin: 0 auto; position: relative; }
+.bnet-header { position: relative; padding-top: 26px; }
+.bnet-logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 275px;
+  height: 115px;
+  text-decoration: none;
+}
+body.gen2 .bnet-logo .world {
+  color: #d7c4a0;
+  font: 700 11px/1 Arial, sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+body.gen2 .bnet-logo .wm {
+  color: #f4e2b0;
+  font: 700 34px/0.9 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+body.gen2 .bnet-logo .era {
+  margin-top: 4px;
+  color: #ffb100;
+  font: italic 700 14px/1.2 Palatino, Georgia, serif;
+}
+.bnet-search {
+  position: absolute;
+  right: 5px;
+  top: 48px;
+  width: 354px;
+  height: 30px;
+}
+.bnet-search input {
+  width: 100%;
+  height: 30px;
+  box-sizing: border-box;
+  padding: 8px 44px 8px 8px;
+  border: 0;
+  background: #fff;
+  color: #707070;
+  font: 12px Arial, sans-serif;
+}
+.bnet-search button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 30px;
+  border: 0;
+  background: #3a2414;
+  color: #ffb100;
+  font: 700 11px Arial, sans-serif;
+  cursor: pointer;
+}
+.header-plate {
+  position: relative;
+  height: 93px;
+  background: #000;
+  border-top: 1px solid #ffa400;
+  border-bottom: 1px solid #ffa400;
+}
+.bnet-menu {
+  position: absolute;
+  left: 19px;
+  top: 19px;
+  display: flex;
+  width: 623px;
+  height: 65px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bnet-menu li { flex: 1 1 0; height: 65px; }
+.bnet-menu a {
+  position: relative;
+  display: block;
+  height: 65px;
+  box-sizing: border-box;
+  padding-top: 40px;
+  color: #ffa400;
+  font: 12px/1 Arial, sans-serif;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px #000;
+}
+.bnet-menu a::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+body.gen2 .bnet-menu a { color: #ffa400; }
+body.gen2 .bnet-menu a:hover,
+body.gen2 .bnet-menu a.active {
+  color: #fff;
+  box-shadow: 0 0 15px #ff7501;
+}
+.user-plate {
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  width: 355px;
+  height: 140px;
+}
+.card-login {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: block;
+  box-sizing: border-box;
+  width: 355px;
+  height: 97px;
+  margin: 0;
+  padding: 32px 110px 0 30px;
+  /* login.jpg is not on disk. Same box, drawn in the page colors. */
+  background: #000;
+  border: 1px solid #ffb100;
+  color: #eee;
+  font-size: 14px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+body.gen2 a.card-login,
+body.gen2 .card-login { color: #eee; }
+body.gen2 .card-login strong { color: #ffb100; display: block; font-size: 14px; }
+body.gen2 .card-login a { color: #ffb100; }
+
+.bnet-content {
+  margin: 0 6px;
+  min-height: 600px;
+  background: #000;
+  color: #efc9a0;
+  border: 1px solid #ffa400;
+  box-shadow: none;
+}
+.content-header h1 {
+  margin: 0;
+  padding: 18px 28px 0;
+  color: #efe3d2;
+  font: 52px/1 Palatino, Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -1.5px;
+}
+.bnet-inner { padding: 12px 28px 36px; }
+body.gen2 h2,
+body.gen2 h3 { color: #efe3d2; font-weight: 400; }
+body.gen2 .forum-cat,
+body.gen2 table.grid th,
+body.gen2 .post header {
+  background: #2a160e;
+  color: #ffb100;
+  border-color: #5a3214;
+}
+body.gen2 table.grid td { border-color: #3a2818; }
+body.gen2 .red,
+body.gen2 .acct button {
+  background: #ffb100;
+  border: 1px solid #ffa400;
+  color: #000;
+  font-weight: 700;
+}
+body.gen2 .hero { height: auto; max-height: 360px; border: 1px solid #ffa400; }
+
+.homepage { display: flex; align-items: flex-start; }
+.hp-left { width: 655px; flex: none; }
+.slideshow { position: relative; display: block; }
+.slideshow img { display: block; width: 100%; height: 280px; object-fit: cover; }
+.slide-cap {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 14px;
+}
+.slide-cap .kicker {
+  display: block;
+  margin: 0 0 4px;
+  color: #ffb100;
+  font: 700 11px/1 Arial, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.slide-cap h3 {
+  margin: 0;
+  color: #fff8d6;
+  font: 400 22px/1.2 Arial, sans-serif;
+  text-shadow: 0 2px 8px #000;
+}
+.featured-news { display: flex; gap: 14px; padding: 14px 16px 4px; }
+.featured { width: 140px; text-decoration: none; }
+.featured img { display: block; width: 140px; height: 90px; object-fit: cover; border-radius: 3px; }
+.featured span {
+  display: block;
+  margin-top: 4px;
+  color: #efe3d2;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.news-article { padding: 40px 25px 20px 30px; }
+.news-article-inner::after { content: ""; display: block; clear: both; }
+.article-left { float: left; }
+.article-left img { display: block; width: 148px; height: 141px; object-fit: cover; }
+.article-right { width: 435px; margin-left: 148px; padding: 7px 0 0 14px; box-sizing: border-box; }
+.article-right h3 { margin: 0 0 4px; font-size: 20px; letter-spacing: -0.08em; }
+.by-line { margin: 0 0 6px; color: #c4a078; font-size: 12px; }
+.article-summary { margin: 0; }
+.hp-side { width: 305px; margin: 20px 13px 20px 0; }
+.side-box {
+  margin: 0 0 16px;
+  background: #000;
+  border: 1px solid #ffa400;
+}
+.side-box h3 {
+  margin: 0;
+  padding: 8px 10px;
+  color: #ffb100;
+  font: 700 12px Arial, sans-serif;
+}
+.side-box img { display: block; width: 100%; height: 140px; object-fit: cover; }
+.side-box p,
+.side-box ul { margin: 0; padding: 8px 10px 10px; }
+.side-box ul { list-style: none; }
+.side-box li { margin: 0 0 4px; }
+
+.sitemap {
+  text-align: left;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 18px;
+  padding: 22px 18px 28px;
+  color: #8694a1;
+  font: 11px/1.6 Arial, sans-serif;
+}
+.sitemap h4 {
+  margin: 0 0 6px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #414a56;
+  color: #b2bac7;
+  font: 400 13px/1.4 "Lucida Sans Unicode", Arial, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sitemap ul { margin: 0; padding: 0; list-style: none; }
+body.gen2 .sitemap a { color: #697489; text-decoration: none; }
+body.gen2 .sitemap a:hover { color: #fff; }
+.sitemap .copy,
+.sitemap .local-note { grid-column: 1 / -1; margin: 8px 0 0; }
+.sitemap .local-note { color: #5c5348; }
+
+@media (max-width: 1040px) {
+  .bnet { width: auto; }
+  .service-bar,
+  body.wod .service-bar.nav-client {
+    position: static;
+    width: auto;
+    height: auto;
+    flex-wrap: wrap;
+    padding: 4px 8px;
+  }
+  .bnet-header { padding: 12px 12px 0; }
+  .bnet-logo { width: auto; height: auto; padding: 8px 0 12px; }
+  .bnet-search { position: relative; top: auto; right: auto; width: 100%; margin: 0 0 12px; }
+  .header-plate { height: auto; padding-bottom: 8px; }
+  .bnet-menu { position: static; width: auto; height: auto; flex-wrap: wrap; }
+  .bnet-menu li { flex: 1 1 30%; height: auto; }
+  .bnet-menu a { height: auto; padding: 28px 6px 10px; }
+  .user-plate { position: static; width: auto; height: auto; }
+  .card-login { position: static; width: auto; height: auto; margin: 8px 12px 12px; }
+  .homepage { display: block; }
+  .hp-left,
+  .hp-side { width: auto; margin: 0; }
+  .article-left { float: none; }
+  .article-left img { width: 100%; height: 180px; }
+  .article-right { width: auto; margin: 8px 0 0; padding: 0; }
+  .featured-news { flex-wrap: wrap; }
+  .news-article { padding: 18px 14px; }
+  .content-header h1 { font-size: 32px; padding: 16px 16px 0; letter-spacing: -0.5px; }
+  .bnet-inner { padding: 12px 16px 28px; }
+  .bnet-content { margin: 0; }
+  .sitemap { grid-template-columns: 1fr 1fr; padding: 16px; }
+}

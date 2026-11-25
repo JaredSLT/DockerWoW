@@ -1,0 +1,69 @@
+/* Classic Era account card. Same gold-on-black fields as realm status. */
+
+body.era-classic-era .acct-ce {
+  max-width: 520px;
+  margin: 0 auto;
+  border: 1px solid #3c3a44;
+  background: rgba(14, 12, 20, 0.9);
+  padding: 22px 24px 28px;
+}
+
+body.era-classic-era .acct-title {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 22px;
+}
+
+body.era-classic-era .acct-sub {
+  margin: 12px 0 6px;
+  color: #f0c14b;
+  font-size: 16px;
+}
+
+body.era-classic-era .acct-lead,
+body.era-classic-era .acct-meta,
+body.era-classic-era .acct-note {
+  color: #d9c7a2;
+}
+
+body.era-classic-era .acct-form label {
+  display: block;
+  margin: 0.7rem 0;
+  color: #e7e2d6;
+}
+
+body.era-classic-era .acct-ce input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.25rem;
+}
+
+body.era-classic-era .acct-error {
+  color: #ff8d8d;
+  font-weight: 700;
+}
+
+body.era-classic-era .acct-notice {
+  color: #8dcea0;
+  font-weight: 700;
+}
+
+body.era-classic-era .acct-chars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.era-classic-era .acct-char {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #2a2633;
+}
+
+body.era-classic-era .acct-actions a,
+body.era-classic-era .acct-services-link a {
+  color: #f0c14b;
+}

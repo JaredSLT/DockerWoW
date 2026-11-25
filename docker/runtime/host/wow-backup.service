@@ -1,0 +1,8 @@
+[Unit]
+Description=Dump WoW realm databases
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wow-backup.sh
+TimeoutStartSec=infinity

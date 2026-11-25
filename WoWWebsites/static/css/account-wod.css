@@ -1,0 +1,162 @@
+/* Warlords account panel. Light card and blue actions, as far as the 2014
+   Battle.net portal shows. No accepted account screenshot. */
+
+body.era-wod .acct-wod {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 8px 0 12px;
+  color: #101114;
+  font: 13px/1.45 Arial, "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+body.era-wod .acct-wod a {
+  color: #00b6ff;
+  text-decoration: none;
+}
+
+body.era-wod .acct-wod a:hover {
+  color: #101114;
+  text-decoration: underline;
+}
+
+body.era-wod .acct-nav,
+body.era-wod .acct-panel {
+  background: #fff;
+  color: #101114;
+  border: 1px solid #33373b;
+  border-top: 3px solid #00b6ff;
+}
+
+body.era-wod .acct-nav {
+  flex: 0 0 210px;
+  padding: 14px 0 18px;
+}
+
+body.era-wod .acct-nav-label {
+  margin: 0 16px 10px;
+  color: #8694a1;
+  font: 11px/1.3 Arial, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.era-wod .acct-nav-link {
+  display: block;
+  padding: 8px 16px;
+}
+
+body.era-wod .acct-wod a.acct-nav-current {
+  color: #101114;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: inset 3px 0 0 #00b6ff;
+}
+
+body.era-wod .acct-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 20px 24px 28px;
+}
+
+body.era-wod .acct-kicker {
+  margin: 0 0 4px;
+  color: #8694a1;
+  font: 11px/1.2 Arial, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.era-wod .acct-wod .acct-title {
+  margin: 0 0 14px;
+  color: #101114;
+  font: 400 26px/1.15 "Lucida Sans Unicode", "Lucida Grande", Arial, sans-serif;
+}
+
+body.era-wod .acct-wod .acct-sub {
+  margin: 16px 0 8px;
+  color: #101114;
+  font: 700 13px/1.3 Arial, sans-serif;
+}
+
+body.era-wod .acct-help,
+body.era-wod .acct-empty,
+body.era-wod .acct-address,
+body.era-wod .acct-signed-in {
+  margin: 8px 0;
+  color: #707070;
+}
+
+body.era-wod .acct-user,
+body.era-wod .acct-email {
+  color: #101114;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+body.era-wod .acct-wod .acct-form label {
+  color: #101114;
+}
+
+body.era-wod .acct-wod input,
+body.era-wod .acct-wod textarea,
+body.era-wod .acct-wod select {
+  width: 100%;
+  max-width: 22rem;
+  box-sizing: border-box;
+  padding: 7px 8px;
+  border: 1px solid #8694a1;
+  background: #fff;
+  color: #101114;
+  font: 13px Arial, sans-serif;
+}
+
+body.era-wod .acct-wod button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: #00b6ff;
+  border: 1px solid #00b6ff;
+  color: #fff;
+  font: 700 12px Arial, sans-serif;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+body.era-wod .acct-wod button:hover {
+  background: #101114;
+  border-color: #101114;
+}
+
+body.era-wod .acct-wod .acct-error { color: #8b1e1e; }
+body.era-wod .acct-wod .acct-notice { color: #1d6b2f; }
+
+body.era-wod .acct-chars {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.era-wod .acct-char {
+  padding: 8px 0;
+  border-bottom: 1px solid #8694a1;
+  color: #101114;
+}
+
+body.era-wod .acct-actions {
+  margin: 16px 0 0;
+}
+
+body.era-wod .acct-actions a {
+  margin-right: 16px;
+}
+
+@media (max-width: 720px) {
+  body.era-wod .acct-wod {
+    flex-direction: column;
+  }
+  body.era-wod .acct-nav {
+    flex-basis: auto;
+    width: 100%;
+  }
+}

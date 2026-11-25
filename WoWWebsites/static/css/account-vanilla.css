@@ -1,0 +1,267 @@
+/* December 2006 account summary on the April community parchment.
+   Red #640909, gold #996D11, cream #FCEAC6, link blue #1E4378. */
+
+.acct-vanilla {
+  color: #2a2114;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+}
+
+.acct-heading {
+  margin: 0 0 10px;
+  padding: 5px 10px;
+  background: #640909;
+  border: 1px solid #2a0606;
+  color: #FCEAC6;
+  font: bold 16px Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-panel {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.acct-sub {
+  margin: 0 0 8px;
+  color: #640909;
+  font: bold 16px Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-help,
+.acct-who,
+.acct-mail,
+.acct-lead,
+.acct-actions,
+.acct-fine,
+.acct-label,
+.acct-welcome {
+  margin: 0 0 8px;
+}
+
+.acct-fine {
+  color: #5c4630;
+  font-size: 11px;
+}
+
+.acct-welcome {
+  line-height: 1.45;
+}
+
+.acct-drop {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
+  background: #12315f;
+  color: #FCEAC6;
+  font: bold 13px/18px Georgia, serif;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.acct-name {
+  font-weight: bold;
+}
+
+.acct-manage {
+  float: right;
+  width: 190px;
+  margin: 0 0 10px 12px;
+  background: #f4e7c4;
+  border: 1px solid #996D11;
+}
+
+.acct-manage-title {
+  margin: 0;
+  padding: 4px 8px;
+  background: #3d4a55;
+  color: #FCEAC6;
+  font: bold 11px Arial, Helvetica, sans-serif;
+}
+
+.acct-manage-links {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.acct-manage-links a {
+  display: block;
+  padding: 2px 8px 2px 16px;
+  color: #1E4378;
+  font: bold 11px Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+}
+
+.acct-manage-links a.acct-here {
+  color: #640909;
+}
+
+.acct-manage-out {
+  margin: 0;
+  padding: 0 6px 6px;
+}
+
+.acct-logout,
+.acct-btn {
+  display: inline-block;
+  background: #640909;
+  border: 1px solid #2a0606;
+  color: #FCEAC6;
+  font: bold 11px Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  text-align: center;
+  padding: 3px 8px;
+}
+
+.acct-logout {
+  display: block;
+}
+
+.acct-logout:hover,
+.acct-btn:hover {
+  color: #fff;
+}
+
+.acct-band {
+  margin: 12px 0 0;
+  padding: 3px 8px;
+  background: #0c3d72;
+  color: #FCEAC6;
+  font: bold 12px Arial, Helvetica, sans-serif;
+}
+
+.acct-card,
+.acct-info {
+  margin: 0 0 10px;
+  padding: 8px;
+  background: #f7ecd0;
+  border: 1px solid #996D11;
+}
+
+.acct-box {
+  float: right;
+  width: 92px;
+  height: auto;
+  margin: 0 0 8px 8px;
+}
+
+.acct-keys {
+  margin: 0 0 8px;
+}
+
+.acct-key {
+  display: inline-block;
+  width: 42px;
+  height: 16px;
+  margin-right: 6px;
+  background: #fff;
+  border: 1px solid #666;
+}
+
+.acct-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  clear: both;
+}
+
+.acct-info {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.acct-vanilla .acct-error {
+  color: #C60000;
+  font-weight: bold;
+  margin: 0 0 8px;
+}
+
+.acct-vanilla .acct-notice {
+  color: #1d6b2f;
+  font-weight: bold;
+  margin: 0 0 8px;
+}
+
+.acct-vanilla .acct-form label {
+  display: block;
+  margin: 0 0 8px;
+  font-weight: bold;
+  color: #3a2a14;
+}
+
+.acct-vanilla .acct-form input {
+  display: block;
+  width: 100%;
+  max-width: 16rem;
+  min-width: 0;
+  margin-top: 2px;
+  box-sizing: border-box;
+  background: #fff8e6;
+  border: 1px solid #996D11;
+  color: #000;
+  font: 12px Arial, Helvetica, sans-serif;
+  padding: 3px 4px;
+}
+
+.acct-vanilla button {
+  background: #640909;
+  color: #FCEAC6;
+  border: 1px solid #996D11;
+  font: bold 11px Arial, Helvetica, sans-serif;
+  padding: 2px 8px;
+  height: 22px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.acct-vanilla button:hover {
+  color: #fff;
+}
+
+.acct-chars {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff8e6;
+  margin: 0 0 8px;
+}
+
+.acct-chars th {
+  text-align: left;
+  background: #640909;
+  color: #FCEAC6;
+  padding: 4px 6px;
+  font: 12px Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-chars td {
+  border-top: 1px solid #D1C0A2;
+  padding: 4px 6px;
+  vertical-align: top;
+}
+
+.acct-empty {
+  color: #5c4630;
+  font-style: italic;
+}
+
+.acct-panel a:link,
+.acct-panel a:visited {
+  color: #1E4378;
+}
+
+.acct-panel a.acct-btn:link,
+.acct-panel a.acct-btn:visited,
+.acct-panel a.acct-logout:link,
+.acct-panel a.acct-logout:visited {
+  color: #FCEAC6;
+}
+
+.acct-panel a:hover {
+  color: #C60000;
+}
+
+.acct-panel a.acct-btn:hover,
+.acct-panel a.acct-logout:hover {
+  color: #fff;
+}

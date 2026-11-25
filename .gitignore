@@ -1,0 +1,61 @@
+# Local configuration. Copy .env.example to .env.
+.env
+.env.*
+!.env.example
+
+# Generated runtime
+.run/
+.cache/
+
+# Game clients and logs
+/clients/
+/logs/
+*.log
+
+# Installed realms: extracts, world SQL, compiled binaries, and keys
+/servers/
+
+# Extracted client data, wherever it lands
+**/maps/
+**/vmaps/
+**/mmaps/
+**/dbc/
+**/db2/
+**/Buildings/
+**/cameras/
+**/Cameras/
+**/navs/
+*.mpq
+*.MPQ
+*.wdb
+*.dbc
+*.db2
+*.mmap
+*.vmtree
+
+# Built programs and libraries. Source stays; build these locally.
+*.so
+*.so.*
+*.o
+*.a
+*.bin
+__pycache__/
+*.pyc
+.venv/
+
+# Website archives, generated art, local data, and the nested checkout
+/WoWWebsites/.git/
+/WoWWebsites/references/
+/WoWWebsites/data/
+/WoWWebsites/static/archive/
+/WoWWebsites/static/img/client/
+
+# Keys and local databases
+*.pem
+*.key
+secret.bin
+*.sqlite
+*.sqlite3
+*.7z
+
+.DS_Store

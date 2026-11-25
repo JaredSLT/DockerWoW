@@ -1,0 +1,11 @@
+[Unit]
+Description=Rebuild a WoW realm when its public git revision moves
+After=docker.service network-online.target
+Wants=network-online.target
+ConditionPathIsMountPoint=/mnt/wow-nvme
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wow-git-update.sh
+TimeoutStartSec=infinity
+Nice=10

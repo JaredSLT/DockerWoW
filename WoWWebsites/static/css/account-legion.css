@@ -1,0 +1,230 @@
+/* Legion Battle.net account. Login and creation are the dark gate.
+   Summary and password are the light management sheet. */
+
+body.era-legion.acct-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.era-legion.acct-screen-login,
+body.era-legion.acct-screen-create {
+  background: radial-gradient(ellipse at 50% 18%, #1a6ea8 0%, #0c3558 34%, #071422 72%);
+  color: #d5e6f2;
+}
+
+body.era-legion.acct-screen-summary,
+body.era-legion.acct-screen-password {
+  background: #ebe6dc;
+  color: #222;
+}
+
+.bnet-gate { flex: 1 1 auto; width: min(880px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 48px; }
+.bnet-mini { color: #9fb4c8; }
+.bnet-mini a { color: #5ec8ff; }
+
+.acct.acct-legion { font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.acct.acct-legion h2, .acct.acct-legion h3, .acct.acct-legion p { margin: 0; }
+.acct.acct-legion .acct-brand {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.acct.acct-legion .acct-title { margin-top: 4px; font-size: 28px; font-weight: 600; }
+.acct.acct-legion .acct-mast { margin-bottom: 16px; }
+
+.acct-mode-login .acct-brand,
+.acct-mode-create .acct-brand {
+  color: #3ec4ff;
+  font-size: 34px;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+.acct-mode-login .acct-title,
+.acct-mode-create .acct-title {
+  color: #9fb4c8;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.acct-mode-login .acct-card,
+.acct-mode-create .acct-card { max-width: 360px; margin: 0 auto; }
+.acct-mode-login .acct-card h3,
+.acct-mode-create .acct-card h3 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.acct-mode-summary,
+.acct-mode-password { color: #1c1c1c; }
+.acct-mode-summary .acct-brand,
+.acct-mode-password .acct-brand { color: #8a6a12; font-size: 11px; }
+.acct-mode-summary .acct-title,
+.acct-mode-password .acct-title { color: #141414; }
+.acct-screen-summary .acct-mast,
+.acct-screen-password .acct-mast {
+  margin: -36px -24px 20px;
+  padding: 22px 24px;
+  background: #111;
+  color: #fff;
+}
+.acct-screen-summary .acct-title,
+.acct-screen-password .acct-title,
+.acct-screen-summary .acct-brand,
+.acct-screen-password .acct-brand { color: #fff; }
+
+.acct.acct-legion a { color: #6e5208; text-decoration: none; }
+.acct-mode-login a, .acct-mode-create a { color: #5ec8ff; }
+.acct.acct-legion a:hover { text-decoration: underline; }
+
+.acct.acct-legion .acct-error,
+.acct.acct-legion .acct-notice {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 3px solid #9f1600;
+  font-weight: 700;
+}
+.acct.acct-legion .acct-error { color: #9f1600; }
+.acct.acct-legion .acct-notice { color: #2d6a22; border-left-color: #2d6a22; }
+
+.acct.acct-legion .acct-layout { display: flex; gap: 22px; align-items: flex-start; }
+.acct.acct-legion .acct-nav {
+  display: flex;
+  flex: 0 0 210px;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+.acct.acct-legion .acct-nav a {
+  display: block;
+  padding: 12px 16px;
+  border-left: 2px solid transparent;
+  font-weight: 600;
+}
+.acct.acct-legion .acct-nav a.acct-nav-current {
+  background: #fffaf0;
+  border-left-color: #f8b700;
+  color: #1a1a1c;
+}
+.acct.acct-legion .acct-main { flex: 1 1 auto; min-width: 0; }
+.acct.acct-legion .acct-panel,
+.acct-mode-summary .acct-card,
+.acct-mode-password .acct-card {
+  padding: 20px 22px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+}
+.acct.acct-legion .acct-panel h3,
+.acct.acct-legion .acct-sub { margin: 0 0 14px; color: #141414; font-size: 18px; }
+.acct.acct-legion .acct-lead { margin-bottom: 12px; }
+.acct.acct-legion .acct-facts { margin: 0; }
+.acct.acct-legion .acct-fact {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.acct.acct-legion .acct-fact dt { flex: 0 0 240px; margin: 0; color: #666; font-weight: 600; }
+.acct.acct-legion .acct-fact dd { margin: 0; color: #1a1a1c; font-weight: 600; overflow-wrap: anywhere; }
+.acct.acct-legion .acct-roster, .acct.acct-legion .acct-games { margin-top: 18px; }
+.acct.acct-legion .acct-game {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f7f7f7;
+  border: 1px solid #e5e5e5;
+}
+.acct.acct-legion .acct-active { color: #2d6a22; font-weight: 700; }
+.acct.acct-legion .acct-char {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+.acct.acct-legion .acct-char-head {
+  color: #666;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.acct.acct-legion .acct-chars { margin: 0; padding: 0; list-style: none; }
+.acct.acct-legion .acct-char-name { overflow-wrap: anywhere; }
+.acct.acct-legion .acct-empty, .acct.acct-legion .acct-hint { color: #5e5e5e; font-size: 13px; font-weight: 400; }
+.acct-mode-login .acct-hint, .acct-mode-create .acct-hint { margin: 12px 0; color: #c5d7e6; }
+.acct.acct-legion .acct-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
+
+.acct.acct-legion .acct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.acct-mode-login .acct-field, .acct-mode-create .acct-field { color: #d5e6f2; }
+.acct-mode-summary .acct-field, .acct-mode-password .acct-field { color: #5c584e; }
+
+.acct.acct-legion input {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px;
+  border-radius: 0;
+  font: 15px/1.3 "Open Sans", Helvetica, Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.acct-mode-login input, .acct-mode-create input {
+  max-width: none;
+  background: #0b1c2c;
+  color: #fff;
+  border: 1px solid #16324a;
+}
+.acct-mode-summary input, .acct-mode-password input {
+  background: #fff;
+  color: #1a1a1c;
+  border: 1px solid #cfcfcf;
+}
+.acct.acct-legion input:focus { outline: none; border-color: #00aeff; }
+
+.acct.acct-legion button {
+  padding: 11px 18px;
+  border: 0;
+  font: 700 14px/1 "Open Sans", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+.acct-mode-login button, .acct-mode-create button {
+  width: 100%;
+  background: #00aeff;
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.acct-mode-summary button, .acct-mode-password button {
+  background: #1c1c1c;
+  color: #fff;
+  border-bottom: 2px solid #f8b700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.acct-services-link { margin-top: 16px; }
+.acct-screen-summary .acct-services-link a,
+.acct-screen-password .acct-services-link a { color: #0b5cab; }
+
+@media (max-width: 720px) {
+  .acct.acct-legion .acct-layout, .acct.acct-legion .acct-fact { flex-direction: column; }
+  .acct.acct-legion .acct-nav { flex: 1 1 auto; flex-direction: row; width: 100%; }
+  .acct.acct-legion .acct-fact dt { flex-basis: auto; }
+}

@@ -1,0 +1,265 @@
+/* Nov 2006 community shell (vanilla, TBC, Wrath).
+   Shell 955px, nav 157px. page-bg-top.jpg, light2.jpg, and the iron
+   slices are not on disk: black page, parchment fill, gold border. */
+html, body { margin: 0; padding: 0; }
+body.gen1 {
+  background: #000;
+  color: #000;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+}
+.page-top {
+  height: 88px;
+  background: #000;
+}
+.shell { width: 955px; margin: -85px auto 40px; position: relative; text-align: left; }
+.topbar, .top-nav-container { height: 60px; width: 955px; position: relative; display: block; }
+.wow-logo {
+  position: absolute; left: 4px; top: -22px; z-index: 5;
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; width: 320px;
+}
+.wow-logo .badge {
+  width: 78px; height: 78px; object-fit: cover; border-radius: 50%;
+  background: #000;
+  border: 3px solid #996D11;
+  flex: none;
+}
+.wow-logo .wordmark { display: flex; flex-direction: column; min-width: 0; }
+.wow-logo .world {
+  color: #FCEAC6; font: 700 9px/1 "Trebuchet MS", sans-serif;
+  letter-spacing: 0.32em;
+}
+.wow-logo .wm {
+  display: block;
+  margin-top: 1px;
+  font: 900 28px/0.85 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.08em;
+  color: #FCEAC6;
+}
+.wow-logo .era {
+  color: #FCEAC6; font: italic 700 12px/1.2 Palatino, Georgia, serif;
+  margin-top: 3px;
+}
+.top-nav { position: absolute; right: 17px; top: 3px; z-index: 3; }
+.search { margin: 0; }
+#searchBoxContainer {
+  height: 34px; width: 420px; display: flex; align-items: center; gap: 4px; box-sizing: border-box;
+}
+.searchBoxForm, .search select, .search input {
+  background-color: #040D1A; border: 1px solid #7F7F7F; color: #FFAC04;
+  font: 10px Arial, Helvetica, sans-serif; height: 18px; box-sizing: border-box;
+}
+#searchBox, .search input { width: 200px; padding-left: 4px; }
+#searchType, .search select { width: 130px; }
+.search button, .red, .acct button {
+  background: #640909;
+  color: #FCEAC6; border: 1px solid #996D11; font: 700 11px Arial, Helvetica, sans-serif;
+  padding: 2px 8px; height: 22px; cursor: pointer; text-decoration: none; display: inline-block;
+}
+.search button:hover, .red:hover, .acct button:hover { color: #fff; }
+.who { position: absolute; right: 0; top: 36px; color: #FCEAC6; font-size: 11px; white-space: nowrap; }
+.who a { color: #e0b800; }
+/* Iron slices are not on disk. These two cells are the side frame. */
+.iron-l, .iron-r {
+  display: table-cell;
+  width: 8px;
+  background: #996D11;
+  vertical-align: top;
+}
+.frame {
+  display: table;
+  width: 955px;
+  box-sizing: border-box;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: #000;
+  border: 1px solid #996D11;
+}
+.navcol, .main { display: table-cell; vertical-align: top; }
+.navcol { width: 157px; position: relative; z-index: 2; background: #000; }
+.left-menu { margin: 8px 0 0 4px; width: 148px; }
+.menu { margin-bottom: 3px; }
+.menu-btn {
+  width: 148px; height: 27px; text-align: left; padding: 0 22px 0 12px;
+  background: #000;
+  border: 1px solid #996D11; color: #FCEAC6;
+  font: italic 700 13px Palatino, Georgia, serif;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.menu-btn em { font-style: italic; }
+.menu-btn .pm {
+  position: absolute; right: 8px; top: 7px; width: 12px; height: 12px;
+  background: #996D11; clip-path: inset(5px 0 5px 0);
+}
+.menu.closed .pm { clip-path: none; background:
+  linear-gradient(#996D11, #996D11) center/12px 2px no-repeat,
+  linear-gradient(#996D11, #996D11) center/2px 12px no-repeat; }
+.menu.closed .menu-inner { display: none; }
+.menu-inner {
+  background: #000;
+  border: 1px solid #996D11; border-top: 0; padding: 4px 0 6px;
+}
+.menu-inner ul { margin: 0; padding: 0; list-style: none; }
+.menu-inner a, a.menuFiller {
+  display: block;
+  box-sizing: border-box;
+  width: 139px;
+  height: 15px;
+  position: relative;
+  left: -3px;
+  color: #CBA300;
+  font: 700 11px/15px arial, "Comic Sans MS", sans-serif;
+  text-decoration: none;
+  padding: 0 0 0 10px;
+  background: none;
+  border: 0;
+}
+.menu-inner a:link, .menu-inner a:visited, a.menuFiller:link, a.menuFiller:visited { color: #CBA300; }
+.menu-inner a:hover, a.menuFiller:hover { color: #fff; text-decoration: none; }
+.main { width: auto; }
+body.gen1 #main,
+body.gen1 .main { background: #E7CFA3; }
+.main-top {
+  height: auto;
+  min-height: 36px;
+  box-sizing: border-box;
+  background: #996D11;
+  border: 0;
+  display: flex; align-items: center; padding: 6px 10px;
+}
+.banner, .redBannerLabel {
+  margin: 0;
+  padding: 4px 12px;
+  background: #640909;
+  border: 1px solid #000;
+  color: #FCEAC6;
+  font: 13pt Palatino, Georgia, "Times New Roman", serif;
+  width: auto;
+  box-sizing: border-box;
+}
+.main-body {
+  display: flex;
+  background: #E7CFA3;
+  border: 0;
+  min-height: 640px;
+}
+.forum-cat {
+  margin: 18px 0 6px; padding: 4px 8px;
+  background: #640909; color: #FCEAC6;
+  font: 13px Palatino, Georgia, serif;
+}
+.forum-table .forum-name { white-space: nowrap; font-weight: 700; width: 1%; }
+.forum-table .forum-desc { color: #5c4630; }
+body.alpha .wow-logo .era { color: #c9b48a; }
+.cnt { flex: 1; min-width: 0; padding: 16px 16px 24px; }
+.marginal, #marginal { width: 226px; flex: none; padding: 12px 6px 24px 0; box-sizing: border-box; }
+.main-bot {
+  height: 12px;
+  box-sizing: border-box;
+  background: #996D11;
+  border: 0;
+}
+footer {
+  color: #9a8a68; font-size: 11px; text-align: center; padding: 16px 8px 32px;
+}
+.hero-wrap, #imageSwitcher { margin: 0 0 12px; position: relative; height: 190px; width: 470px; }
+.hero-cap { display: none; }
+.hero { width: 470px; height: 190px; object-fit: cover; border: 1px solid #996D11; display: block; }
+.kicker { font-size: 13px; margin: 12px 0; }
+table.news, table.grid, table#generalNews { width: 100%; border-collapse: collapse; background: rgba(255,248,230,.35); display: table; }
+table.news th, table.grid th {
+  text-align: left; background: #640909; color: #FCEAC6; padding: 6px 8px; font-size: 12px;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+}
+table.news td, table.grid td, table#generalNews tr td { border-top: 1px solid #D1C0A2; border-right: 1px solid #DAC6A1; padding: 8px; vertical-align: top; }
+table.news tr.hilite, table.news tr.hilite td, table#generalNews tr.hilite, table#generalNews tr.hilite td {
+  background: #F9E6B6; background-color: #F9E6B6; border-top-color: #F9E6B6;
+}
+body.gen1 table.news tr:hover td,
+body.gen1 table#generalNews tr:hover td { background: #EEDB99; }
+table.news h3, table#generalNews div.hdl h3 { margin: 0 0 4px; font-size: 14px; display: inline; }
+table.news p, table#generalNews p { margin: 0; }
+table.news td.date { width: 88px; white-space: nowrap; }
+table.news .date, table.news span.date, table#generalNews span.date, .date {
+  color: #1E4378; font-weight: 700; font-size: 12px; font-family: Arial, Helvetica, sans-serif;
+  display: block; letter-spacing: normal;
+}
+a { color: #1E4378; }
+a:link, a:visited { color: #1E4378; }
+a:hover { color: #C60000; }
+.who a, .who a:link, .who a:visited { color: #E0B800; }
+.ibox a, .ibox a:link, .ibox a:visited { color: #E0B800; }
+.ibox a:hover, .who a:hover { color: #fff; }
+.ibox {
+  background: #000; color: #FCEAC6; border: 1px solid #996D11; margin: 0 0 14px; padding: 0 0 8px;
+}
+body.gen1 .ibox { width: 213px; box-sizing: border-box; }
+.ibox h3 {
+  margin: 0; padding: 6px 8px; background: #640909;
+  color: #FCEAC6; font: 12px Arial, Helvetica, sans-serif;
+}
+.ibox p, .ibox a { color: #e0b800; font-size: 11px; padding: 0 8px; }
+.ibox .fine, .fine { color: #a09070; font-size: 10px; }
+.ssotd, img.ssotd-screen {
+  display: block; width: calc(100% - 16px); max-width: 195px; box-sizing: border-box;
+  margin: 8px; height: 120px; object-fit: cover; border: 0; border-bottom: 1px solid #996D11;
+}
+code, #build { overflow-wrap: anywhere; }
+.twocol { display: flex; gap: 24px; }
+.twocol > div { flex: 1; }
+.acct { display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
+.acct label { display: flex; flex-direction: column; font-weight: 700; font-size: 12px; }
+.acct input, .acct textarea, .acct select {
+  border: 1px solid #8a6a22; background: #f6ecd4; padding: 4px; font: 13px Trebuchet MS, sans-serif;
+}
+.sheet { display: flex; gap: 20px; }
+.gear { list-style: none; padding: 0; margin: 0; }
+.gear .slot { display: inline-block; width: 90px; color: #6a5018; font-weight: 700; }
+.up { color: #1a7a1a; font-weight: 700; }
+.down { color: #8b1c14; font-weight: 700; }
+.warn { color: #8b1c14; }
+.trees { display: flex; gap: 8px; flex-wrap: wrap; }
+.tree { flex: 1; min-width: 180px; background: rgba(20,14,8,.85); color: #eee; padding: 8px; border: 1px solid #8a6a22; }
+.tree h3 { margin: 0 0 8px; color: #f3d789; font-size: 13px; }
+.talent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.talent {
+  background: #2a2014; color: #f3d789; border: 1px solid #7a5a18; font: 10px/1.15 Arial, sans-serif;
+  min-height: 42px; cursor: pointer; text-align: left; padding: 3px; overflow: hidden;
+}
+.talent:hover { outline: 1px solid #e0b800; }
+.tname { display: block; }
+.worldmap {
+  position: relative; height: 420px; background: #1c3a28 url("/static/img/ssotd-elwynn.jpg") center/cover;
+  border: 3px solid #8a6a22;
+}
+.zone {
+  position: absolute; color: #fceac6; font: 700 11px Arial, sans-serif; text-shadow: 0 1px 2px #000;
+  text-decoration: none; background: rgba(0,0,0,.35); padding: 2px 4px;
+}
+.post { border: 1px solid #d1c0a2; margin: 0 0 12px; background: rgba(255,248,230,.4); }
+.post header { background: #6b1210; color: #fceac6; padding: 4px 8px; font-size: 12px; }
+.post pre { white-space: pre-wrap; padding: 8px; margin: 0; font: 13px Trebuchet MS, sans-serif; }
+.meta { color: #5a4a28; }
+.flash { background: #e8d48a; border: 1px solid #8a6a22; padding: 8px; margin-bottom: 12px; }
+@media (max-width: 980px) {
+  .page-top { display: none; }
+  .shell, .topbar, .top-nav-container, .frame { width: auto; }
+  .shell { margin: 0 8px 24px; }
+  .frame, .main-body, .navcol, .main { display: block; width: auto; }
+  .iron-l, .iron-r { display: none; }
+  body.gen1 #main, body.gen1 .main { background: #E7CFA3; }
+  .marginal, #marginal { width: auto; padding: 0 8px 16px; }
+  body.gen1 .ibox, #ssotd-container { width: auto; }
+  .left-menu, .menu-btn { width: 100%; }
+  .wow-logo { position: static; width: auto; }
+  .topbar { height: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0; }
+  .top-nav { position: static; }
+  .who, .search { position: static; margin-top: 0; }
+  #searchBoxContainer { width: auto; max-width: 100%; height: auto; flex-wrap: wrap; }
+  .search input, #searchBox { width: auto; flex: 1; min-width: 0; }
+  .hero, .hero-wrap, #imageSwitcher { width: 100%; max-width: 470px; height: auto; }
+  .hero { height: 190px; }
+  .banner, .redBannerLabel { width: auto; max-width: 100%; }
+}

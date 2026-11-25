@@ -1,0 +1,335 @@
+/* October 2026 World of Warcraft community site. */
+
+body.era-midnight {
+  margin: 0;
+  background: #12100e;
+  color: #f4f0e6;
+  font: 16px/1.45 "Helvetica Neue", Arial, sans-serif;
+}
+
+body.era-midnight a { color: #f0c14a; text-decoration: none; }
+body.era-midnight a:hover { text-decoration: underline; }
+body.era-midnight h1,
+body.era-midnight h2,
+body.era-midnight h3 { font-weight: 600; letter-spacing: 0; }
+
+.mn-shell { min-height: 100vh; }
+.mn-main { min-height: 50vh; }
+.mn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.mn-mast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px;
+  background: #3a332f;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.mn-blizz,
+.mn-mast summary,
+.mn-try,
+.mn-sub,
+.mn-links > a {
+  color: #fff;
+  font-weight: 700;
+}
+
+.mn-blizz {
+  color: #3ec0ff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 18px;
+}
+
+.mn-logo {
+  color: #f8d56a;
+  font: 700 18px/1 Georgia, "Times New Roman", serif;
+  text-shadow: 0 1px 0 #5a3b08;
+  white-space: nowrap;
+}
+.mn-logo span { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+.mn-links { display: flex; align-items: center; gap: 16px; flex: 1; }
+.mn-links a, .mn-mast summary { font-size: 15px; }
+.mn-forum-only { display: none; gap: 16px; }
+.mn-new {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 4px;
+  background: #f5c518;
+  color: #1a1a1a;
+  font: 700 9px/1.4 Arial, sans-serif;
+  font-style: normal;
+  vertical-align: 2px;
+}
+
+.mn-drop { position: relative; }
+.mn-drop > summary { cursor: pointer; list-style: none; }
+.mn-drop > summary::-webkit-details-marker { display: none; }
+.mn-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  padding: 10px;
+  background: #241e1b;
+  border: 1px solid #5c5148;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 6;
+}
+.mn-panel a { color: #fff; }
+.mn-search { margin-left: auto; }
+.mn-search .mn-panel { flex-direction: row; }
+.mn-search input, .mn-main input, .mn-main textarea, .mn-main select {
+  background: #1b1816;
+  color: #fff;
+  border: 1px solid #6d6258;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+.mn-try, .mn-sub {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.mn-try { background: #1a1a1a; color: #fff; }
+.mn-sub { background: #e2512a; color: #fff; }
+
+body.era-midnight:has(.mn-forums) .mn-forum-only { display: inline-flex; }
+body.era-midnight:has(.mn-forums) .mn-try,
+body.era-midnight:has(.mn-forums) .mn-search { display: none; }
+body.era-midnight:has(.mn-forums) .mn-sub { background: #f5c518; color: #1a1a1a; }
+body.era-midnight:has([data-era-bare]) .mn-mast,
+body.era-midnight:has([data-era-bare]) .mn-foot,
+body.era-midnight:has(.mn-shop) .mn-mast,
+body.era-midnight:has(.mn-shop) .mn-foot { display: none; }
+body.era-midnight:has([data-era-bare]) .mn-main,
+body.era-midnight:has(.mn-shop) .mn-main { padding: 0; }
+
+.mn-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 28px 20px 40px;
+  background: #0e0d0c;
+  color: #b7aea4;
+}
+.mn-foot p { margin: 0; width: 100%; }
+
+.mn-yellow, .mn-blue, .mn-ghost {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 3px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.mn-yellow { background: #f5c518; color: #1a1a1a; }
+.mn-blue { background: #148eff; color: #fff; }
+.mn-ghost { border: 1px solid #f5c518; color: #f5c518; background: transparent; }
+
+.mn-hero {
+  min-height: 520px;
+  padding: 72px 8vw 48px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 70%, rgba(90, 40, 20, 0.45), transparent 40%),
+    linear-gradient(180deg, #c47a9a 0%, #6d7eb8 42%, #24324f 100%);
+}
+.mn-hero-logos { display: flex; justify-content: center; gap: 28px; margin-bottom: 28px; color: #f8e7b0; font: 700 13px/1.2 Georgia, serif; }
+.mn-kicker { margin: 0; color: #f5c518; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; }
+.mn-hero h1 { margin: 8px 0; font-size: 52px; color: #fff; }
+.mn-dek { max-width: 640px; margin: 0 auto 18px; color: #efe7da; }
+.mn-cta { display: flex; justify-content: center; gap: 12px; }
+.mn-plat { color: #d9d3c8; }
+
+.mn-updates, .mn-subscr, .mn-news, .mn-guide, .mn-armory, .mn-services { padding: 36px 6vw 64px; }
+.mn-updates { background: #1a1614; }
+.mn-updates-head, .mn-sub-grid { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; }
+.mn-feature, .mn-mini, .mn-news-card, .mn-product, .mn-cats article {
+  background: #241e1b;
+  border: 1px solid #3d342e;
+  border-radius: 6px;
+}
+.mn-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px; margin: 12px 0; }
+.mn-feature h3 { margin-top: 0; font-size: 28px; }
+.mn-minis, .mn-news-grid, .mn-products, .mn-class-grid, .mn-race-grid, .mn-cats {
+  display: grid;
+  gap: 12px;
+}
+.mn-minis, .mn-products { grid-template-columns: repeat(4, 1fr); }
+.mn-mini, .mn-news-card, .mn-product { display: block; padding: 14px; color: inherit; min-height: 110px; }
+.mn-view { text-align: center; }
+.mn-live { list-style: none; padding: 0; }
+.mn-live time { color: #b7aea4; margin-left: 8px; }
+
+.mn-subscr { background: #14110f; }
+.mn-sub-grid { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 22px; align-items: start; }
+.mn-sub-grid article h3 { margin-bottom: 6px; }
+
+.mn-page-hero, .mn-status-hero, .mn-forum-banner, .mn-article {
+  padding: 72px 10vw 36px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(12, 10, 8, 0.82)),
+    #2c3a28;
+}
+.mn-page-hero h1, .mn-status-hero h1, .mn-article h1 { font-size: 48px; margin: 0 0 10px; }
+.mn-page-races { background: linear-gradient(180deg, #20445a, #0e2433); }
+.mn-classes { background: #1a140f; }
+.mn-class-grid { grid-template-columns: 1fr 1fr; padding: 24px 6vw 70px; }
+.mn-class {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  min-height: 180px;
+  background: #2a2118;
+  color: #f4f0e6;
+  border: 1px solid #4a3b2c;
+}
+.mn-class img, .mn-ph { width: 180px; height: 180px; object-fit: cover; background: #3a2c20; }
+.mn-class span { padding: 16px 18px; }
+.mn-class strong { display: block; color: #f5c518; font-size: 26px; }
+.mn-class em { color: #c8bba8; font-style: normal; font-size: 12px; letter-spacing: 0.06em; }
+.mn-class p { margin: 8px 0; color: #ddd4c6; }
+.mn-talent { font-size: 13px; }
+
+.mn-races { background: #0c1424; }
+.mn-faction { padding: 28px 6vw 48px; text-align: center; }
+.mn-alliance h2, .mn-horde h2 { font-size: 36px; letter-spacing: 0.04em; }
+.mn-horde { background: #3a1012; }
+.mn-race-grid { grid-template-columns: repeat(6, 1fr); }
+.mn-race {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  color: #f5c518;
+  background: #141820;
+  border: 1px solid #2c3a55;
+}
+.mn-race img, .mn-race .mn-ph { width: 100%; height: 160px; object-fit: cover; background: #222; }
+.mn-race em { color: #c8bba8; font-style: normal; font-size: 12px; }
+
+.mn-housing { background: #1a120c; padding: 24px; }
+.mn-house-frame {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 640px;
+  border: 14px solid #6a4a32;
+  background: #17324d;
+  overflow: hidden;
+}
+.mn-house-frame input { position: absolute; opacity: 0; }
+.mn-house-view { position: absolute; inset: 0; }
+.mn-plan, .mn-yard { width: 46%; height: 70%; margin: 8% 0 0 50%; border-radius: 50%; border: 8px solid #d9e2ea; }
+.mn-plan { background: #8a5a32; position: relative; }
+.mn-plan .room { position: absolute; background: #c48a4a; border: 3px solid #5a3218; }
+.mn-plan .room:nth-child(1) { width: 40%; height: 28%; left: 10%; top: 16%; }
+.mn-plan .room:nth-child(2) { width: 30%; height: 24%; right: 12%; top: 30%; }
+.mn-plan .room:nth-child(3) { width: 36%; height: 22%; left: 24%; bottom: 14%; }
+.mn-yard { display: none; background: linear-gradient(#87b34a, #6a4a2a); border-radius: 0; width: 100%; height: 100%; margin: 0; }
+.mn-yard .cottage { position: absolute; left: 30%; top: 28%; width: 28%; height: 26%; background: #8d6844; box-shadow: inset 0 -20px #243; }
+.mn-yard .tree { position: absolute; left: 18%; top: 20%; width: 10%; height: 40%; background: #245c32; border-radius: 40px; }
+.mn-yard .path { position: absolute; left: 40%; bottom: 0; width: 18%; height: 46%; background: #c4a574; }
+#mn-house-yard:checked ~ .mn-house-plan { display: none; }
+#mn-house-yard:checked ~ .mn-house-yard { display: block; }
+.mn-house-controls { position: absolute; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
+.mn-house-controls label { background: #111; color: #fff; padding: 8px 10px; border-radius: 4px; cursor: pointer; }
+
+.mn-status { background: #070b16; }
+.mn-status-hero { background: radial-gradient(circle at 50% 30%, #1d3b66, #070b16 70%); }
+.mn-filters { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 12px; padding: 18px 6vw; align-items: end; }
+.mn-filters label { display: flex; flex-direction: column; gap: 6px; color: #b7aea4; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.mn-token, .mn-fine, .mn-warn { padding: 0 6vw 12px; color: #d9c27a; }
+.mn-realms, .mn-topics { width: calc(100% - 12vw); margin: 0 6vw 48px; border-collapse: collapse; }
+.mn-realms th, .mn-topics th { text-align: left; color: #b7aea4; font-weight: 600; padding: 10px; }
+.mn-realms td, .mn-topics td { padding: 12px 10px; border-top: 1px solid #2a3142; }
+.mn-realms tr:nth-child(even) td { background: #121826; }
+.mn-up { color: #3ddc84; }
+.mn-down { color: #ff5d5d; }
+
+.mn-news { background: #1c1410; }
+.mn-news-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+.mn-news-card h2 { margin: 0 0 8px; color: #fff; }
+.mn-news-card time, .mn-by { color: #f5c518; }
+.mn-hotfixes { display: grid; grid-template-columns: 180px 1fr; gap: 16px; margin-top: 28px; padding-top: 18px; border-top: 1px solid #4a3b2c; }
+.mn-article { text-align: left; background: #1a120e; }
+.mn-ribbon { display: inline-block; background: #f5c518; color: #1a1a1a; font-weight: 800; padding: 6px 18px; }
+.mn-copy { max-width: 760px; }
+
+.mn-forums { background: #161311; padding-bottom: 48px; }
+.mn-forum-banner { min-height: 220px; display: flex; align-items: flex-end; background: linear-gradient(90deg, #1a1030, #6a2a12); }
+.mn-forum-banner p { font: 700 42px/1 Georgia, serif; color: #f8d56a; margin: 24px; }
+.mn-forums h1, .mn-forum-tabs, .mn-crumb { padding: 12px 6vw 0; }
+.mn-forum-tabs span { margin-right: 16px; color: #b7aea4; }
+.mn-cats { grid-template-columns: 1fr 1fr; padding: 18px 6vw; }
+.mn-cats article { padding: 16px 18px; }
+.mn-cats h2 { margin: 0 0 6px; }
+.mn-cats a { margin-right: 12px; }
+.mn-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 6vw; }
+.mn-chips a { background: #2a241f; padding: 6px 8px; }
+.mn-topics a { display: block; color: #fff; }
+.mn-topics span, .mn-post { color: #b7aea4; }
+.mn-post { padding: 0 6vw 32px; display: grid; gap: 8px; max-width: 640px; }
+
+.mn-shop { background: #15171c; color: #fff; padding-bottom: 48px; }
+.mn-shop-top, .mn-shop-games {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+}
+.mn-shop-top { background: #101114; }
+.mn-shop-games { background: #1c1e24; }
+.mn-shop-games span { margin-right: 16px; font-weight: 700; }
+.mn-shop-hero { margin: 16px 24px; padding: 48px 32px; background: linear-gradient(90deg, #152238, #6a4a68); }
+.mn-shop-hero h1 { max-width: 560px; font-size: 32px; }
+.mn-products { grid-template-columns: repeat(5, 1fr); padding: 0 24px; }
+.mn-price { font-size: 22px; font-weight: 800; }
+.mn-price em { color: #3ddc84; font-style: normal; font-size: 13px; margin-left: 8px; }
+.bnet-logo { color: #fff; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.mn-armory, .mn-guide, .mn-services, .mn-profile { background: #16120f; }
+.mn-guide-links { display: flex; flex-wrap: wrap; gap: 12px 20px; padding: 0; list-style: none; }
+.mn-profile-head { padding: 28px 6vw 8px; background: #2a2118; }
+.mn-profile-head h1 { margin: 0; color: #e7c27a; font-size: 40px; }
+.mn-horde.mn-profile-head, .mn-profile-head.mn-horde { box-shadow: inset 6px 0 0 #c41e3a; }
+.mn-profile-head.mn-alliance { box-shadow: inset 6px 0 0 #3ec0ff; }
+.mn-tabs { display: flex; gap: 18px; padding: 8px 6vw; border-bottom: 1px solid #4a3b2c; }
+.mn-tab { color: #f5c518; font-weight: 800; letter-spacing: 0.04em; }
+.mn-on { background: #f5c518; color: #1a1a1a; padding: 6px 8px; }
+.mn-doll { display: grid; grid-template-columns: 1fr 180px 1fr; gap: 12px; padding: 18px 6vw 48px; }
+.mn-gear { display: flex; flex-direction: column; gap: 8px; }
+.mn-gear a { display: flex; gap: 8px; align-items: center; color: #d7c4ff; }
+.mn-gear img { width: 36px; height: 36px; }
+.mn-model { background: #2a2118; min-height: 280px; display: grid; place-items: center; color: #b7aea4; }
+.mn-panel-note { padding: 24px 6vw 48px; }
+
+.mn-main table.grid { width: calc(100% - 12vw); margin: 12px 6vw 32px; border-collapse: collapse; }
+.mn-main table.grid td, .mn-main table.grid th { border-bottom: 1px solid #3d342e; padding: 8px; text-align: left; }
+.mn-main .forums, .mn-main .post, .mn-main .shop-shelf, .mn-main .story { padding: 12px 6vw 40px; }
+.mn-services .acct-form, .mn-services form { margin: 8px 0 16px; }
+
+@media (max-width: 900px) {
+  .mn-mast { flex-wrap: wrap; }
+  .mn-hero h1 { font-size: 34px; }
+  .mn-feature, .mn-minis, .mn-sub-grid, .mn-class-grid, .mn-news-grid, .mn-cats, .mn-products, .mn-filters, .mn-doll {
+    grid-template-columns: 1fr;
+  }
+  .mn-race-grid { grid-template-columns: repeat(2, 1fr); }
+}

@@ -1,0 +1,612 @@
+/* July 2019 Battle for Azeroth shell. Home bar and hero match home-2019-07.jpg.
+   Forums index matches forums-index-2019.jpg. Shop matches shop-2019-06.jpg. */
+
+* { box-sizing: border-box; }
+
+body.era-bfa {
+  margin: 0;
+  background: #07080d;
+  color: #f4efe6;
+  font: 16px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body.era-bfa a { color: #e6c36a; }
+
+.bfa-site { min-height: 100vh; }
+
+.bfa-blizz,
+.bfa-fbar,
+.bfa-shop-bar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-height: 42px;
+  padding: 0 22px;
+  background: #000;
+  color: #fff;
+  font: 700 12px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bfa-bmark {
+  color: #00aeef;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  text-transform: none;
+}
+
+.bfa-blizz-nav,
+.bfa-fbar nav,
+.bfa-shop-bar nav,
+.bfa-blizz-right,
+.bfa-fbar-right,
+.bfa-shop-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.bfa-blizz-right,
+.bfa-fbar-right,
+.bfa-shop-right { margin-left: auto; }
+
+.bfa-blizz a,
+.bfa-fbar a,
+.bfa-blizz summary,
+.bfa-fbar summary {
+  color: #fff;
+  text-decoration: none;
+}
+
+.bfa-drop { position: relative; }
+.bfa-drop summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.bfa-drop summary::-webkit-details-marker { display: none; }
+.bfa-drop summary::after {
+  content: "▾";
+  margin-left: 6px;
+  font-size: 9px;
+}
+.bfa-drop .bfa-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 30;
+  min-width: 230px;
+  padding: 8px 0;
+  background: #140e0a;
+  border: 1px solid #6b4e28;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.bfa-drop[open] .bfa-menu { display: block; }
+.bfa-menu a {
+  display: block;
+  padding: 8px 16px;
+  color: #f4efe6;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.bfa-menu a:hover { background: #3a2a18; color: #f0c36a; }
+
+.bfa-sub {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: 76px;
+  padding: 0 8px 0 236px;
+  background: linear-gradient(#4a3420, #2c1d12 58%, #24160e);
+  border-top: 1px solid #7a5a30;
+  border-bottom: 1px solid #c6a15a;
+  box-shadow: inset 0 1px 0 rgba(255, 220, 150, 0.18);
+}
+
+.bfa-logo {
+  position: absolute;
+  left: 18px;
+  top: -6px;
+  z-index: 4;
+  line-height: 0;
+}
+.bfa-logo img { height: 142px; width: auto; }
+
+.bfa-subnav {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+}
+.bfa-subnav > a,
+.bfa-sub .bfa-drop > summary {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  color: #e7c56a;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font: 700 13px/1 Arial, Helvetica, sans-serif;
+  border-left: 1px solid rgba(198, 161, 90, 0.28);
+}
+.bfa-subnav > a:hover,
+.bfa-sub .bfa-drop > summary:hover { color: #ffe7a8; }
+
+.bfa-search {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+.bfa-search input {
+  width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f4efe6;
+  font: 14px Arial, Helvetica, sans-serif;
+}
+.bfa-search:focus-within input {
+  width: 150px;
+  margin-right: 6px;
+  border-bottom: 1px solid #e7c56a;
+}
+.bfa-search button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10' cy='10' r='6' fill='none' stroke='%23e7c56a' stroke-width='2'/%3E%3Cpath d='M15 15l6 6' stroke='%23e7c56a' stroke-width='2'/%3E%3C/svg%3E") center / 18px no-repeat;
+  cursor: pointer;
+}
+
+.bfa-login {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  color: #e7c56a;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font: 700 13px/1 Arial, Helvetica, sans-serif;
+}
+
+.bfa-user { position: relative; }
+.bfa-user > summary {
+  list-style: none;
+  width: 76px;
+  height: 100%;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #7a3018;
+  cursor: pointer;
+}
+.bfa-user > summary::-webkit-details-marker { display: none; }
+.bfa-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #e7c56a;
+  background:
+    radial-gradient(circle at 50% 34%, #e7c56a 5px, transparent 6px),
+    radial-gradient(circle at 50% 78%, #e7c56a 12px, transparent 13px),
+    #2a2118;
+}
+.bfa-user-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 30;
+  width: 220px;
+  padding: 22px 16px 16px;
+  background: #120e0a;
+  border: 1px solid #3a2a18;
+  text-align: right;
+}
+.bfa-user[open] .bfa-user-menu { display: block; }
+.bfa-user-menu p { margin: 0 0 12px; color: #f4efe6; font-size: 13px; }
+.bfa-user-menu a {
+  display: block;
+  margin-top: 8px;
+  color: #e7c56a;
+  text-decoration: none;
+}
+
+.bfa-hero {
+  min-height: 560px;
+  background:
+    linear-gradient(90deg, #05070f 0%, #05070f 34%, rgba(5, 7, 15, 0.88) 48%, rgba(5, 7, 15, 0.2) 66%, rgba(5, 7, 15, 0) 78%),
+    url("/static/img/bfa/hero.jpg") right center / auto 115% no-repeat,
+    #05070f;
+}
+.bfa-hero-copy {
+  max-width: 980px;
+  padding: 64px 32px 80px 248px;
+}
+.bfa-hero h1 {
+  margin: 0 0 18px;
+  color: #fff;
+  font: 800 46px/1.05 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.01em;
+}
+.bfa-hero p {
+  max-width: 640px;
+  margin: 0 0 16px;
+  color: #d7c4a2;
+  font-size: 18px;
+  line-height: 1.45;
+}
+.bfa-explore {
+  color: #d7c4a2;
+  text-underline-offset: 3px;
+}
+.bfa-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+.bfa-buy,
+.bfa-trailer {
+  display: inline-block;
+  min-width: 150px;
+  padding: 14px 22px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font: 700 14px/1 Arial, Helvetica, sans-serif;
+}
+.bfa-buy {
+  background: #8b2c14;
+  color: #f0c14b;
+  border: 1px solid #c45520;
+}
+.bfa-trailer {
+  background: transparent;
+  color: #f0c14b;
+  border: 2px solid #c9a15a;
+}
+.bfa-buy:hover,
+.bfa-trailer:hover { color: #ffe7a8; }
+
+.bfa-rivets {
+  height: 18px;
+  background:
+    radial-gradient(circle at 10px 9px, #0a0a0a 2.5px, #5a5a5a 3.5px, transparent 4.5px) 0 0 / 22px 18px,
+    linear-gradient(#3a3a3a, #151515);
+  border-top: 2px solid #6a6a6a;
+  border-bottom: 2px solid #000;
+}
+
+.bfa-countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 16px 30px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(255, 220, 160, 0.16), transparent 42%),
+    linear-gradient(#7a5a3c, #5c4030 45%, #3d291c);
+  color: #fff;
+}
+.bfa-count-label { margin: 0; text-align: right; }
+.bfa-count-label strong {
+  display: block;
+  letter-spacing: 0.16em;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.bfa-count-label span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.bfa-countdown ol {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bfa-countdown li {
+  min-width: 58px;
+  padding: 6px 6px 4px;
+  text-align: center;
+  background: linear-gradient(#f8f8f8, #d0d0d0);
+  color: #222;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px #fff, 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.bfa-countdown b {
+  display: block;
+  font: 700 28px/1 Arial, Helvetica, sans-serif;
+}
+.bfa-countdown li span {
+  display: block;
+  margin-top: 2px;
+  color: #555;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bfa-latest,
+.bfa-news {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+}
+.bfa-latest h2,
+.bfa-news h2 { color: #f4e2b0; font-weight: 600; }
+.bfa-news-item {
+  padding: 12px 0;
+  border-top: 1px solid rgba(230, 195, 106, 0.25);
+}
+.bfa-news-item time {
+  display: block;
+  color: #c6a15a;
+  font-size: 13px;
+}
+.bfa-news-item h3 { margin: 4px 0; font-size: 18px; }
+.bfa-news-item p { margin: 0; color: #d7cbb8; }
+.bfa-realm { color: #d7cbb8; }
+
+.bfa-legal {
+  margin: 0;
+  padding: 18px;
+  text-align: center;
+  color: #b7ab9a;
+  font-size: 12px;
+}
+
+.bfa-sheet {
+  max-width: 1100px;
+  margin: 28px auto 40px;
+  padding: 28px 32px 40px;
+  background: #1a120c;
+  color: #f4efe6;
+  border: 1px solid #6b4e28;
+}
+.bfa-sheet h2,
+.bfa-sheet h3 { color: #f4e2b0; }
+.bfa-sheet a { color: #f0c36a; }
+.bfa-sheet p,
+.bfa-sheet li { color: #f0e6d6; }
+.bfa-sheet table.grid { width: 100%; border-collapse: collapse; }
+.bfa-sheet table.grid th,
+.bfa-sheet table.grid td {
+  padding: 8px 6px;
+  text-align: left;
+  border-bottom: 1px solid rgba(230, 195, 106, 0.25);
+}
+.bfa-sheet table.grid th { color: #e7c56a; }
+.bfa-sheet .up { color: #8dcc6a; }
+.bfa-sheet .down { color: #e07060; }
+.bfa-sheet input,
+.bfa-sheet textarea,
+.bfa-sheet select {
+  background: #120e0a;
+  color: #f4efe6;
+  border: 1px solid #6b4e28;
+  padding: 8px 10px;
+}
+.bfa-sheet button {
+  background: #8b2c14;
+  color: #f0c14b;
+  border: 1px solid #c9a15a;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.race-grid,
+.class-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.race-card,
+.class-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #24180f;
+  border: 1px solid #6b4e28;
+  color: #f4efe6;
+  text-decoration: none;
+}
+.bfa-sheet .trees { display: flex; flex-wrap: wrap; gap: 12px; }
+.bfa-sheet .tree { background: #120e0a; padding: 8px; border: 1px solid #6b4e28; }
+.bfa-sheet .talent-grid { display: grid; gap: 4px; }
+.bfa-sheet button.talent { display: block; width: 100%; text-align: left; }
+.paperdoll .doll { display: flex; flex-wrap: wrap; gap: 12px; }
+.doll-slot { margin: 4px 0; }
+.item-icon { width: 36px; height: 36px; vertical-align: middle; }
+
+body.era-bfa-forums { background: #1c140e; color: #f4efe6; }
+.bfa-fbar { background: rgba(20, 12, 8, 0.72); position: relative; z-index: 2; }
+.bfa-fhero {
+  position: relative;
+  min-height: 280px;
+  margin-top: -42px;
+  padding-top: 42px;
+  background: #1c140e url("/static/img/bfa/forums-hero.jpg") center 30% / cover no-repeat;
+}
+.bfa-fcrumb {
+  margin: 0;
+  padding: 14px 28px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
+  font-size: 14px;
+}
+.bfa-fcrumb a { color: #fff; text-decoration: none; }
+.bfa-fhero-hit {
+  position: absolute;
+  left: 18%;
+  top: 42%;
+  width: 280px;
+  height: 120px;
+  text-indent: -999px;
+  overflow: hidden;
+}
+.bfa-fmain { max-width: 1080px; margin: 0 auto; padding: 28px 20px 10px; }
+.bfa-fmain h1 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bfa-ftabs { display: flex; gap: 22px; margin-bottom: 18px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+.bfa-ftabs a { color: #d7cbb8; text-decoration: none; }
+.bfa-ftabs a.on { color: #fff; border-bottom: 2px solid #e7c56a; }
+.bfa-fcats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.bfa-fcard {
+  padding: 16px 18px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(230, 195, 106, 0.28);
+}
+.bfa-fcard h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.bfa-fcard p { margin: 0 0 8px; color: #cbbfae; font-size: 14px; }
+.bfa-flinks a,
+.bfa-flinks span {
+  display: inline-block;
+  margin: 3px 14px 3px 0;
+  color: #f7f1e6;
+  text-decoration: none;
+  font-size: 14px;
+}
+.bfa-flinks a::before,
+.bfa-flinks span::before {
+  content: "◆";
+  margin-right: 5px;
+  color: #e7c56a;
+  font-size: 10px;
+}
+.bfa-flinks a:hover { text-decoration: underline; }
+.bfa-realms { margin-top: 36px; }
+.bfa-realms h2 { letter-spacing: 0.08em; text-transform: uppercase; font-size: 18px; }
+.bfa-realms ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bfa-realms a { color: #f4efe6; text-decoration: none; font-size: 14px; }
+.bfa-realms a::before {
+  content: "●";
+  margin-right: 6px;
+  color: #e7c56a;
+  font-size: 10px;
+}
+.bfa-ffoot {
+  margin-top: 48px;
+  padding: 28px 16px 48px;
+  text-align: center;
+  color: #cbbfae;
+  font-size: 13px;
+}
+.bfa-fblizz {
+  color: #00aeef;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+}
+.bfa-fmeta a,
+.bfa-ffoot a { color: #f4efe6; }
+.bfa-frating {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 3px solid #fff;
+  color: #fff;
+  letter-spacing: 0.08em;
+}
+.bfa-ffoot ul { list-style: none; margin: 8px 0 0; padding: 0; }
+
+body.era-bfa-shop { background: #071833; color: #fff; }
+.bfa-shop-bar {
+  background: #071833;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+.bfa-shop-bar a { color: #d5e6f5; text-decoration: none; }
+.bfa-shop-bar input {
+  width: 240px;
+  padding: 7px 10px;
+  border: 1px solid #1d4e86;
+  background: #0b2144;
+  color: #fff;
+}
+.bfa-shop-banner img { display: block; width: 100%; height: 118px; object-fit: cover; object-position: center; }
+.bfa-shop-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+  padding: 12px 28px;
+  background: #0c2248;
+  font-size: 14px;
+}
+.bfa-shop-filters a { color: #d5e6f5; text-decoration: none; }
+.bfa-shop-filters span { margin-left: 8px; color: #9fb4cc; }
+.bfa-shop-grid {
+  display: grid;
+  grid-template-columns: 220px 240px 240px;
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+}
+.bfa-shop-grid header h1 { margin: 0 0 8px; font-size: 28px; font-weight: 500; }
+.bfa-shop-grid header p { margin: 0; color: #c5d4e6; }
+.bfa-sku {
+  background: #0a1c38;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.bfa-sku img { display: block; width: 100%; height: 150px; object-fit: cover; object-position: center 70%; }
+.bfa-sku h2,
+.bfa-sku p { margin: 0 12px 8px; }
+.bfa-sku h2 { margin-top: 8px; font-size: 18px; }
+.bfa-sku-mark {
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 8px 12px;
+  border-radius: 50%;
+  background: #c9a15a;
+  color: #1a120c;
+  text-align: center;
+  font-weight: 800;
+  line-height: 28px;
+}
+.bfa-sku-lead { color: #f0b429; font-size: 14px; }
+.bfa-sku-kind,
+.bfa-price { color: #c5d4e6; font-size: 14px; }
+.bfa-sku a { color: #8ec8ff; }
+
+@media (max-width: 900px) {
+  .bfa-sub { padding-left: 12px; flex-wrap: wrap; }
+  .bfa-logo { position: static; }
+  .bfa-logo img { height: 72px; }
+  .bfa-hero-copy { padding: 28px 16px 48px; }
+  .bfa-hero h1 { font-size: 32px; }
+  .bfa-fcats,
+  .bfa-realms ul,
+  .bfa-shop-grid { grid-template-columns: 1fr; }
+}

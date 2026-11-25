@@ -1,0 +1,199 @@
+/* Shop shelf only. Linked after the era shell so these rules win on /shop. */
+
+section.shop-shelf {
+  box-sizing: border-box;
+  padding: 16px 18px 18px;
+}
+section.shop-shelf h2 { margin: 0 0 8px; }
+section.shop-shelf .shop-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0 16px;
+}
+section.shop-shelf .shop-item {
+  flex: 1 1 200px;
+  margin: 0;
+  padding: 12px;
+  box-sizing: border-box;
+}
+section.shop-shelf .shop-item h3 { margin: 0 0 6px; }
+section.shop-shelf .shop-item p { margin: 0; }
+section.shop-shelf > p { margin: 8px 0; }
+
+/* Alpha and the 2006 shell: a parchment panel on the community page. */
+section.shop-shelf.shop-alpha,
+section.shop-shelf.shop-vanilla,
+section.shop-shelf.shop-tbc,
+section.shop-shelf.shop-wotlk {
+  background: #E7CFA3 url("/static/img/parchment.jpg");
+  background-size: 512px;
+  color: #1a1208;
+  border: 1px solid #996D11;
+  box-shadow: inset 0 0 0 1px #f3d789;
+}
+section.shop-shelf.shop-alpha h2,
+section.shop-shelf.shop-alpha h3,
+section.shop-shelf.shop-alpha p,
+section.shop-shelf.shop-vanilla h2,
+section.shop-shelf.shop-vanilla h3,
+section.shop-shelf.shop-vanilla p,
+section.shop-shelf.shop-tbc h2,
+section.shop-shelf.shop-tbc h3,
+section.shop-shelf.shop-tbc p,
+section.shop-shelf.shop-wotlk h2,
+section.shop-shelf.shop-wotlk h3,
+section.shop-shelf.shop-wotlk p {
+  color: #1a1208;
+}
+section.shop-shelf.shop-alpha .shop-item,
+section.shop-shelf.shop-vanilla .shop-item,
+section.shop-shelf.shop-tbc .shop-item,
+section.shop-shelf.shop-wotlk .shop-item {
+  background: rgba(255, 248, 230, .55);
+  border: 1px solid #996D11;
+}
+section.shop-shelf.shop-alpha a.cta.buy,
+section.shop-shelf.shop-vanilla a.cta.buy,
+section.shop-shelf.shop-tbc a.cta.buy,
+section.shop-shelf.shop-wotlk a.cta.buy {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 6px 16px;
+  background: #f3e2b8;
+  color: #1a1208;
+  border: 1px solid #996D11;
+  border-radius: 0;
+  text-decoration: none;
+  text-transform: none;
+  font: 700 12px/1.2 "Trebuchet MS", sans-serif;
+}
+
+/* Cataclysm through Warlords: black Battle.net panel, gold bar. */
+section.shop-shelf.shop-cata,
+section.shop-shelf.shop-mop,
+section.shop-shelf.shop-wod {
+  background: #000;
+  color: #efc9a0;
+  border: 1px solid #3a2818;
+}
+section.shop-shelf.shop-cata h2,
+section.shop-shelf.shop-cata h3,
+section.shop-shelf.shop-mop h2,
+section.shop-shelf.shop-mop h3,
+section.shop-shelf.shop-wod h2,
+section.shop-shelf.shop-wod h3 {
+  color: #ffb100;
+}
+section.shop-shelf.shop-cata .shop-item,
+section.shop-shelf.shop-mop .shop-item,
+section.shop-shelf.shop-wod .shop-item {
+  background: #1a0f08;
+  border: 1px solid #5a3214;
+}
+section.shop-shelf.shop-cata a.cta.buy,
+section.shop-shelf.shop-mop a.cta.buy,
+section.shop-shelf.shop-wod a.cta.buy {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 4px;
+  padding: 12px 16px;
+  background: #ffb100;
+  color: #1a0f08;
+  border: 0;
+  border-radius: 0;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font: 700 14px/1 Arial, sans-serif;
+}
+
+/* Legion, Battle for Azeroth, Shadowlands: dark panel, wide red bar. */
+section.shop-shelf.shop-legion,
+section.shop-shelf.shop-bfa,
+section.shop-shelf.shop-shadowlands {
+  color: #f4ece4;
+  border: 1px solid #3a2a22;
+}
+section.shop-shelf.shop-legion {
+  background: #10160f;
+  color: #e7f6e4;
+  border-color: #3d6a28;
+}
+section.shop-shelf.shop-bfa {
+  background: #1a120e;
+  color: #f6ecdf;
+  border-color: #8a5a20;
+}
+section.shop-shelf.shop-shadowlands {
+  background: #1a1024;
+  color: #f3e9ff;
+  border-color: #6a3a90;
+}
+section.shop-shelf.shop-legion .shop-item,
+section.shop-shelf.shop-bfa .shop-item,
+section.shop-shelf.shop-shadowlands .shop-item {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+section.shop-shelf.shop-legion a.cta.buy,
+section.shop-shelf.shop-bfa a.cta.buy,
+section.shop-shelf.shop-shadowlands a.cta.buy {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 14px 20px;
+  background: #9f1600;
+  color: #fff8e8;
+  border: 1px solid #ea3012;
+  border-radius: 0;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font: 700 16px/1 Arial, sans-serif;
+}
+
+/* Dragonflight through Midnight: a dark band across the content column.
+   Gen4 .cnt pads 22px on the sides and 18px on the bottom. */
+section.shop-shelf.shop-dragonflight,
+section.shop-shelf.shop-warwithin,
+section.shop-shelf.shop-midnight {
+  width: auto;
+  margin: 0 -22px -18px;
+  padding: 28px 32px 32px;
+  border: 0;
+  border-radius: 0;
+  background: #070d18;
+  color: #e8eef8;
+}
+section.shop-shelf.shop-dragonflight { background: #07141a; }
+section.shop-shelf.shop-warwithin { background: #120e0a; }
+section.shop-shelf.shop-midnight { background: #0c0618; }
+section.shop-shelf.shop-dragonflight .shop-item,
+section.shop-shelf.shop-warwithin .shop-item,
+section.shop-shelf.shop-midnight .shop-item {
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 12px;
+}
+section.shop-shelf.shop-dragonflight a.cta.buy,
+section.shop-shelf.shop-warwithin a.cta.buy,
+section.shop-shelf.shop-midnight a.cta.buy {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 12px 28px;
+  border: 0;
+  border-radius: 999px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  font: 700 14px/1 "Helvetica Neue", Arial, sans-serif;
+}
+section.shop-shelf.shop-dragonflight a.cta.buy { background: #5ee0c5; color: #06221e; }
+section.shop-shelf.shop-warwithin a.cta.buy { background: #e6b15a; color: #1a1208; }
+section.shop-shelf.shop-midnight a.cta.buy { background: #c9a0ff; color: #160c28; }

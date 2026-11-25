@@ -1,0 +1,7 @@
+libmysqlclient_21.0 {
+  global:
+    mysql_get_client_info;
+    mysql_get_client_version;
+    mysql_get_server_info;
+    mysql_get_server_version;
+};

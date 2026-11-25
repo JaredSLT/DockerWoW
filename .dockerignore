@@ -1,0 +1,14 @@
+# Keep build context small — sources are cloned from Gitea during the image build
+clients/**
+addons/**
+servers/**
+**/*.mpq
+**/*.MPQ
+**/*.wdb
+**/*.idx
+**/*.index
+.git
+**/Cache/**
+**/Logs/**
+**/WTF/**
+**/Interface/**

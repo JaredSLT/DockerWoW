@@ -1,0 +1,151 @@
+@import url("/static/css/gen4.css");
+
+/* Legion through Shadowlands: worldofwarcraft.com.
+   Measurements are from the archived stylesheets, not the wood/logo images
+   (those stay remote). Navbar.is-compact desktop bar is 40px #0b0d12.
+   SiteNav-bar is #211510; at 1280px the menu is 80px (Legion wow.css) or
+   65px (BfA/Shadowlands page CSS), under a 40px top margin. */
+
+body.wowcom {
+  background: #000;
+  color: var(--ink, #fff);
+}
+body.wowcom .shell { width: auto; max-width: none; }
+body.wowcom .frame,
+body.wowcom .iron-l,
+body.wowcom .iron-r { display: none; }
+body.wowcom table.grid { display: table; width: 100%; border-collapse: collapse; }
+body.wowcom table.grid tr { display: table-row; }
+body.wowcom table.grid th,
+body.wowcom table.grid td { display: table-cell; }
+
+.wowcom-head { position: relative; z-index: 30; background: #000; }
+
+.blizz-bar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 40px;
+  background: #0b0d12;
+  box-sizing: border-box;
+}
+body.wowcom .blizz-mark {
+  color: #009ae4;
+  text-decoration: none;
+  font: 700 15px/40px Helvetica, Arial, sans-serif;
+  margin-right: 20px;
+}
+.blizz-links { display: flex; align-items: center; min-width: 0; }
+body.wowcom .blizz-links a,
+body.wowcom .blizz-account,
+body.wowcom .blizz-bar .who,
+body.wowcom .blizz-bar .who a {
+  color: rgba(255, 255, 255, .7);
+  text-decoration: none;
+  font: 15px/40px Helvetica, Arial, sans-serif;
+  padding: 0 10px;
+  background: transparent;
+}
+body.wowcom .blizz-account,
+body.wowcom .blizz-bar .who { margin-left: auto; padding-right: 0; }
+body.wowcom .blizz-links a:hover,
+body.wowcom .blizz-account:hover,
+body.wowcom .blizz-bar .who a:hover { color: #fff; }
+
+/* 40px margin + bar matches .SiteNav-sticky (120px Legion, 105px later) at 1280. */
+.wow-sub { padding: 40px 30px 0; background: #000; }
+.wow-sub-bar {
+  display: flex;
+  align-items: center;
+  height: 65px;
+  padding: 0 8px 0 12px;
+  background: #211510;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+  border-top: 1px solid rgba(68, 47, 38, .5);
+  border-bottom: 1px solid rgba(51, 33, 25, .5);
+  box-sizing: border-box;
+}
+body.legion .wow-sub-bar { height: 80px; }
+body.wowcom .sub-logo {
+  flex: 0 0 auto;
+  margin-right: 12px;
+  color: #f8b700;
+  text-decoration: none;
+  font: 700 18px/1 "Times New Roman", Times, serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.subnav, .sub-right { display: flex; align-items: center; min-width: 0; }
+.sub-right { margin-left: auto; }
+body.wowcom .subnav a,
+body.wowcom .sub-login,
+body.wowcom .sub-subscribe,
+body.wowcom a.try {
+  color: #f8b700;
+  text-decoration: none;
+  font: 700 1.2rem/65px "Open Sans", Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  padding: 0 10px;
+  background: transparent;
+  border: 0;
+  white-space: nowrap;
+}
+body.legion .subnav a,
+body.legion .sub-login,
+body.legion a.try { line-height: 80px; }
+body.wowcom .subnav a:hover,
+body.wowcom .sub-login:hover,
+body.wowcom .sub-subscribe:hover,
+body.wowcom a.try:hover { color: #fff; }
+
+/* Captured ghost / purchase buttons. Labels stay the markup's Buy Now / Learn More. */
+body.wowcom a.cta {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+body.wowcom a.cta.buy {
+  background: rgba(159, 22, 0, .6);
+  color: #f7b10a;
+  border: 1px solid #ea3012;
+}
+body.wowcom a.cta.learn {
+  background: rgba(0, 0, 0, .4);
+  color: #f7b10a;
+  border: 1px solid #000;
+}
+body.wowcom a.cta.buy:hover { background: #9f1600; }
+body.wowcom a.cta.learn:hover { background: #b06601; color: #ffd36b; }
+
+body.legion {
+  --accent: #b6f25c; --line: #3d6a28; --panel: #10160f; --field: #0c120b;
+  --bg: #070c08; --ink: #e7f6e4; --muted: #b7d4b4; --date: #c6f5a4;
+}
+
+@media (max-width: 969px) {
+  /* Live SiteNav is display:none below 900px (Legion) / 970px (BfA, Shadowlands).
+     Keep the links visible so Story and Shop stay reachable without the modal.
+     The subnav is its own flex row; without a wrap it stays one nowrap line
+     and BfA/Shadowlands (Classic + Subscribe) overflow a 390px viewport. */
+  .blizz-bar, .wow-sub, .wow-sub-bar { max-width: 100%; }
+  .blizz-bar { height: auto; min-height: 48px; padding: 0 12px; flex-wrap: wrap; }
+  .blizz-links, .subnav, .sub-right { flex-wrap: wrap; min-width: 0; }
+  .subnav { flex: 1 1 160px; }
+  body.wowcom .blizz-mark,
+  body.wowcom .blizz-links a,
+  body.wowcom .blizz-account,
+  body.wowcom .blizz-bar .who,
+  body.wowcom .blizz-bar .who a { line-height: 48px; }
+  body.wowcom .blizz-account,
+  body.wowcom .blizz-bar .who { margin-left: 0; }
+  .wow-sub { padding: 8px 10px 0; }
+  .wow-sub-bar { height: auto; flex-wrap: wrap; padding: 6px 8px; }
+  body.legion .wow-sub-bar { height: auto; }
+  body.wowcom .subnav a,
+  body.wowcom .sub-login,
+  body.wowcom .sub-subscribe,
+  body.wowcom a.try,
+  body.legion .subnav a,
+  body.legion .sub-login,
+  body.legion a.try { line-height: 36px; font-size: 13px; padding: 0 8px; }
+  .sub-right { margin-left: 0; }
+}

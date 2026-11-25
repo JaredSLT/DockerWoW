@@ -1,0 +1,600 @@
+/* March 2010 community plate, Wrath forums, Armory, and the 2008 splash. */
+
+body.era-wotlk {
+  margin: 0;
+  color: #d7e2ea;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+  background: #02060c;
+}
+
+body.era-wotlk:not(.era-wotlk-account):not(.era-wotlk-signup):not(.era-wotlk-forums):not(.era-wotlk-armory):not(.era-wotlk-wrath):not(.era-wotlk-portal) {
+  min-width: 1040px;
+  background:
+    linear-gradient(90deg, rgba(2, 6, 14, 0.55), rgba(2, 6, 14, 0.78) 16%, rgba(2, 6, 14, 0.82) 84%, rgba(2, 6, 14, 0.55)),
+    url("/static/img/hero-wotlk.jpg") center top / cover no-repeat fixed;
+}
+
+a { color: #8ec6ff; }
+img { border: 0; }
+
+.wlk-top {
+  background: #020814;
+  border-bottom: 1px solid #1a3a58;
+}
+.wlk-top-inner {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 4px 8px;
+  text-align: right;
+  color: #6a8298;
+  font-size: 11px;
+}
+.wlk-top a { color: #d7e7f6; text-decoration: none; margin: 0 4px; }
+.wlk-top a:hover { color: #fff; }
+
+.wlk {
+  width: 1000px;
+  margin: 0 auto 28px;
+  background: #07111c;
+  border: 1px solid #8a7340;
+  box-shadow: 0 0 0 1px #000, 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.wlk-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 8px 10px 0;
+}
+.wlk-logo {
+  width: 190px;
+  flex: none;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1;
+  padding-bottom: 4px;
+}
+.wlk-logo .world {
+  display: block;
+  color: #f0d78c;
+  font: 700 11px Georgia, "Times New Roman", serif;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.wlk-logo .wm {
+  display: block;
+  color: #f6e7b0;
+  font: 700 20px Georgia, "Times New Roman", serif;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 0 #3a2a08, 0 0 8px rgba(240, 200, 80, 0.45);
+}
+.wlk-logo .ribbon {
+  display: block;
+  margin-top: 3px;
+  color: #d5ecff;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+}
+.wlk-search { margin-left: auto; display: flex; }
+.wlk-search input {
+  width: 210px;
+  background: #0c0c0c;
+  color: #eee;
+  border: 1px solid #5a5348;
+  padding: 3px 6px;
+}
+.wlk-search button {
+  background: #6e1414;
+  color: #f6e2a8;
+  border: 1px solid #a07830;
+  font-weight: 700;
+}
+.wlk-lang, .wlk-who {
+  color: #c5d4e2;
+  font-size: 11px;
+  padding: 3px 6px;
+  border: 1px solid #3a4654;
+  background: #0c1218;
+  margin-bottom: 1px;
+}
+.wlk-who a, .wlk-lang { color: #d5e6f4; }
+
+.wlk-cols { display: flex; align-items: stretch; padding: 6px; gap: 6px; }
+.wlk-menu { width: 190px; flex: none; }
+.wlk-center { flex: 1; min-width: 0; }
+.wlk-rail { width: 196px; flex: none; }
+
+.wlk-sec { margin: 0 0 3px; background: #0b1c33; border: 1px solid #1d4e7a; }
+.wlk-sec summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  cursor: pointer;
+  color: #f0d78c;
+  font: 700 11px Arial, sans-serif;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  background: linear-gradient(#1a4578, #0c2748);
+}
+.wlk-sec summary::-webkit-details-marker { display: none; }
+.wlk-sec summary i::before { content: "+"; color: #f6e7b0; font-style: normal; }
+.wlk-sec[open] summary i::before { content: "–"; }
+.wlk-sub a {
+  display: block;
+  padding: 1px 8px 1px 14px;
+  color: #d5e6f6;
+  text-decoration: none;
+  font-size: 11px;
+}
+.wlk-sub a:hover { background: #14345c; color: #fff; }
+
+.wlk-parch {
+  background: #f4e6c4 url("/static/img/parchment.jpg");
+  background-size: cover;
+  color: #2a2116;
+  min-height: 560px;
+  padding: 8px 10px 16px;
+  border: 1px solid #c6b184;
+}
+.wlk-banner {
+  margin: 0 0 8px;
+  padding: 4px 8px;
+  background: linear-gradient(#6e1818, #3d0c0c);
+  color: #f6e2a8;
+  font: 700 14px Georgia, "Times New Roman", serif;
+}
+.wlk-parch a { color: #1a3f72; }
+.wlk-parch h2, .wlk-parch h3 { color: #2c4d7a; }
+.wlk-parch h2 { margin: 0 0 6px; font-size: 16px; }
+.wlk-parch table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.28); }
+.wlk-parch th, .wlk-parch td { border-bottom: 1px solid #c8b48a; padding: 4px 6px; text-align: left; vertical-align: top; }
+.wlk-parch .up { color: #1d6b2f; font-weight: 700; }
+.wlk-parch .down { color: #8b1e1e; font-weight: 700; }
+.wlk-parch .hero, .wlk-parch img { max-width: 100%; height: auto; }
+.wlk-parch .trees { display: flex; gap: 8px; overflow-x: auto; }
+.wlk-parch .talent-grid { display: grid; grid-template-columns: repeat(4, 46px); grid-auto-rows: 54px; }
+.wlk-parch .talent { position: relative; background: transparent; border: 0; padding: 0; }
+.wlk-parch .twocol { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 12px; }
+.wlk-parch .race-grid, .wlk-parch .class-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.wlk-parch .cta {
+  display: inline-block;
+  background: #6e1414;
+  color: #f6e2a8;
+  padding: 3px 8px;
+}
+.wlk-legal {
+  margin: 0;
+  padding: 6px 10px 8px;
+  text-align: center;
+  color: #8aa0b4;
+  font-size: 11px;
+}
+
+.wlk-hero {
+  position: relative;
+  height: 196px;
+  margin-bottom: 8px;
+  background: linear-gradient(100deg, #2a1438 0%, #e7b15a 42%, #f7e2b4 100%);
+  border: 1px solid #b0893e;
+  overflow: hidden;
+}
+.slide-gift {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+  padding: 12px 16px 28px;
+  text-decoration: none;
+  color: #3a2808;
+}
+.gift-box {
+  width: 112px;
+  height: 146px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px;
+  color: #f6e7b0;
+  background: linear-gradient(#24365c, #10182c);
+  border: 3px solid #e2c36a;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+  font: 700 14px Georgia, serif;
+}
+.hero-copy strong {
+  display: block;
+  font: 700 30px/1 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.5px;
+  color: #6a4a08;
+  text-shadow: 0 1px 0 #fff2cc;
+}
+.hero-copy em {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #2a2116;
+}
+.slide-fall {
+  position: absolute;
+  left: 12px;
+  bottom: 6px;
+  color: #f4f7fb;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 0 1px 3px #000;
+}
+.hero-nav {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: #d7b15a;
+  color: #3a2808;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+}
+
+.wlk-poll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 5px;
+  background: #f8efd6;
+  border: 1px solid #c9b48a;
+}
+.wlk-poll .bar {
+  flex: 1;
+  height: 18px;
+  background: #efe4c8;
+  border: 1px solid #b7a47a;
+}
+.wlk-poll .bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#e7f3fb, #8fb4d4);
+  text-align: center;
+  font-size: 11px;
+  line-height: 18px;
+}
+.poll-name {
+  background: #ead7a6;
+  border: 1px solid #b0893e;
+  padding: 3px 10px;
+  font-weight: 700;
+  color: #5a3e10;
+}
+.wlk-story { margin-bottom: 10px; }
+.wlk-story .by, .wlk-article .by, .wlk-realm { color: #6a5a40; font-size: 11px; }
+.wlk-more ul { margin: 0; padding: 0; list-style: none; }
+.wlk-more li { padding: 2px 0; border-top: 1px solid rgba(120, 90, 40, 0.25); }
+.wlk-more li span { display: inline-block; width: 4.5rem; color: #6a5a40; }
+
+.ad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  margin: 0 0 6px;
+  padding: 6px;
+  border: 1px solid #8a6a2a;
+  text-align: center;
+  text-decoration: none;
+  color: #f6e2a8;
+  font-weight: 700;
+}
+.ad-trial { background: linear-gradient(#16365f, #091525); }
+.ad-gift { background: linear-gradient(#6a3410, #241006); color: #f0d078; }
+.ad-cata { background: linear-gradient(#4a140c, #140606); color: #ffb45a; }
+.ad-raf { height: 110px; background: linear-gradient(#1a2838, #3a2a10); }
+.ql h3 {
+  margin: 8px 0 4px;
+  color: #f0d78c;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.ql a {
+  display: block;
+  color: #9fd0ff;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 2px 0;
+}
+.ql a::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #d8f4ff, #1d7ec4);
+}
+
+/* Forums. */
+body.era-wotlk-forums {
+  background: #000 url("/static/img/hero-wotlk.jpg") center top / cover no-repeat fixed;
+  color: #d5dbe3;
+}
+.fi { width: 960px; margin: 0 auto 40px; }
+.site-links { text-align: right; padding: 8px 4px; }
+.site-links a { color: #f0d78c; text-decoration: none; margin-left: 14px; }
+.fi-logo { text-align: center; text-decoration: none; }
+.fi-logo a { color: #f6e7b0; text-decoration: none; }
+.fi-logo .world { letter-spacing: 3px; font-size: 12px; }
+.fi-logo .wm { display: block; font: 700 28px Georgia, serif; text-shadow: 0 0 12px rgba(80, 160, 255, 0.7); }
+.fi-logo .ribbon { color: #b9dcff; letter-spacing: 1px; }
+.fi-lang { text-align: right; color: #9ab; font-size: 11px; }
+.fi-sheet {
+  background: rgba(6, 6, 8, 0.92);
+  border: 1px solid #3d5168;
+  padding: 16px 22px 24px;
+  box-shadow: 0 0 24px rgba(40, 120, 200, 0.25);
+}
+.fi-sheet h1 {
+  margin: 0;
+  color: #f2e2a8;
+  font: 700 22px Georgia, serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.fi-welcome { color: #f4f0e4; font-weight: 700; }
+.fi-lead { color: #c5ced8; max-width: 640px; }
+.fi-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; }
+.fi-board {
+  display: block;
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  text-decoration: none;
+  background: #10141a;
+  border: 1px solid #2a3340;
+}
+.fi-board strong { display: block; color: #8ec6ff; }
+.fi-board span { display: block; color: #9aa6b2; font-size: 11px; }
+.fi-fold { margin-top: 6px; background: #1a222c; border: 1px solid #314050; }
+.fi-fold summary { padding: 6px 10px; cursor: pointer; color: #d5e6f6; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.fi-fold p, .fi-links { padding: 0 10px 8px; }
+.fi-links a, .fi-extra a { color: #8ec6ff; margin-right: 12px; }
+.fi-legal { text-align: center; color: #9ab; font-size: 11px; }
+.fi-board-page .threads, .fi .threads { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.threads th { background: #1c2430; color: #f0d78c; text-align: left; padding: 4px 6px; }
+.threads td { padding: 4px 6px; border-top: 1px solid #2a3038; }
+.threads tr:nth-child(even) td { background: #12161c; }
+.threads .subj a { color: #e4c15a; text-decoration: none; }
+.threads .who { color: #7dcea0; }
+.threads .who.blizz { color: #8ec6ff; }
+.threads .num, .threads .when { text-align: right; color: #c5ced8; }
+.board-tools, .quick, .crumb { color: #c5ced8; }
+.quick input, .fi-post input, .fi-post textarea {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 3px;
+  box-sizing: border-box;
+}
+.fi-post { margin-top: 12px; }
+.board-side {
+  margin-top: 12px;
+  padding: 8px;
+  background: #1a120c;
+  border: 1px solid #6a4a20;
+  color: #f0d78c;
+}
+.post { margin: 8px 0; padding: 8px; background: #14181e; border: 1px solid #2c3644; }
+.post header { color: #8ec6ff; margin-bottom: 4px; }
+.post pre { white-space: pre-wrap; font: 12px/1.45 Arial, sans-serif; margin: 0; }
+.pager a { margin-right: 6px; }
+.pager a.on { color: #f0d78c; }
+
+/* Armory. */
+body.era-wotlk-armory {
+  background:
+    radial-gradient(ellipse at 0% 40%, rgba(40, 90, 140, 0.35), transparent 40%),
+    radial-gradient(ellipse at 100% 50%, rgba(20, 60, 110, 0.4), transparent 42%),
+    #05080e;
+  color: #e6d7b4;
+}
+.arm { width: 880px; margin: 0 auto 32px; }
+.arm-top { text-align: right; padding-top: 8px; }
+.arm-top a { color: #f0d78c; }
+.arm-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.arm-logo { text-decoration: none; text-align: center; color: #f6e7b0; }
+.arm-logo .world { display: block; letter-spacing: 3px; font-size: 11px; }
+.arm-logo .wm { display: block; font: 700 26px Georgia, serif; }
+.arm-logo .arm { display: block; color: #e4c15a; letter-spacing: 2px; font: 700 14px Georgia, serif; }
+.arm-login { color: #f0d040; font-weight: 700; }
+.arm-tabs { display: flex; gap: 8px; margin: 8px 0; }
+.arm-tabs a { color: #f6e2a8; text-decoration: none; padding: 2px 8px; background: #6e1414; border: 1px solid #a07830; }
+.arm-tabs a.on { background: #c9a24a; color: #2a1c08; }
+.arm-q { display: flex; gap: 6px; margin-bottom: 8px; }
+.arm-q input { flex: 1; background: #fff; border: 1px solid #888; padding: 4px; }
+.arm-q button, .arm-landing button { background: #7a1820; color: #f6e2a8; border: 1px solid #e4c15a; font-weight: 700; }
+.arm-landing, .arm-block, .results, .sheet {
+  background: #e7d3a4 url("/static/img/parchment.jpg");
+  background-size: cover;
+  color: #2a2116;
+  border: 8px solid #5c4018;
+  box-shadow: inset 0 0 0 2px #e6c98a, 0 0 0 1px #000;
+  padding: 16px;
+}
+.arm-landing { text-align: center; margin-top: 12px; }
+.arm-landing h1, .arm-block h1, .sheet h2 { color: #6a3a10; }
+.arm-landing form { margin: 12px auto; display: flex; justify-content: center; gap: 6px; }
+.arm-landing input { width: 220px; background: #fff; border: 1px solid #335; padding: 4px; }
+.arm-landing ul, .arm-block ul { text-align: left; }
+.arm-err { color: #8b1e1e; font-weight: 700; }
+.results table, .arm-block table, .stats table { width: 100%; border-collapse: collapse; }
+.results th { background: #c9a24a; color: #2a1c08; padding: 4px; text-align: left; }
+.results td { padding: 3px 4px; border-bottom: 1px solid #d8c498; background: rgba(255, 248, 220, 0.55); }
+.results a { color: #6a3a10; }
+.rel { display: inline-block; width: 72px; height: 10px; background: #d8c498; border: 1px solid #8a6a2a; }
+.rel span { display: block; height: 100%; background: #3d8ec9; }
+.sheet-btns, .sheet-tabs { margin-bottom: 8px; }
+.arm-btn, .sheet-tabs a, .sheet-tabs span {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 2px 8px;
+  background: #d8c498;
+  border: 1px solid #8a6a2a;
+  color: #3a2808;
+  text-decoration: none;
+}
+.arm-btn.on, .sheet-tabs .on { background: #8b2e16; color: #f6e2a8; }
+.arm-btn.off { opacity: 0.55; }
+.sheet-id { display: flex; gap: 12px; align-items: center; background: linear-gradient(#6e1818, #3a0c0c); color: #f6e2a8; padding: 8px; }
+.sheet-id h2, .sheet-id p { margin: 0; color: #f6e2a8; }
+.sheet-id a { color: #f0d78c; }
+.sheet-id .lvl {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #111;
+  color: #f6e2a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.score { margin-left: auto; text-align: right; }
+.score strong { display: block; font-size: 22px; }
+.doll { display: grid; grid-template-columns: 150px 1fr 150px 190px; gap: 8px; margin-top: 8px; }
+.slot { display: flex; gap: 4px; align-items: center; min-height: 28px; font-size: 11px; }
+.socket { width: 28px; height: 28px; background: #1a1208; border: 1px solid #6a5428; display: inline-block; }
+.model {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1a1208;
+  border: 1px solid #6a5428;
+  text-align: center;
+}
+.side h3, .stats h3 { margin: 8px 0 4px; color: #6a3a10; font-size: 12px; }
+.weapons { display: flex; gap: 8px; margin-top: 8px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stats .updated { grid-column: 1 / -1; color: #6a5a40; }
+.stats th { text-align: left; font-weight: 400; }
+.sheet section { margin-top: 8px; }
+
+/* Expansion splash and Battle.net portal. */
+body.era-wotlk-wrath {
+  margin: 0;
+  color: #d5e8f8;
+  background: #02060c url("/static/img/hero-wotlk.jpg") right center / cover no-repeat fixed;
+}
+.wr-nav { text-align: center; padding: 10px; background: rgba(0, 0, 0, 0.45); }
+.wr-nav a { color: #f6e7b0; text-decoration: none; margin: 0 8px; letter-spacing: 1px; font-size: 12px; }
+.wr-panel {
+  width: 440px;
+  margin: 28px 6vw 16px;
+  padding: 16px 18px 22px;
+  background: rgba(6, 16, 28, 0.84);
+  border: 1px solid #7f97ab;
+  box-shadow: 0 0 24px rgba(80, 180, 255, 0.2);
+}
+.wr-logo { text-align: center; color: #f6e7b0; font: 700 18px Georgia, serif; }
+.wr-logo em { display: block; font-style: normal; color: #b9dcff; font-size: 13px; }
+.wr-watch a, .wr-pills a {
+  display: inline-block;
+  margin: 4px 6px 4px 0;
+  color: #f6e2a8;
+}
+.wr h1 { font-size: 20px; }
+.wr-back, .wr-legal { text-align: center; }
+
+body.era-wotlk-portal {
+  margin: 0;
+  color: #d5e6f8;
+  background:
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 85% 60%, #fff, transparent),
+    radial-gradient(ellipse at 75% 10%, #6a78c8, #140820 48%, #07060d);
+}
+.portal { width: 920px; margin: 0 auto; padding: 28px 0 40px; }
+.portal-logo, .bn-logo { font: 700 28px Arial, sans-serif; letter-spacing: 2px; color: #f4f7fb; text-decoration: none; }
+.portal-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  margin-top: 18px;
+  padding: 22px;
+  background: rgba(8, 28, 48, 0.72);
+  border: 1px solid #3d7eb0;
+}
+.portal-shot { background: #071018; border: 1px solid #24506e; padding: 12px; min-height: 160px; }
+.portal h1 { margin: 0 0 8px; font-size: 28px; }
+.kicker { letter-spacing: 2px; text-transform: uppercase; color: #9fd0ff; }
+.portal-cta, .acct-cta {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: #f5b400;
+  color: #1a1a1a;
+  font-weight: 700;
+  text-decoration: none;
+}
+.portal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.portal-row a {
+  display: block;
+  padding: 14px;
+  background: #101820;
+  border: 1px solid #24506e;
+  color: #d5e6f8;
+  text-decoration: none;
+}
+.portal-row span { display: block; color: #8ec6ff; letter-spacing: 1px; }
+.portal footer { color: #9ab; font-size: 12px; }
+
+/* Account frames. Form colors live in account-wotlk.css. */
+body.era-wotlk-account {
+  background:
+    radial-gradient(ellipse at 80% 0%, #3a4e88, transparent 50%),
+    #070b16;
+  color: #d5e6f8;
+}
+.bn { width: 920px; margin: 0 auto; padding: 16px 0 32px; }
+.bn-bar { display: flex; justify-content: space-between; align-items: center; }
+.bn-swirl {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: middle;
+  border: 3px solid #3ec6ff;
+  border-radius: 50%;
+  box-shadow: inset 8px -6px 0 #1a6cff;
+}
+.bn-welcome { margin: 0; font-size: 16px; }
+.bn-lang, .bn-user { text-align: right; color: #9fd0ff; }
+.bn-user a, .bn-foot a { color: #8ec6ff; }
+.bn-panel {
+  margin-top: 14px;
+  padding: 12px 18px 18px;
+  background: linear-gradient(#12375a, #071018 42%, #0b1c2c);
+  border: 1px solid #2a6ea0;
+}
+.bn-foot { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 12px; color: #9ab; font-size: 11px; }
+.bn-foot p { width: 100%; margin: 0; }
+
+body.era-wotlk-signup { background: #000; color: #2a2116; }
+.su-page { width: 640px; margin: 24px auto 40px; }
+.su-sheet {
+  background: #e7d3a1 url("/static/img/parchment.jpg");
+  background-size: cover;
+  border: 12px solid #4a3420;
+  box-shadow: inset 0 0 0 3px #c6a56a;
+  padding: 18px 22px 24px;
+}
+.su-mark { text-align: center; font: 700 18px Georgia, serif; color: #6a3a10; }
+.su-legal { text-align: center; color: #c8b48a; }
+
+.dev-foot { color: #9ab; font-size: 11px; text-align: center; }

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+data/
+references/
+*.sqlite
+secret.bin
+scripts/extract_thumbs.bin
+static/img/client/
+static/archive/

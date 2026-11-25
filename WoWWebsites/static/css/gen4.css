@@ -1,0 +1,250 @@
+@import url("/static/css/gen1.css");
+@import url("/static/css/era-dark.css");
+/* Dragonflight through Midnight: full-bleed masthead on worldofwarcraft.com.
+   Legion, BfA, and Shadowlands use wowcom.css on top of these content rules. */
+
+body:is(.gen4, .wowcom) {
+  --accent: #7db4ea;
+  --line: #2a4a78;
+  --panel: #121a2c;
+  --field: #0c1422;
+  --ink: #e8eef8;
+  --muted: #b7c6dc;
+  --date: #9ec7f0;
+  --bg: #070d18;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+/* gen1 parchment is scoped to body.gen1. This shell stays flat. */
+body.gen4 {
+  background-image: none;
+}
+body.gen4 .main-body {
+  background-color: transparent;
+  background-image: none;
+}
+body:is(.gen4, .wowcom) .page-top { display: none; }
+body:is(.gen4, .wowcom) .mod-head {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 12px 32px; background: rgba(6, 8, 16, .94);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 20;
+}
+body:is(.gen4, .wowcom) .wow-logo { position: static; width: auto; top: auto; }
+body:is(.gen4, .wowcom) .wow-logo .badge { width: 48px; height: 48px; box-shadow: 0 0 0 2px var(--accent); }
+body:is(.gen4, .wowcom) .wow-logo .wm { font-size: 20px; }
+body:is(.gen4, .wowcom) .wow-logo .era { color: var(--accent); }
+body:is(.gen4, .wowcom) .h-nav { display: flex; gap: 6px; flex-wrap: wrap; }
+body:is(.gen4, .wowcom) .h-nav a {
+  color: var(--ink); text-decoration: none;
+  font: 600 12px "Helvetica Neue", Arial, sans-serif;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 8px 8px;
+}
+body:is(.gen4, .wowcom) .h-nav a:hover { color: var(--accent); }
+body:is(.gen4, .wowcom) .who { position: static; margin-left: auto; }
+body:is(.gen4, .wowcom) .shell { width: auto; max-width: none; margin: 0 0 48px; }
+/* gen1 .main is display:table-cell, so it shrink-wraps to the 1180px column
+   and the masthead never reaches the viewport edges. */
+body.gen4 .shell { width: 100%; max-width: none; }
+body.gen4 .main { display: block; width: 100%; }
+body.gen4 .main-body { width: 100%; }
+body:is(.gen4, .wowcom) .main-top,
+body:is(.gen4, .wowcom) .cnt,
+body:is(.gen4, .wowcom) .marginal,
+body:is(.gen4, .wowcom) footer {
+  width: min(1180px, 94vw);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+body:is(.gen4, .wowcom) .main-top {
+  background: transparent; border: 0; height: auto; padding: 22px 0 8px;
+  text-shadow: none;
+}
+body:is(.gen4, .wowcom) .banner {
+  font: 600 32px/1.15 "Helvetica Neue", Arial, sans-serif;
+  color: #fff; letter-spacing: 0.01em;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  width: auto;
+}
+body:is(.gen4, .wowcom) .main:has(.hero-wrap) .main-top {
+  margin: 0 0 -78px; position: relative; z-index: 2; pointer-events: none; padding: 0;
+}
+body:is(.gen4, .wowcom) .main:has(.hero-wrap) .banner {
+  display: inline-block; margin: 22px 0 0 24px;
+  font-size: 40px; text-shadow: 0 2px 14px #000, 0 0 2px #000;
+}
+body:is(.gen4, .wowcom) .main-body {
+  display: block; background: transparent; border: 0; box-shadow: none; min-height: 0;
+}
+body:is(.gen4, .wowcom) .cnt {
+  max-width: none; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; padding: 0 22px 18px; overflow: hidden;
+}
+body:is(.gen4, .wowcom) .hero-wrap { margin: 0 -22px 16px; }
+body:is(.gen4, .wowcom) .hero { height: 440px; border: 0; border-radius: 0; }
+body:is(.gen4, .wowcom) .hero-cap {
+  display: block; position: absolute; left: 24px; bottom: 16px;
+  color: #fff; font: 700 13px/1 Arial, sans-serif; letter-spacing: 0.16em;
+  text-transform: uppercase; text-shadow: 0 2px 8px #000;
+}
+body:is(.gen4, .wowcom) .marginal {
+  width: auto; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; padding: 12px 0 0;
+}
+body.gen4 .marginal {
+  width: min(1180px, 94vw);
+  margin-left: auto;
+  margin-right: auto;
+}
+body:is(.gen4, .wowcom) .ibox { background: var(--panel); border-color: var(--line); height: 100%; box-sizing: border-box; overflow: hidden; }
+body:is(.gen4, .wowcom) .ssotd { width: 100%; max-width: 100%; margin: 0; border: 0; border-bottom: 1px solid var(--line); height: 140px; }
+body:is(.gen4, .wowcom) a { color: var(--accent); }
+body:is(.gen4, .wowcom) .ibox h3,
+body:is(.gen4, .wowcom) .forum-cat,
+body:is(.gen4, .wowcom) table.grid th,
+body:is(.gen4, .wowcom) .post header {
+  background: rgba(0, 0, 0, .35);
+  color: var(--accent);
+  border-color: var(--line);
+}
+body:is(.gen4, .wowcom) table.news thead { display: none; }
+body:is(.gen4, .wowcom) table.news,
+body:is(.gen4, .wowcom) table.news tbody { display: block; width: auto; }
+body:is(.gen4, .wowcom) table.news tr {
+  display: grid; grid-template-columns: 108px 1fr; gap: 2px 14px;
+  background: rgba(0, 0, 0, .28); border: 1px solid var(--line);
+  margin: 0 0 10px; padding: 12px 14px;
+}
+body:is(.gen4, .wowcom) table.news tr.hilite { background: rgba(255, 255, 255, .04); }
+body:is(.gen4, .wowcom) table.news td { display: block; border: 0; padding: 0; background: transparent; }
+body:is(.gen4, .wowcom) table.news h3 { display: block; margin: 0 0 4px; font-size: 16px; }
+body:is(.gen4, .wowcom) .search button, body:is(.gen4, .wowcom) .red, body:is(.gen4, .wowcom) .acct button {
+  background: var(--accent); border: 0; color: #0c1018; border-radius: 2px; font-weight: 700;
+}
+body.bfa { --accent: #f0b45a; --line: #8a5a20; --panel: #1a120e; --field: #120c08; --bg: #100c09; --ink: #f6ecdf; --muted: #d2c2ae; --date: #f0c98a; }
+body.shadowlands { --accent: #d2a6ff; --line: #6a3a90; --panel: #1a1024; --field: #120a1c; --bg: #100814; --ink: #f3e9ff; --muted: #cbb6e0; --date: #e0c4ff; }
+body.dragonflight { --accent: #5ee0c5; --line: #1e7a78; --panel: #0e1c22; --field: #0a1418; --bg: #07141a; --ink: #e7f7f4; --muted: #b7d5d0; --date: #9aebdc; }
+body.warwithin { --accent: #e6b15a; --line: #8a6230; --panel: #1c1610; --field: #14100c; --bg: #120e0a; --ink: #f6efe4; --muted: #d4c6b2; --date: #f0d09a; }
+body.midnight { --accent: #c9a0ff; --line: #6d4ab8; --panel: #160c28; --field: #100820; --bg: #0c0618; --ink: #f4ecff; --muted: #cbbbe4; --date: #ddc6ff; }
+body.midnight .red, body.shadowlands .red { color: #1a1028; }
+
+body:is(.gen4, .wowcom) .main:has(.home-landing) .main-top,
+body:is(.gen4, .wowcom) .main:has(.home-landing) .marginal { display: none; }
+body:is(.gen4, .wowcom) .main:has(.home-landing) .cnt {
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+body.gen4:has(.home-landing) .mod-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .78), rgba(0, 0, 0, .28) 72%, transparent);
+  border-bottom-color: transparent;
+}
+body.gen4 .mast,
+body.gen4 .mast-img { width: 100%; }
+.mast { position: relative; background: #000; }
+.mast-img {
+  display: block; width: 100%; height: 520px; object-fit: cover;
+  filter: brightness(0.62) saturate(1.05);
+}
+.mast-copy {
+  position: absolute; left: max(28px, calc(50% - 560px)); bottom: 48px;
+  max-width: 680px; color: #fff;
+}
+.mast-copy .eyebrow {
+  margin: 0 0 8px; color: #fff;
+  font: 700 12px/1 Arial, sans-serif; letter-spacing: 0.16em; text-transform: uppercase;
+  text-shadow: 0 2px 8px #000;
+}
+.mast-copy h1 {
+  margin: 0 0 10px;
+  font: 600 48px/1.05 "Helvetica Neue", Arial, sans-serif;
+  text-shadow: 0 2px 18px #000;
+}
+.mast-copy .lede {
+  margin: 0; max-width: 560px; color: #f4f4f4;
+  font: 16px/1.45 Arial, sans-serif; text-shadow: 0 1px 8px #000;
+}
+.cta-row { display: flex; gap: 12px; margin-top: 18px; }
+body:is(.gen4, .wowcom) a.cta {
+  display: inline-block; padding: 12px 22px; text-decoration: none;
+  font: 700 14px/1 Arial, sans-serif; letter-spacing: 0.04em;
+}
+body:is(.gen4, .wowcom) a.cta.buy { background: var(--accent); color: #14120c; }
+body:is(.gen4, .wowcom) a.cta.learn { background: transparent; color: #fff; border: 2px solid #fff; }
+.latest, .feature-row {
+  width: min(1180px, 94vw); margin: 0 auto; box-sizing: border-box;
+}
+.latest { padding: 32px 0 8px; }
+.latest h2 {
+  margin: 0 0 16px; color: #fff;
+  font: 600 28px/1.2 "Helvetica Neue", Arial, sans-serif;
+}
+.news-cards { display: grid; gap: 12px; }
+body:is(.gen4, .wowcom) a.news-card {
+  display: grid; grid-template-columns: 180px 1fr; gap: 16px;
+  padding: 12px; background: var(--panel); border: 1px solid var(--line);
+  color: var(--ink); text-decoration: none;
+}
+.news-card img { width: 180px; height: 110px; object-fit: cover; }
+.news-card time {
+  display: block; color: var(--date); font: 700 11px/1 Arial, sans-serif;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.news-card strong { display: block; margin: 4px 0; color: #fff; font-size: 18px; }
+.news-card em {
+  display: block; color: var(--muted); font-style: normal; font-size: 14px; line-height: 1.4;
+}
+.feature-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 18px 0 36px;
+}
+body:is(.gen4, .wowcom) a.feature-tile {
+  display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 140px; padding: 16px; box-sizing: border-box;
+  background:
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, .55)),
+    var(--panel);
+  border: 1px solid var(--line); color: #fff; text-decoration: none;
+}
+body.wowcom a.feature-tile { min-height: 180px; }
+.feature-tile strong { font-size: 20px; }
+.feature-tile span { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+@media (max-width: 800px) {
+  body:is(.gen4, .wowcom) .mod-head { padding: 10px 14px; position: static; }
+  body.gen4:has(.home-landing) .mod-head {
+    position: absolute;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .78), rgba(0, 0, 0, .2) 80%, transparent);
+  }
+  body:is(.gen4, .wowcom) .who { margin-left: 0; }
+  body:is(.gen4, .wowcom) .marginal { grid-template-columns: 1fr; }
+  body:is(.gen4, .wowcom) .hero { height: 240px; }
+  body:is(.gen4, .wowcom) .main:has(.hero-wrap) .banner { font-size: 28px; margin-left: 14px; }
+  body:is(.gen4, .wowcom) table.news tr { grid-template-columns: 1fr; }
+  body:is(.gen4, .wowcom) .main-top,
+  body:is(.gen4, .wowcom) .cnt,
+  body:is(.gen4, .wowcom) .marginal,
+  body:is(.gen4, .wowcom) footer,
+  .latest, .feature-row { width: auto; margin-left: 10px; margin-right: 10px; }
+  .mast-img { height: 320px; }
+  .mast-copy { left: 16px; right: 16px; bottom: 20px; }
+  .mast-copy h1 { font-size: 28px; }
+  .cta-row { flex-wrap: wrap; }
+  .feature-row { grid-template-columns: 1fr 1fr; }
+  body:is(.gen4, .wowcom) a.news-card { grid-template-columns: 1fr; }
+  .news-card img { width: 100%; height: 140px; }
+  body:is(.gen4, .wowcom) .main:has(.home-landing) .cnt { margin: 0; width: auto; }
+}

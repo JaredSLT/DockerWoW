@@ -1,0 +1,373 @@
+/* Shadowlands Battle.net account: blue gate and Games & Subscriptions. */
+
+.acct-shadowlands {
+  color: #e7eef8;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.acct-shadowlands .acct-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+.acct-shadowlands .acct-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 22px;
+}
+
+.acct-gate .acct-layout {
+  display: block;
+}
+
+.acct-shadowlands .acct-rail {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  background: #07111e;
+  border-right: 1px solid rgba(255, 255, 255, .06);
+}
+
+.acct-shadowlands .acct-rail-link {
+  display: block;
+  padding: 12px 18px;
+  color: #d5deea;
+  text-decoration: none;
+  font: 600 14px/1.3 "Helvetica Neue", Arial, sans-serif;
+  border-left: 3px solid transparent;
+}
+
+.acct-shadowlands .acct-rail-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, .04);
+}
+
+.acct-shadowlands .acct-rail-current {
+  color: #fff;
+  background: #148eff;
+  border-left-color: #9fd2ff;
+}
+
+.acct-shadowlands .acct-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.acct-gate .bn-card {
+  width: min(400px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 36px 32px 28px;
+  background: rgba(8, 28, 58, .55);
+  border: 1px solid rgba(180, 210, 255, .18);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+}
+
+.bn-mark {
+  margin: 0 0 22px;
+  text-align: center;
+  color: #5ec8ff;
+  font: 800 34px/1 "Arial Black", "Arial Narrow", Impact, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.bn-mark span {
+  display: block;
+}
+
+.bn-mark {
+  font-size: 28px;
+}
+
+.bn-mark::after {
+  content: "Entertainment";
+  display: block;
+  margin-top: 4px;
+  color: #d7e7f8;
+  font: 600 11px/1 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .28em;
+}
+
+.acct-shadowlands .acct-panel-title,
+.acct-shadowlands .acct-subhead {
+  margin: 0 0 14px;
+  color: #fff;
+  font: 700 22px/1.2 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.acct-gate .acct-panel-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.acct-shadowlands .acct-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.acct-manage .acct-label {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  display: block;
+  margin-bottom: 6px;
+  color: #9eb0c8;
+  font: 700 11px/1.2 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.acct-shadowlands .acct-field {
+  display: block;
+  margin: 0 0 12px;
+}
+
+.acct-shadowlands .acct-form input,
+.acct-shadowlands .acct-input {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 0;
+  padding: 12px 14px;
+  color: #fff;
+  background: #0c2344;
+  border: 1px solid #1d4e86;
+  border-radius: 2px;
+  font: 15px/1.3 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.acct-shadowlands .acct-form input:focus {
+  outline: none;
+  border-color: #49a6ff;
+}
+
+.acct-shadowlands .acct-submit {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 16px;
+  color: #fff;
+  background: #148eff;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  font: 700 16px/1 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.acct-shadowlands .acct-submit:hover {
+  background: #3aa2ff;
+}
+
+.bn-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 14px;
+  color: #9eb4cc;
+  font: 700 11px/1 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.bn-or::before,
+.bn-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, .2);
+}
+
+.bn-social {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.bn-social span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #222;
+  background: #fff;
+  font: 700 18px/1 Arial, sans-serif;
+}
+
+.bn-fb { color: #fff !important; background: #1877f2 !important; }
+.bn-g { color: #444 !important; }
+.bn-apple { color: #111 !important; }
+
+.acct-shadowlands .acct-error,
+.acct-shadowlands .acct-notice {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  font-weight: 700;
+}
+
+.acct-shadowlands .acct-error {
+  color: #ffd0d0;
+  background: rgba(120, 16, 24, .72);
+  border: 1px solid #e35b6a;
+}
+
+.acct-shadowlands .acct-notice {
+  color: #e7fff0;
+  background: rgba(12, 70, 40, .72);
+  border: 1px solid #3dba74;
+}
+
+.acct-shadowlands .acct-note,
+.acct-shadowlands .acct-empty {
+  margin: 14px 0 0;
+  color: #c5d4e8;
+  font: 13px/1.45 "Helvetica Neue", Arial, sans-serif;
+}
+
+.acct-shadowlands a {
+  color: #49a6ff;
+  text-decoration: none;
+}
+
+.acct-shadowlands a:hover { color: #fff; }
+
+.acct-shadowlands .acct-switch,
+.acct-shadowlands .acct-actions {
+  margin: 12px 0 0;
+}
+
+.acct-shadowlands .acct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.acct-manage .bn-panel,
+.acct-manage .acct-block {
+  color: #e7eef8;
+}
+
+.acct-manage .bn-panel {
+  padding: 8px 8px 18px;
+  background: linear-gradient(180deg, #12325c, #0d2748);
+  border: 1px solid rgba(120, 170, 220, .25);
+}
+
+.bn-game {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.bn-w {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: #111;
+  background: radial-gradient(circle at 40% 35%, #ffe27a, #e0a500 55%, #8a6200);
+  border-radius: 50%;
+  font: 800 20px/1 Georgia, serif;
+}
+
+.bn-sub,
+.acct-shadowlands .acct-fact-label {
+  display: block;
+  color: #9eb0c8;
+  font-size: 13px;
+}
+
+.acct-shadowlands .acct-facts { margin: 12px 0; }
+
+.acct-shadowlands .acct-fact {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.acct-shadowlands .acct-fact-value,
+.acct-shadowlands .acct-char-name { color: #fff; font-weight: 700; }
+
+.acct-shadowlands .acct-chars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.acct-shadowlands .acct-char {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4rem 8rem;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+body.sl-account-manage .sl-acct-root {
+  min-height: 100vh;
+  padding: 28px 4vw 48px;
+  background:
+    radial-gradient(1200px 500px at 70% -10%, rgba(28, 92, 170, .45), transparent 60%),
+    #07111c;
+}
+
+body.sl-account-gate {
+  background:
+    radial-gradient(900px 520px at 50% 40%, #0d5ea8 0%, #06315f 42%, #021426 100%);
+}
+
+body.sl-account-gate .sl-acct-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+body.sl-account-gate .sl-services-gate {
+  width: min(440px, 100%);
+  padding: 36px 28px;
+  text-align: center;
+  background: rgba(8, 28, 58, .55);
+  border: 1px solid rgba(180, 210, 255, .18);
+}
+
+body.sl-account-gate .sl-services-gate h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+@media (max-width: 800px) {
+  .acct-shadowlands .acct-layout { flex-direction: column; }
+  .acct-shadowlands .acct-rail { flex: none; }
+  .bn-game, .acct-shadowlands .acct-char, .acct-shadowlands .acct-fact {
+    grid-template-columns: 1fr;
+  }
+}

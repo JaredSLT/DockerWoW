@@ -1,0 +1,15 @@
+# host-setup.sh rewrites After= and ConditionPathIsMountPoint for WOW_VOLUME_MOUNT.
+# The path below is only the default (/mnt/wow-nvme).
+[Unit]
+Description=Share the WoW volume mount into Docker containers
+After=mnt-wow-nvme.mount
+Before=docker.service
+ConditionPathIsMountPoint=/mnt/wow-nvme
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/wow-volume-share.sh
+
+[Install]
+WantedBy=docker.service

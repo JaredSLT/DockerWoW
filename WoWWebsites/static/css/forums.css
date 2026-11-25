@@ -1,0 +1,180 @@
+/* Forum chrome. Selectors hang off the shell body class (visual + expansion id). */
+
+.forums table.grid { width: 100%; border-collapse: collapse; }
+
+nav.forum-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 16px;
+}
+nav.forum-pager a.page {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 2px 8px;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* Classic community site: parchment table, blue dates, gold header bar. */
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-table,
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-threads {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #e7cfa3;
+  background-image: url("/static/img/parchment.jpg");
+  background-size: 512px;
+  background-repeat: repeat;
+  color: #3a2a14;
+  border: 1px solid #8a6a22;
+}
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-table td,
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-threads td {
+  background: transparent;
+  color: #3a2a14;
+  border: 1px solid #d1c0a2;
+}
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-table th,
+body:is(.alpha, .gen1, .era-vanilla) table.grid.forum-threads th,
+body:is(.alpha, .gen1, .era-vanilla) h3.forum-cat {
+  background: linear-gradient(#f8e7b0, #e0c36a 45%, #a67c2d);
+  color: #3a2508;
+  border: 1px solid #6e5018;
+  text-align: left;
+  font-weight: 700;
+  text-shadow: 0 1px 0 #fff4d0;
+}
+body:is(.alpha, .gen1, .era-vanilla) .forums .date {
+  color: #1e4378;
+  font: 700 12px Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+  font-variant: normal;
+  display: inline;
+  text-shadow: none;
+}
+body:is(.alpha, .gen1, .era-vanilla) td.thread-title a.topic,
+body:is(.alpha, .gen1, .era-vanilla) td.forum-name a {
+  font-size: 13px;
+  font-weight: 700;
+}
+body:is(.alpha, .gen1, .era-vanilla) nav.forum-pager a.page {
+  color: #1e4378;
+  border: 1px solid #8a6a22;
+  background: rgba(255, 248, 230, 0.75);
+}
+
+/* Battle.net community site: black table, gold header, row hover. */
+body.gen2 table.grid.forum-table,
+body.gen2 table.grid.forum-threads {
+  width: 100%;
+  border-collapse: collapse;
+  background: #000;
+  color: #efe3d2;
+  border: 1px solid #2a2a2a;
+}
+body.gen2 table.grid.forum-table td,
+body.gen2 table.grid.forum-threads td {
+  background: #000;
+  color: #efe3d2;
+  border: 1px solid #1c1c1c;
+}
+body.gen2 table.grid.forum-table th,
+body.gen2 table.grid.forum-threads th,
+body.gen2 h3.forum-cat {
+  background: #000;
+  color: #f0c14a;
+  border: 0;
+  border-bottom: 2px solid #f0c14a;
+  text-align: left;
+  font-weight: 700;
+}
+body.gen2 table.grid.forum-table tr.forum-row:hover td,
+body.gen2 table.grid.forum-threads tr.thread-row:hover td {
+  background: #1a140c;
+  color: #fff8e8;
+}
+body.gen2 nav.forum-pager a.page {
+  color: #f0c14a;
+  border: 1px solid #3a2818;
+  background: #000;
+}
+body.gen2 nav.forum-pager a.page:hover {
+  background: #1a140c;
+  color: #fff;
+}
+
+/* worldofwarcraft.com and the later marketing shell: borderless rows. */
+body:is(.wowcom, .gen4) table.grid.forum-table,
+body:is(.wowcom, .gen4) table.grid.forum-threads {
+  width: 100%;
+  border: 0;
+  border-collapse: collapse;
+  background: transparent;
+  box-shadow: none;
+}
+body:is(.wowcom, .gen4) table.grid.forum-table th,
+body:is(.wowcom, .gen4) table.grid.forum-threads th {
+  background: transparent;
+  color: var(--muted, #8d95a8);
+  border: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+}
+body:is(.wowcom, .gen4) table.grid.forum-table td,
+body:is(.wowcom, .gen4) table.grid.forum-threads td {
+  background: transparent;
+  border: 0;
+  padding: 14px 8px;
+  box-shadow: none;
+}
+body:is(.wowcom, .gen4) h3.forum-cat {
+  background: transparent;
+  color: inherit;
+  border: 0;
+  font-size: 22px;
+  font-weight: 600;
+  padding: 20px 0 4px;
+  margin: 0;
+}
+body:is(.wowcom, .gen4) td.thread-title a.topic,
+body:is(.wowcom, .gen4) td.forum-name a {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+body:is(.wowcom, .gen4) table.grid.forum-threads td.thread-author,
+body:is(.wowcom, .gen4) table.grid.forum-threads td.thread-replies,
+body:is(.wowcom, .gen4) table.grid.forum-threads td.thread-last,
+body:is(.wowcom, .gen4) table.grid.forum-table td.forum-desc,
+body:is(.wowcom, .gen4) .forums .date {
+  color: var(--muted, #8d95a8);
+  font-size: 13px;
+  font-weight: 400;
+}
+body:is(.wowcom, .gen4) nav.forum-pager a.page {
+  color: var(--muted, #8d95a8);
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+}
+
+nav.forum-pager a.current { font-weight: 700; }
+
+article.post.blizzard-post {
+  background: #e7f1fb;
+  color: #102033;
+  border: 1px solid #6d9cc8;
+  border-left: 4px solid #1a6fb5;
+}
+article.post.blizzard-post header {
+  background: #1a6fb5;
+  color: #f7fbff;
+}
+article.post.blizzard-post pre {
+  color: #102033;
+  background: transparent;
+}

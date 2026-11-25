@@ -1,0 +1,297 @@
+/* Armory character paperdoll. Scoped under .sheet so it does not restyle the site. */
+
+div.sheet {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+div.sheet .paperdoll {
+  width: 100%;
+}
+
+div.sheet .doll {
+  display: grid;
+  grid-template-columns: minmax(128px, 1fr) minmax(136px, 1.15fr) minmax(128px, 1fr);
+  grid-template-areas:
+    "left main right"
+    "weapons weapons weapons";
+  gap: 8px 10px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid rgba(138, 106, 34, 0.65);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+div.sheet .doll-left { grid-area: left; }
+div.sheet .doll-main { grid-area: main; }
+div.sheet .doll-right { grid-area: right; }
+div.sheet .doll-weapons { grid-area: weapons; }
+
+div.sheet .doll-main {
+  text-align: center;
+  padding: 8px 4px 0;
+  min-width: 0;
+}
+
+div.sheet .doll-main h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+div.sheet .doll-main p {
+  margin: 3px 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+div.sheet .doll-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  margin: 0 0 6px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+  border: 1px solid rgba(138, 106, 34, 0.75);
+  background: rgba(20, 12, 4, 0.14);
+}
+
+div.sheet .doll-slot a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  text-decoration: none;
+}
+
+div.sheet .doll-slot a:hover .doll-item {
+  text-decoration: underline;
+}
+
+div.sheet .doll-slot .item-icon,
+div.sheet .doll-socket {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  box-sizing: border-box;
+}
+
+div.sheet .doll-socket {
+  border: 1px dashed rgba(138, 106, 34, 0.9);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+div.sheet .doll-text {
+  min-width: 0;
+}
+
+div.sheet .doll-label,
+div.sheet .doll-item {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+div.sheet .doll-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+div.sheet .doll-item {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+div.sheet .doll-weapons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+div.sheet .doll-weapons .doll-slot {
+  flex: 1 1 30%;
+  max-width: 240px;
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  div.sheet .doll {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "main main"
+      "left right"
+      "weapons weapons";
+  }
+  div.sheet .doll-weapons .doll-slot {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
+
+/* Lines already present on the equipment dict. Absent keys render nothing. */
+div.sheet .doll-enchant,
+div.sheet .doll-gem {
+  display: block;
+  font-size: 11px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* TBC and Wrath: parchment panel, dark outer edge. Sockets stay recessed. */
+div.sheet.armory-classic {
+  box-sizing: border-box;
+  padding: 10px;
+  background: #120c08;
+  border: 10px solid #120c08;
+  box-shadow: 0 0 0 1px #3a2a14, inset 0 0 0 1px #5c4318;
+}
+
+div.sheet.armory-classic .doll {
+  background-color: #e7cfa3;
+  background-image: url("/static/img/parchment.jpg");
+  background-size: 512px;
+  border: 1px solid #6b4e22;
+  box-shadow: inset 0 0 0 1px #f3e2b8;
+  color: #2a1c0e;
+}
+
+div.sheet.armory-classic .doll-main h2 {
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  color: #3a2410;
+}
+
+div.sheet.armory-classic .doll a {
+  color: #2a1c0e;
+}
+
+div.sheet.armory-classic .doll a:hover {
+  color: #6b1210;
+}
+
+div.sheet.armory-classic .doll-label {
+  color: #6a4a18;
+}
+
+div.sheet.armory-classic .doll-slot {
+  background: rgba(62, 40, 14, 0.14);
+  border: 1px solid #6b4e22;
+}
+
+div.sheet.armory-classic .doll-slot .item-icon,
+div.sheet.armory-classic .doll-socket {
+  border: 1px solid #5c4318;
+  background: rgba(42, 28, 10, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(243, 226, 184, 0.45);
+}
+
+div.sheet.armory-classic .doll-socket {
+  border-style: dashed;
+}
+
+div.sheet.armory-classic .doll-enchant { color: #1b6b24; }
+div.sheet.armory-classic .doll-gem { color: #1e4378; }
+
+/* Cataclysm through Warlords: near-black profile with gold rules. */
+div.sheet.armory-profile {
+  background: #111111;
+  border: 1px solid #c9a227;
+  box-sizing: border-box;
+}
+
+div.sheet.armory-profile .doll {
+  gap: 0;
+  padding: 0;
+  background: #111111;
+  background-image: none;
+  border: 0;
+  box-shadow: none;
+  color: #f3ead8;
+}
+
+div.sheet.armory-profile .doll-left,
+div.sheet.armory-profile .doll-right,
+div.sheet.armory-profile .doll-main {
+  padding: 8px;
+}
+
+div.sheet.armory-profile .doll-left { border-right: 1px solid #c9a227; }
+div.sheet.armory-profile .doll-right { border-left: 1px solid #c9a227; }
+
+div.sheet.armory-profile .doll-weapons {
+  padding: 8px;
+  border-top: 1px solid #c9a227;
+}
+
+div.sheet.armory-profile .doll-main h2 {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #c9a227;
+  color: #fff;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+}
+
+div.sheet.armory-profile .doll-label { color: #c9a227; }
+
+div.sheet.armory-profile .doll a,
+div.sheet.armory-profile .doll-item { color: #ffb100; }
+
+div.sheet.armory-profile .doll a:hover .doll-item { color: #fff; }
+
+div.sheet.armory-profile .doll-slot {
+  margin: 0 0 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #c9a227;
+}
+
+div.sheet.armory-profile .doll-slot .item-icon,
+div.sheet.armory-profile .doll-socket {
+  border: 1px solid #c9a227;
+  background: #1a1408;
+  box-shadow: none;
+}
+
+div.sheet.armory-profile .doll-enchant { color: #1eff00; }
+div.sheet.armory-profile .doll-gem { color: #69ccf0; }
+
+/* Legion and later: flat dark panel in the expansion accent. */
+div.sheet.armory-later .doll {
+  background: #16181d;
+  background-image: none;
+  border: 1px solid var(--accent, #9aa4b2);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+div.sheet.armory-later .doll-main h2,
+div.sheet.armory-later .doll-label {
+  color: var(--accent, #9aa4b2);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+div.sheet.armory-later .doll-slot {
+  background: #1b1e24;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--accent, #9aa4b2);
+  box-shadow: none;
+}
+
+div.sheet.armory-later .doll-slot .item-icon,
+div.sheet.armory-later .doll-socket {
+  border: 1px solid var(--accent, #9aa4b2);
+  background: #0c0e12;
+  box-shadow: none;
+}
+
+div.sheet.armory-later .doll-socket { border-style: dashed; }
+div.sheet.armory-later .doll-enchant { color: #1eff00; }
+div.sheet.armory-later .doll-gem { color: var(--accent, #9aa4b2); }

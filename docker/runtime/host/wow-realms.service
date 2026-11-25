@@ -1,0 +1,12 @@
+[Unit]
+Description=Start the WoW realms selected for boot
+After=docker.service wow-volume-share.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/wow-realms.sh
+
+[Install]
+WantedBy=multi-user.target

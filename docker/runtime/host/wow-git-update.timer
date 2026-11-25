@@ -1,0 +1,11 @@
+[Unit]
+Description=Poll public WoW core and database repositories
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=30min
+AccuracySec=1min
+Persistent=false
+
+[Install]
+WantedBy=timers.target

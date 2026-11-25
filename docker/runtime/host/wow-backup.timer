@@ -1,0 +1,10 @@
+[Unit]
+Description=Dump WoW realm databases every day
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+AccuracySec=15min
+
+[Install]
+WantedBy=timers.target

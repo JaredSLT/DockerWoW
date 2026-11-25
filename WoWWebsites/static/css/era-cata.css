@@ -1,0 +1,602 @@
+/* Cataclysm community site, late 2011. Dark column, fiery sky, Services tab. */
+
+body.era-cata {
+  margin: 0;
+  background-color: #070403;
+  background-image:
+    radial-gradient(ellipse at 16% 0%, rgba(190, 72, 18, 0.5), transparent 46%),
+    radial-gradient(ellipse at 84% 6%, rgba(120, 36, 8, 0.4), transparent 42%),
+    linear-gradient(#3a140c 0, #120804 280px, #070403 560px);
+  background-attachment: fixed;
+  color: #e6d3b4;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+}
+
+body.era-cata a { color: #f0b429; }
+body.era-cata a:hover { color: #fff; }
+
+.cata-service {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  background: #121820;
+  color: #9aa7b4;
+  font-size: 11px;
+}
+
+.cata-service a,
+.cata-hello {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-left: 1px solid #2a3340;
+  color: #7ec8ea;
+  text-decoration: none;
+}
+
+.cata-hello { color: #c5d0da; gap: 4px; }
+.cata-hello a { padding: 0; border: 0; }
+
+.cata-explore { position: relative; }
+.cata-explore summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0 16px;
+  height: 36px;
+  line-height: 36px;
+  background: #1d6ea8;
+  color: #fff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.cata-explore summary::-webkit-details-marker { display: none; }
+.cata-explore div {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  min-width: 180px;
+  background: #16120e;
+  border: 1px solid #5a3c20;
+  display: flex;
+  flex-direction: column;
+}
+.cata-explore a {
+  border: 0;
+  border-top: 1px solid #3a2818;
+  padding: 8px 12px;
+  color: #f0d7a4;
+}
+
+.cata-wrap {
+  width: 1006px;
+  max-width: calc(100% - 24px);
+  margin: 48px auto 32px;
+  position: relative;
+}
+
+.cata-logo {
+  display: inline-block;
+  margin: 0 0 6px 8px;
+  text-decoration: none;
+  line-height: 0.85;
+  text-shadow: 0 2px 0 #000, 0 0 12px rgba(0, 0, 0, 0.8);
+}
+.cata-logo span {
+  display: block;
+  color: #f3e2b0;
+  font: 11px Georgia, "Times New Roman", serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.cata-logo strong {
+  display: block;
+  color: #f6c14a;
+  font: 700 34px/0.9 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.04em;
+}
+.cata-logo em {
+  display: block;
+  color: #e8d7a8;
+  font: 700 13px/1.2 Georgia, "Times New Roman", serif;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+}
+
+.cata-head {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.cata-icos { display: flex; }
+.cata-ico {
+  flex: 1 1 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(#4a321c, #24160e);
+  border: 1px solid #6a4a28;
+  border-bottom: 0;
+  color: #e7d2a4;
+  font-size: 18px;
+  text-decoration: none;
+}
+.cata-ico.on {
+  background: linear-gradient(#f6b13a, #c56a12);
+  color: #2a1404;
+}
+
+.cata-tabs { display: flex; background: #140e0a; }
+.cata-tab {
+  flex: 1 1 0;
+  padding: 9px 4px 8px;
+  color: #f0d7a4;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.cata-tab.on {
+  background: linear-gradient(#f0a020, #c45a10);
+  color: #2a1404;
+}
+
+.cata-sidecol { display: flex; flex-direction: column; gap: 8px; }
+.cata-find { display: flex; height: 52px; }
+.cata-find input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 10px;
+  background: #fff;
+  border: 1px solid #c8c8c8;
+  border-right: 0;
+  color: #222;
+  font: 12px Arial, sans-serif;
+}
+.cata-find button {
+  width: 42px;
+  background: #1d6ea8;
+  border: 0;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cata-plate {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 6px 10px;
+  background: linear-gradient(#6ea31a, #3d6b12);
+  color: #f3ffd8;
+  text-decoration: none;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+.cata-plate-user {
+  display: block;
+  background: linear-gradient(#6e1c14, #3a0c0a 70%);
+  color: #f8e6c8;
+}
+.cata-plate-user a { color: #fff; text-decoration: none; font-size: 16px; }
+.cata-plate-user span { display: block; color: #e7c8a8; font-weight: 400; }
+
+.cata-login-err { margin: 8px 0 0; color: #ffb0a0; font-weight: 700; }
+
+.cata-stage {
+  margin-top: 8px;
+  padding: 14px 16px 22px;
+  background: linear-gradient(#1a100c, #100a08);
+  border: 1px solid #3a2818;
+  box-shadow: inset 0 0 0 1px #24160e;
+  min-height: 420px;
+}
+
+.cata-stage h1,
+.cata-stage h2,
+.cata-stage h3 { color: #f4e2c4; font-family: Georgia, "Times New Roman", serif; }
+.cata-stage h1 { margin: 0 0 8px; font-size: 28px; font-weight: 400; }
+.cata-stage h2 { font-size: 18px; }
+.cata-crumbs { margin: 0 0 12px; color: #c4a078; font-size: 11px; }
+.cata-crumbs a { color: #f0b429; text-decoration: none; }
+.cata-lead, .cata-by, .cata-more { color: #c4a078; }
+.cata-by span { margin-left: 8px; }
+
+.cata-home { display: grid; grid-template-columns: 1fr 240px; gap: 14px; align-items: start; }
+.cata-hero {
+  position: relative;
+  display: block;
+  min-height: 230px;
+  background: #1a0c08;
+  overflow: hidden;
+  text-decoration: none;
+}
+.cata-hero img, .cata-mini img, .cata-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cata-hero img { height: 230px; }
+.cata-hero span {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 16px 14px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.82));
+  color: #fff;
+}
+.cata-hero strong { display: block; font: 700 20px/1.2 Georgia, serif; }
+.cata-hero em { display: block; margin-top: 4px; color: #f0d7a4; font-style: normal; }
+.cata-hero b {
+  display: inline-block;
+  margin-top: 8px;
+  color: #f6c14a;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+.cata-minis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 6px; }
+.cata-mini {
+  display: block;
+  background: #140c08;
+  color: #f0d7a4;
+  text-decoration: none;
+  min-height: 92px;
+}
+.cata-mini img { height: 64px; }
+.cata-mini span { display: block; padding: 4px 6px 6px; font-size: 11px; }
+
+.cata-story {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 4px 12px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #3a2818;
+}
+.cata-story h3 { grid-column: 1 / -1; margin: 0; font-size: 16px; }
+.cata-story h3 a { color: #f4e2c4; text-decoration: none; }
+.cata-story .cata-by { grid-column: 1 / -1; margin: 0; }
+.cata-thumb { grid-row: 3 / span 2; width: 92px; height: 68px; background: #24160e; overflow: hidden; }
+.cata-story p { margin: 0; }
+.cata-next { text-align: right; margin: 16px 0 0; }
+.cata-next a {
+  display: inline-block;
+  padding: 6px 18px;
+  background: linear-gradient(#8a2e14, #5a140c);
+  border: 1px solid #c45a32;
+  color: #f8e6c8;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.cata-card {
+  display: block;
+  margin: 0 0 10px;
+  padding: 0;
+  background: #1a100c;
+  border: 1px solid #5a3c20;
+  color: #f0d7a4;
+  text-decoration: none;
+}
+.cata-card strong, .cata-card span, .cata-card em {
+  display: block;
+  padding: 6px 10px;
+}
+.cata-card strong { color: #f6c14a; letter-spacing: 0.04em; }
+.cata-card em { font-style: normal; color: #f2c14b; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.cata-play { background: linear-gradient(#16324e, #0c1c2c); }
+.cata-realm .up { color: #8dce4a; }
+.cata-realm .down { color: #e24b3b; }
+
+.cata-guide-top { display: grid; grid-template-columns: 240px 1fr; gap: 12px; margin-bottom: 16px; }
+.cata-begin {
+  display: block;
+  padding: 14px;
+  background: #24180e;
+  border: 1px solid #8a6230;
+  text-decoration: none;
+}
+.cata-begin strong { display: block; color: #f6c14a; font-size: 16px; margin-bottom: 6px; }
+.cata-begin span, .cata-guide-note { color: #e6d3b4; }
+.cata-guide-cols { display: grid; grid-template-columns: 1.15fr 1fr 1.15fr; gap: 18px; }
+.cata-guide h3, .cata-cat {
+  margin: 16px 0 8px;
+  color: #e0a040;
+  font: 700 12px/1.2 Arial, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.cata-sidehead { margin: 8px 0 4px; color: #c4a078; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.cata-race-col a, .cata-links a, .cata-class-row a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  color: #f0d7a4;
+  text-decoration: none;
+}
+.cata-race-col img, .cata-class-row img { width: 18px; height: 18px; }
+.cata-links { display: flex; flex-direction: column; }
+.cata-plain { margin: 0; padding-left: 16px; }
+.cata-plain li { margin: 0 0 6px; }
+.cata-class-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
+.cata-tal { justify-content: flex-end; color: #c4a078; font-size: 11px; }
+.cata-guide-jump a { margin-right: 14px; }
+
+.cata-forum-grid, .cata-search-grid, .cata-profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 230px;
+  gap: 16px;
+}
+.cata-boards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+.cata-board {
+  display: block;
+  padding: 8px 10px;
+  background: #1c120c;
+  border: 1px solid #3a2818;
+  text-decoration: none;
+}
+.cata-board strong { display: block; color: #f0d7a4; }
+.cata-board span, .cata-topics { color: #b9a288; }
+.cata-class-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.cata-class-pills a {
+  padding: 6px 10px;
+  background: #24160e;
+  border: 1px solid #5a3c20;
+  color: #f0d7a4;
+  text-decoration: none;
+}
+.cata-latest h2 { margin: 0 0 8px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #e0a040; }
+.cata-blizz { display: flex; gap: 8px; }
+.cata-blizz a {
+  flex: 1 1 0;
+  padding: 10px;
+  background: #e7d3a4;
+  color: #3a2a14;
+  text-decoration: none;
+}
+.cata-blizz strong { display: block; }
+.cata-blizz span { display: block; margin-top: 6px; color: #6a5030; font-size: 11px; }
+.cata-topics { margin: 0; padding: 0; list-style: none; }
+.cata-topics li { margin: 0 0 8px; }
+
+.cata-board-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.cata-create {
+  display: inline-block;
+  padding: 8px 14px;
+  background: linear-gradient(#8a2a16, #5a140c);
+  border: 1px solid #c45a32;
+  color: #f8e6c8;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.cata-views { color: #c4a078; }
+.cata-views .on { color: #f6c14a; font-weight: 700; }
+.cata-threads, .cata-facts, body.era-cata table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  background: #140e0a;
+}
+.cata-threads th, .cata-facts th, body.era-cata table.grid th {
+  padding: 8px;
+  color: #e0a040;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1px solid #3a2818;
+}
+.cata-threads td, .cata-facts td, body.era-cata table.grid td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #2a1c12;
+  vertical-align: top;
+}
+.cata-threads td.num { text-align: right; }
+.cata-threads a.topic { color: #f0b429; font-weight: 700; text-decoration: none; }
+.cata-blz, a.cata-blz { color: #6eb6ff; }
+.cata-post label, body.era-cata .cata-stage .acct label { display: block; margin: 8px 0; }
+.cata-post input, .cata-post textarea,
+body.era-cata .cata-stage input, body.era-cata .cata-stage textarea, body.era-cata .cata-stage select {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 6px 8px;
+  background: #120c08;
+  border: 1px solid #5a3c22;
+  color: #f3e6d0;
+  font: 12px Arial, sans-serif;
+}
+.cata-post button, body.era-cata .cata-stage button {
+  margin-top: 6px;
+  padding: 7px 14px;
+  background: #7a1c1c;
+  border: 1px solid #c45a32;
+  color: #fff8f2;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cata-pager { display: flex; gap: 6px; margin: 10px 0; }
+.cata-pager a, .cata-search-tabs a {
+  padding: 4px 8px;
+  background: #24160e;
+  border: 1px solid #5a3c20;
+  text-decoration: none;
+}
+.cata-pager a.on, .cata-search-tabs a.on { background: #c45a10; color: #1a0c04; }
+
+.cata-profile-grid { grid-template-columns: 180px 1fr; }
+.cata-profile-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.cata-profile h1 { margin: 0; font-size: 36px; color: #fff; }
+.cata-guild, .cata-guild a { color: #f0a020; font: 700 16px Georgia, serif; }
+.cata-ident { color: #f0d7a4; }
+.cata-score { margin: 0; color: #fff; font: 700 28px Georgia, serif; }
+.cata-profile-nav { display: flex; flex-direction: column; }
+.cata-profile-nav a {
+  padding: 5px 0;
+  color: #f0b429;
+  text-decoration: none;
+}
+.cata-lock::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 5px;
+  margin-left: 6px;
+  border: 1px solid #c4a078;
+  border-top: 3px solid #c4a078;
+  vertical-align: middle;
+}
+.cata-doll {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.cata-slot {
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 0 0 6px;
+  background: #140c10;
+  border: 2px solid #6b3f86;
+  box-sizing: border-box;
+}
+.cata-slot.empty { border-color: #3a2a22; }
+.cata-slot img { width: 100%; height: 100%; display: block; }
+.cata-figure {
+  min-height: 360px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 38%, #6a3058, #1a1024 72%);
+  color: #f4e2c4;
+  font: 700 16px Georgia, serif;
+}
+.cata-weapons { grid-column: 1 / -1; display: flex; justify-content: center; gap: 8px; }
+.cata-profile section { margin: 0 0 16px; }
+
+.cata-tip {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 8px 12px;
+  padding: 12px;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.55)),
+    #2a140e;
+  border: 1px solid #5a3218;
+}
+.cata-tip-icon img { width: 52px; height: 52px; border: 1px solid #111; }
+.cata-tip h1 { margin: 0 0 4px; font-size: 22px; }
+.cata-tip h1.q0 { color: #9d9d9d; }
+.cata-tip h1.q1 { color: #fff; }
+.cata-tip h1.q2 { color: #1eff00; }
+.cata-tip h1.q3 { color: #0070dd; }
+.cata-tip h1.q4 { color: #a335ee; }
+.cata-tip h1.q5 { color: #ff8000; }
+.cata-tip h1.q6, .cata-tip h1.q7 { color: #e6cc80; }
+.cata-kind { font-weight: 700; }
+.cata-tip-side { grid-column: 1 / -1; margin: 0; }
+.cata-item-tabs { margin: 12px 0; }
+.cata-item-tabs .on {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #c45a10;
+  color: #1a0c04;
+  font-weight: 700;
+}
+.coin { display: inline-block; margin-right: 6px; font-weight: 700; }
+.coin.g { color: #f6c14a; }
+.coin.s { color: #d5d7de; }
+.coin.c { color: #c47a3a; }
+
+.cata-search-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
+.cata-hit { margin: 0 0 10px; padding: 8px 10px; background: #1c120c; border: 1px solid #3a2818; }
+.cata-hit p, .cata-hits span { color: #b9a288; }
+.cata-hits { margin: 0; padding: 0; list-style: none; }
+.cata-hits li { margin: 0 0 8px; }
+.cata-sort span { margin-left: 8px; color: #c4a078; }
+
+.cata-foot {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  color: #9a8b78;
+  font-size: 11px;
+}
+.cata-foot h4 {
+  margin: 0 0 6px;
+  color: #c4a078;
+  font: 700 11px Arial, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cata-foot ul { margin: 0; padding: 0; list-style: none; }
+.cata-foot a { color: #b9a288; text-decoration: none; }
+.cata-foot a:hover { color: #fff; }
+.cata-copy, .cata-blizz { grid-column: 1 / -1; }
+.cata-lang { float: right; }
+.cata-blizz {
+  color: #f6c14a;
+  font: 700 16px Georgia, serif;
+  letter-spacing: 0.08em;
+}
+
+body.era-cata .up { color: #8dce4a; font-weight: 700; }
+body.era-cata .down { color: #e24b3b; font-weight: 700; }
+body.era-cata img.hero, body.era-cata .shot-grid img { max-width: 100%; height: auto; }
+body.era-cata .shot-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+body.era-cata .trees { display: flex; gap: 8px; flex-wrap: wrap; }
+body.era-cata .tree {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px;
+  background: #1a100c;
+  border: 1px solid #5a3c20;
+}
+body.era-cata .talent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+body.era-cata .talent {
+  min-height: 42px;
+  padding: 3px;
+  background: #24160e;
+  border: 1px solid #6a4a28;
+  color: #f3d789;
+  font: 10px/1.15 Arial, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+body.era-cata .worldmap {
+  position: relative;
+  height: 420px;
+  background: #1c3a28 url("/static/img/hero-cata.jpg") center/cover;
+  border: 1px solid #5a3c20;
+}
+body.era-cata .zone {
+  position: absolute;
+  color: #fceac6;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 0 1px 2px #000;
+}
+
+@media (max-width: 860px) {
+  .cata-service { position: static; flex-wrap: wrap; height: auto; }
+  .cata-wrap { margin-top: 12px; }
+  .cata-head, .cata-home, .cata-guide-cols, .cata-guide-top,
+  .cata-forum-grid, .cata-search-grid, .cata-profile-grid, .cata-foot {
+    display: block;
+  }
+  .cata-minis { grid-template-columns: 1fr 1fr; }
+  .cata-boards { grid-template-columns: 1fr; }
+  .cata-story { grid-template-columns: 72px 1fr; }
+}

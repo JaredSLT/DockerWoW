@@ -1,0 +1,187 @@
+/* Wrath account controls. Signup is parchment. Login and summary are Battle.net. */
+
+.acct.acct-wotlk {
+  display: block;
+  max-width: none;
+  width: 100%;
+  color: #2a2116;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+}
+
+.acct-wotlk .acct-title {
+  margin: 0 0 10px;
+  padding: 4px 10px;
+  background: #3a2414;
+  color: #f3e2bc;
+  font: 700 13px Georgia, "Times New Roman", serif;
+}
+
+.acct-wotlk .acct-kicker {
+  margin: 0;
+  color: #8eb4d4;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.acct-wotlk .acct-heading {
+  margin: 0 0 8px;
+  color: #6a3a10;
+  font: 700 20px Georgia, "Times New Roman", serif;
+}
+
+.acct-wotlk .acct-error {
+  margin: 0 0 10px;
+  color: #8b1e1e;
+  font-weight: 700;
+}
+
+.acct-wotlk .acct-notice {
+  margin: 0 0 10px;
+  color: #1d4e73;
+  font-weight: 700;
+}
+
+.acct-wotlk .acct-panel {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  background: rgba(255, 248, 230, 0.55);
+  border: 1px solid #8a6a2a;
+}
+
+.acct-wotlk .acct-lead,
+.acct-wotlk .acct-note,
+.acct-wotlk .acct-terms { margin: 0 0 10px; }
+
+.acct-wotlk .acct-form label,
+.acct-wotlk .acct-field {
+  display: block;
+  margin: 8px 0;
+  font-weight: 700;
+}
+
+.acct-wotlk .acct-form input {
+  display: block;
+  width: 16rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 3px;
+  padding: 3px 4px;
+  background: #fff;
+  border: 1px solid #8a6a2a;
+  color: #1a1a1a;
+  font: 13px Arial, Helvetica, sans-serif;
+}
+
+.acct-wotlk button {
+  margin-top: 4px;
+  background: #2a2118;
+  color: #f3e2bc;
+  border: 1px solid #8a6a2a;
+  font: 700 12px Arial, Helvetica, sans-serif;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.acct-wotlk a { color: #1a3f72; }
+.acct-wotlk .acct-links { margin: 10px 0 0; }
+
+.acct-login-grid { display: block; }
+
+.acct-wotlk .acct-summary h4 {
+  margin: 12px 0 6px;
+  color: #1e4378;
+}
+
+.acct-wotlk .acct-chars {
+  width: 100%;
+  border-collapse: collapse;
+  background: #eef6fb;
+}
+
+.acct-wotlk .acct-chars th {
+  text-align: left;
+  background: #16324f;
+  color: #f3e6c4;
+  padding: 6px 8px;
+}
+
+.acct-wotlk .acct-chars td {
+  border-top: 1px solid #7aa0c4;
+  padding: 6px 8px;
+  color: #102033;
+  background: #e7f3fb;
+}
+
+.acct-wotlk .acct-empty { font-style: italic; }
+
+.acct-wotlk .acct-password {
+  background: #d4e4f0;
+  border: 1px solid #1e4378;
+  color: #102033;
+}
+
+.acct-wotlk .acct-password .acct-heading,
+.acct-wotlk .acct-password .acct-field { color: #1e4378; }
+
+/* Battle.net login, summary, and password. */
+body.era-wotlk-account .acct-wotlk { color: #d5e6f8; }
+body.era-wotlk-account .acct-title {
+  background: none;
+  padding: 0;
+  color: #8eb4d4;
+  font: 700 11px Arial, sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+body.era-wotlk-account .acct-heading {
+  color: #fff;
+  font: 700 28px Arial, Helvetica, sans-serif;
+}
+body.era-wotlk-account .acct-panel {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+body.era-wotlk-account .acct-login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+body.era-wotlk-account .acct-side h3 { margin: 0 0 6px; font-size: 20px; }
+body.era-wotlk-account .acct-wotlk .acct-form input {
+  background: #fff;
+  border-color: #9aa;
+  color: #111;
+}
+body.era-wotlk-account .acct-wotlk button,
+body.era-wotlk-account .acct-cta {
+  background: #f5b400;
+  color: #1a1a1a;
+  border: 1px solid #c48a00;
+  text-decoration: none;
+  padding: 6px 14px;
+}
+body.era-wotlk-account .acct-note,
+body.era-wotlk-account .acct-links a,
+body.era-wotlk-account .acct-field { color: #d5e6f8; }
+body.era-wotlk-account .acct-error { color: #ffb4b4; }
+body.era-wotlk-account .acct-notice { color: #b7dcff; }
+
+body.era-wotlk-account .acct-summary {
+  background: transparent;
+  border: 0;
+  color: #d5e6f8;
+}
+body.era-wotlk-account .acct-summary h4,
+body.era-wotlk-account .acct-name { color: #fff; }
+body.era-wotlk-account .acct-password {
+  background: #d4e4f0;
+  border: 1px solid #1e4378;
+  padding: 12px;
+  color: #102033;
+}
+body.era-wotlk-account .acct-password .acct-heading { color: #1e4378; font-size: 22px; }
+body.era-wotlk-account .acct-password .acct-field,
+body.era-wotlk-account .acct-password .acct-lead { color: #102033; }

@@ -1,0 +1,177 @@
+/* Burning Crusade account page on the 2006 community shell.
+   Two columns, parchment panels, fel-green left rule.
+   Colors from gen1.css, plus fel green. */
+
+.acct.acct-tbc {
+  display: block;
+  max-width: none;
+  width: 100%;
+  gap: 0;
+  color: #000;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+}
+
+.acct-tbc .acct-title {
+  margin: 0 0 12px;
+  padding: 4px 12px;
+  background: #640909;
+  border: 1px solid #000;
+  color: #FCEAC6;
+  font: 13pt Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-tbc .acct-error {
+  margin: 0 0 10px;
+  color: #C60000;
+  font-weight: 700;
+}
+
+.acct-tbc .acct-notice {
+  margin: 0 0 10px;
+  color: #1d6b2f;
+  font-weight: 700;
+}
+
+.acct-tbc .acct-cols {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border-left: 4px solid #6bd12a;
+  padding-left: 14px;
+}
+
+.acct-tbc .acct-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.acct-tbc .acct-side {
+  flex: 0 0 168px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 12px 12px;
+  background: #e9f6d4;
+  border: 1px solid #3d7a22;
+}
+
+.acct-tbc .acct-realm {
+  margin: 0 0 2px;
+  color: #1f4d14;
+  font: italic 700 14px Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-tbc .acct-patch {
+  margin: 0 0 8px;
+  color: #5c4630;
+  font-size: 11px;
+}
+
+.acct-tbc .acct-panel {
+  margin: 0 0 12px;
+  padding: 12px 14px 14px;
+  background: #F9E6B6;
+  border: 1px solid #996D11;
+}
+
+.acct-tbc .acct-heading {
+  margin: 0 0 6px;
+  color: #640909;
+  font: italic 700 16px Palatino, Georgia, "Times New Roman", serif;
+}
+
+.acct-tbc .acct-summary .acct-heading { color: #1f4d14; }
+
+.acct-tbc .acct-lead,
+.acct-tbc .acct-note {
+  margin: 0 0 10px;
+  color: #000;
+}
+
+.acct-tbc .acct-side .acct-note {
+  margin: 0;
+  color: #5c4630;
+  font-size: 11px;
+}
+
+.acct-tbc .acct-form label,
+.acct-tbc .acct-field {
+  display: block;
+  margin: 8px 0;
+  font-weight: 700;
+  color: #000;
+}
+
+.acct-tbc .acct-form input {
+  display: block;
+  width: 16rem;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-top: 3px;
+  padding: 3px 4px;
+  background: #FCEAC6;
+  border: 1px solid #996D11;
+  color: #000;
+  font: 13px Arial, Helvetica, sans-serif;
+}
+
+.acct-tbc button {
+  margin-top: 4px;
+  background: #640909;
+  color: #FCEAC6;
+  border: 1px solid #996D11;
+  font: 700 11px Arial, Helvetica, sans-serif;
+  padding: 2px 8px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.acct-tbc button:hover { color: #fff; }
+
+.acct-tbc a { color: #1E4378; }
+.acct-tbc a:hover { color: #C60000; }
+
+.acct-tbc .acct-links { margin: 10px 0 0; }
+.acct-tbc .acct-links a { margin-right: 4px; }
+
+.acct-tbc .acct-name {
+  margin: 0 0 10px;
+  color: #000;
+}
+
+.acct-tbc .acct-name strong {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.acct-tbc .acct-chars {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  border-top: 1px solid #D1C0A2;
+}
+
+.acct-tbc .acct-chars li {
+  padding: 6px 2px;
+  border-bottom: 1px solid #D1C0A2;
+}
+
+.acct-tbc .acct-char-name { font-weight: 700; }
+
+.acct-tbc .acct-char-level,
+.acct-tbc .acct-char-class {
+  margin-left: 8px;
+  color: #5c4630;
+}
+
+.acct-tbc .acct-empty {
+  font-style: italic;
+  color: #5c4630;
+}
+
+.acct-tbc .acct-password .acct-heading { color: #1f4d14; }
+
+@media (max-width: 640px) {
+  .acct-tbc .acct-cols { flex-direction: column; }
+  .acct-tbc .acct-side { flex-basis: auto; width: 100%; }
+}

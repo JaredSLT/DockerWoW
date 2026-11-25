@@ -1,0 +1,24 @@
+/* Account forms on the Wrath Classic product chrome. */
+
+.acct-wc h2 {
+  margin: 0 0 8px;
+  color: #f4f8fc;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.acct-wc h3 { margin: 0 0 8px; font-weight: 600; }
+
+.era-wotlk-classic .acct-error { color: #ff9b9b; }
+.era-wotlk-classic .acct-notice { color: #9dffc3; }
+
+.acct-wc .acct-chars { padding-left: 18px; }
+.acct-wc .acct-chars li { margin: 6px 0; }
+
+.era-wotlk-classic .acct-services {
+  margin: 18px 0;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.era-wotlk-classic .acct-muted { color: #9aabbd; }

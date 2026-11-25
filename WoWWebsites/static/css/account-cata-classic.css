@@ -1,0 +1,72 @@
+/* Account panel on the May 2024 shop shell. No account screenshot. */
+
+.acct-cc {
+  max-width: 520px;
+  padding: 22px 24px 28px;
+  background: #22252a;
+  border-radius: 2px;
+  color: #d5d8de;
+}
+
+.acct-cc h2 {
+  margin: 0 0 12px;
+  color: #f4f6f8;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.acct-cc h3 {
+  margin: 0 0 8px;
+  color: #f4f6f8;
+  font-size: 16px;
+}
+
+.acct-cc p {
+  margin: 0 0 10px;
+}
+
+.acct-cc a {
+  color: #9ecbff;
+}
+
+.acct-error {
+  color: #ff9b9b;
+  font-weight: 700;
+}
+
+.acct-notice {
+  color: #9ddeaf;
+  font-weight: 700;
+}
+
+.acct-cc label {
+  display: block;
+  margin: 12px 0;
+}
+
+.acct-cc input {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  background: #14171c;
+  color: #f4f6f8;
+  border: 1px solid #3a4048;
+  padding: 8px 10px;
+}
+
+.acct-cc button {
+  margin-top: 6px;
+  background: #3a4048;
+  color: #fff;
+  border: 0;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.acct-cc .acct-chars {
+  margin: 0 0 12px;
+  padding-left: 18px;
+}

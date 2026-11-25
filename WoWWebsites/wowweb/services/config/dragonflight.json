@@ -1,0 +1,15 @@
+{
+  "name_change": true,
+  "appearance_change": false,
+  "race_change": true,
+  "faction_change": true,
+  "guild_name_change": true,
+  "expansion_transfer": true,
+  "boost": false,
+  "wow_token": false,
+  "level_cap": 70,
+  "squish_above": 70,
+  "squish_to": 60,
+  "boost_level": 70,
+  "token_gold": 100000
+}

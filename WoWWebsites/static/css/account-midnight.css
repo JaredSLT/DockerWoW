@@ -1,0 +1,146 @@
+/* Battle.net account gate used by the October 2026 Midnight shell. */
+
+body.midnight .acct-error,
+body.midnight .acct-notice {
+  max-width: 420px;
+  margin: 16px auto;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
+body.midnight .acct-error { color: #ffd0d0; background: #4a1c24; }
+body.midnight .acct-notice { color: #d8ffe4; background: #16402a; }
+
+body.midnight .bnet-gate,
+body.midnight .acct-midnight {
+  min-height: 100vh;
+  background: #0e1116;
+  color: #f5f7fb;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body.midnight .bnet-gate {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 12vh 16px 48px;
+  text-align: center;
+}
+
+body.midnight .bnet-logo {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+body.midnight .bnet-gate h1,
+body.midnight .acct-main h1 {
+  margin: 0 0 18px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+body.midnight .acct-form { text-align: left; }
+body.midnight .acct-field { display: block; margin: 0 0 12px; color: #c5ceda; font-size: 14px; }
+body.midnight .acct-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 12px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid #8b98a8;
+  border-radius: 2px;
+  font: 16px/1.3 "Helvetica Neue", Arial, sans-serif;
+}
+body.midnight .acct-input:focus { outline: 2px solid #148eff; border-color: #148eff; }
+body.midnight .acct-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  background: #148eff;
+  color: #fff;
+  border: 0;
+  border-radius: 2px;
+  font: 700 16px/1 "Helvetica Neue", Arial, sans-serif;
+  cursor: pointer;
+}
+body.midnight .acct-links, body.midnight .acct-hint, body.midnight .acct-fine { color: #c5ceda; }
+body.midnight .acct-links a, body.midnight .acct-fine a, body.midnight .acct-actions a { color: #4dabff; }
+
+body.midnight .bnet-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #8b98a8;
+}
+body.midnight .bnet-or::before,
+body.midnight .bnet-or::after { content: ""; flex: 1; height: 1px; background: #303846; }
+body.midnight .bnet-social { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 12px 0; }
+body.midnight .bnet-social button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+  color: #111;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+body.midnight .bnet-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 28px;
+  background: #151922;
+}
+body.midnight .bnet-tools { display: flex; gap: 16px; align-items: center; }
+body.midnight .bnet-tools a { color: #fff; text-decoration: none; }
+body.midnight .acct-frame { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 60px); }
+body.midnight .acct-nav { display: flex; flex-direction: column; padding: 24px 0; background: #12151c; }
+body.midnight .acct-nav-link { display: block; padding: 12px 18px; color: #d5dbe3; text-decoration: none; }
+body.midnight .acct-nav-on { background: #2a3140; box-shadow: inset 3px 0 0 #4dabff; color: #fff; }
+body.midnight .acct-main { padding: 28px 32px 48px; }
+body.midnight .bnet-create .acct-title,
+body.midnight .bnet-games .acct-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+body.midnight .acct-title { margin-top: 0; }
+body.midnight .bnet-step { margin: 0 0 18px; padding: 0; border: 0; }
+body.midnight .bnet-step legend { font-size: 22px; font-weight: 650; margin-bottom: 8px; }
+body.midnight .bnet-kicker { color: #8b98a8; }
+body.midnight .acct-check { display: block; margin: 8px 0 14px; }
+body.midnight .acct-license {
+  margin-top: 12px;
+  padding: 16px;
+  background: #1b202a;
+  border-radius: 4px;
+}
+body.midnight .acct-license-title { margin: 0 0 8px; }
+body.midnight .acct-k { margin: 12px 0 0; color: #8b98a8; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+body.midnight .acct-email, body.midnight .acct-game-name { color: #fff; font-size: 18px; }
+body.midnight .acct-status { color: #7dffa8; font-weight: 700; }
+body.midnight .acct-chars { list-style: none; margin: 12px 0 0; padding: 0; }
+body.midnight .acct-char {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid #303846;
+}
+body.midnight .bnet-create { max-width: 480px; }
+body.midnight .bnet-mail { color: #c5ceda; margin-right: 8px; }
+
+@media (max-width: 800px) {
+  body.midnight .acct-frame { grid-template-columns: 1fr; }
+  body.midnight .acct-nav { flex-direction: row; flex-wrap: wrap; }
+}

@@ -1,0 +1,48 @@
+/* Controls the November 2006 stylesheets do not cover: talent calculator,
+   world map, and the account form sitting in the parchment well. */
+
+body.vanilla .trees { display: flex; gap: 8px; flex-wrap: wrap; }
+body.vanilla .tree {
+  flex: 1; min-width: 180px; background: rgba(20, 14, 8, .85); color: #eee;
+  padding: 8px; border: 1px solid #8a6a22;
+}
+body.vanilla .tree h3 { margin: 0 0 8px; color: #f3d789; font-size: 13px; }
+body.vanilla .talent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+body.vanilla .talent {
+  background: #2a2014; color: #f3d789; border: 1px solid #7a5a18;
+  font: 10px/1.15 Arial, sans-serif; min-height: 42px; cursor: pointer;
+  text-align: left; padding: 3px; overflow: hidden;
+}
+body.vanilla .talent:hover { outline: 1px solid #e0b800; }
+body.vanilla .tname { display: block; }
+body.vanilla .worldmap {
+  position: relative; height: 420px;
+  background: #1c3a28 url("/static/img/ssotd-elwynn.jpg") center/cover;
+  border: 3px solid #8a6a22;
+}
+body.vanilla .zone {
+  position: absolute; color: #fceac6; font: 700 11px Arial, sans-serif;
+  text-shadow: 0 1px 2px #000; text-decoration: none;
+  background: rgba(0, 0, 0, .35); padding: 2px 4px;
+}
+body.vanilla .post { border: 1px solid #d1c0a2; margin: 0 0 12px; background: rgba(255, 248, 230, .4); }
+body.vanilla .post header { background: #6b1210; color: #fceac6; padding: 4px 8px; font-size: 12px; }
+body.vanilla .post pre { white-space: pre-wrap; padding: 8px; margin: 0; font: 13px "Trebuchet MS", sans-serif; }
+body.vanilla #cntMain { min-height: 980px; }
+body.vanilla .vanilla-redbtn {
+  display: inline-block;
+  min-width: 48px;
+  height: 22px;
+  padding: 0 8px;
+  background: #8d160f;
+  color: #f8e7b0;
+  font: bold 11px/22px Arial, Helvetica, sans-serif;
+  text-align: center;
+  white-space: nowrap;
+}
+body.vanilla .guide-copy { font: 12px/1.45 Arial, Helvetica, sans-serif; color: #000; padding: 8px 12px 24px; }
+body.vanilla .guide-copy h2 { font: 18px Palatino, Georgia, serif; margin: 0 0 8px; }
+body.vanilla .guide-copy a { color: #1e4378; }
+body.vanilla table.grid { width: 100%; border-collapse: collapse; }
+body.vanilla table.grid th { text-align: left; background: #640909; color: #fceac6; padding: 4px 6px; }
+body.vanilla table.grid td { border-top: 1px solid #d1c0a2; padding: 4px 6px; }

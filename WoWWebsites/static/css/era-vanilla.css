@@ -1,0 +1,518 @@
+/* April 2006 World of Warcraft community site.
+   Header, menu buttons, arena banner, night elf, and the right rail
+   are crops of the 12 April 2006 community home. The iron frame and
+   parchment are the original layout slices. */
+
+body.era-vanilla {
+  margin: 0;
+  background: #000;
+  color: #2a2114;
+  font: 12px Arial, Helvetica, sans-serif;
+  min-width: 1880px;
+}
+body.era-vanilla a { color: #1e4378; }
+
+.v-trees {
+  position: absolute;
+  top: 0;
+  height: 840px;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+}
+.v-trees-l {
+  left: -250px;
+  width: 250px;
+  background-image: url("/static/img/vanilla2006/trees-left.jpg");
+  background-position: right top;
+}
+.v-trees-r {
+  left: 980px;
+  width: 432px;
+  background-image: url("/static/img/vanilla2006/trees-right.jpg");
+  background-position: left top;
+}
+
+.v-site {
+  position: relative;
+  z-index: 1;
+  width: 980px;
+  margin: 0 auto;
+}
+
+.v-top { position: relative; height: 76px; z-index: 5; }
+.v-header { display: block; width: 980px; height: 76px; }
+.v-logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 198px;
+  height: 102px;
+  z-index: 2;
+}
+.hit-logo,
+.hit-acct,
+.hit-realm {
+  position: absolute;
+  z-index: 3;
+  overflow: hidden;
+  text-indent: -999px;
+  white-space: nowrap;
+}
+.hit-logo { left: 0; top: 0; width: 198px; height: 102px; }
+.hit-acct { left: 548px; top: 8px; width: 160px; height: 50px; }
+.hit-realm { left: 714px; top: 8px; width: 160px; height: 50px; }
+.v-who {
+  position: absolute;
+  right: 16px;
+  top: 78px;
+  margin: 0;
+  color: #f0d56a;
+  font: 11px Verdana, Arial, sans-serif;
+  z-index: 6;
+}
+.v-who a { color: #f0d56a; }
+
+.v-elf {
+  position: absolute;
+  left: -172px;
+  top: 58px;
+  width: 210px;
+  height: auto;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.v-body {
+  display: flex;
+  align-items: flex-start;
+  padding: 0 20px 28px 39px;
+  position: relative;
+  z-index: 3;
+}
+.v-menu {
+  width: 151px;
+  flex: none;
+  margin-top: 28px;
+  position: relative;
+  z-index: 1;
+}
+.v-menu summary {
+  display: block;
+  position: relative;
+  width: 151px;
+  height: 26px;
+  background-repeat: no-repeat;
+  background-size: 151px 100%;
+  cursor: pointer;
+  list-style: none;
+}
+.v-menu summary::-webkit-details-marker { display: none; }
+.v-menu summary span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.v-sec-news summary { background-image: url("/static/img/vanilla2006/btn-news.jpg"); }
+.v-sec-account summary { background-image: url("/static/img/vanilla2006/btn-account.jpg"); }
+.v-sec-guide summary { background-image: url("/static/img/vanilla2006/btn-guide.jpg"); }
+.v-sec-workshop summary {
+  height: 26px;
+  background-image: url("/static/img/vanilla2006/btn-workshop.jpg");
+}
+.v-sec-media summary {
+  height: 28px;
+  background-image: url("/static/img/vanilla2006/btn-media.jpg");
+}
+.v-sec-forums summary {
+  height: 28px;
+  background-image: url("/static/img/vanilla2006/btn-forums.jpg");
+}
+.v-sec-community summary {
+  height: 28px;
+  background-image: url("/static/img/vanilla2006/btn-community.jpg");
+}
+.v-sec-support summary {
+  height: 28px;
+  background-image: url("/static/img/vanilla2006/btn-support.jpg");
+}
+.v-sub {
+  margin: 0 0 1px;
+  padding: 2px 0 4px;
+  background: #070d18;
+  border: 1px solid #1a3148;
+  border-top: 0;
+}
+.v-sub a {
+  display: block;
+  position: relative;
+  height: 15px;
+  padding: 0 16px 0 8px;
+  color: #f6e7b0;
+  font: bold 10px/15px Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.v-sub a::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 5px;
+  width: 5px;
+  height: 5px;
+  background: #8ec0ea;
+  transform: rotate(45deg);
+}
+.v-sub a:hover { color: #fff; }
+
+.v-iron { width: 754px; margin-left: 8px; flex: none; }
+.v-iron-t { height: 25px; background: url("/new-hp/images/layout/frame_top-bg.jpg") repeat-x 0 0; }
+.v-iron-t > div { height: 25px; background: url("/new-hp/images/layout/frame_top-left.jpg") no-repeat left top; }
+.v-iron-t > div > div { height: 25px; background: url("/new-hp/images/layout/frame_top-right.jpg") no-repeat right top; }
+.v-iron-m { background: url("/new-hp/images/layout/frame_left-bg.jpg") repeat-y left top; }
+.v-iron-r { background: url("/new-hp/images/layout/frame_right-bg.jpg") repeat-y right top; }
+.v-parch {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 34px 0 31px;
+  min-height: 620px;
+  background: #e6d2a4 url("/new-hp/images/layout/light.jpg") repeat;
+}
+.v-iron-b { height: 41px; background: url("/new-hp/images/layout/frame_bottom-bg.jpg") repeat-x 0 0; }
+.v-iron-b > div { height: 41px; background: url("/new-hp/images/layout/frame_bottom-left.jpg") no-repeat left top; }
+.v-iron-b > div > div { height: 41px; background: url("/new-hp/images/layout/frame_bottom-right.jpg") no-repeat right top; }
+
+.v-center { flex: 1 1 auto; min-width: 0; padding: 8px 10px 18px; }
+.v-center.v-wide { padding: 10px 16px 24px; }
+.v-center:has(.v-home) { padding: 2px 4px 12px; }
+.v-center img { max-width: 100%; }
+.v-center h1,
+.v-center h2 {
+  margin: 0 0 8px;
+  color: #640909;
+  font: bold 18px Palatino, Georgia, "Times New Roman", serif;
+}
+.v-center p,
+.v-center li { line-height: 1.4; }
+.v-center table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f4e6c4;
+}
+.v-center table.grid th {
+  background: #12315f;
+  color: #fff;
+  text-align: left;
+  padding: 3px 6px;
+}
+.v-center table.grid td {
+  border-bottom: 1px solid #cbb892;
+  padding: 3px 6px;
+}
+.v-center .up { color: #1d6b2f; font-weight: bold; }
+.v-center .down { color: #8b1e1e; font-weight: bold; }
+.v-center .race-grid,
+.v-center .class-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.v-center .race-card,
+.v-center .class-card {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 140px;
+  color: #1e4378;
+  font-weight: bold;
+  text-decoration: none;
+}
+.v-center .trees { display: flex; gap: 8px; overflow-x: auto; }
+.v-center .tree { flex: none; width: 220px; }
+.v-center .talent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 52px);
+  grid-auto-rows: 58px;
+  gap: 3px;
+}
+.v-center button.talent {
+  font: 8px/1.1 Arial, sans-serif;
+  background: #f4e6c4;
+  border: 1px solid #6a5428;
+  color: #2a2114;
+  padding: 2px;
+}
+.v-center .trank { display: block; color: #640909; font-weight: bold; }
+.v-center .worldmap { position: relative; min-height: 280px; background: #c4b48a; }
+.v-center .zone { position: absolute; font-size: 10px; }
+
+.v-arena img { display: block; width: 100%; height: auto; }
+.v-news { margin: 6px 4px 0; color: #3a2e1c; }
+.v-news h3 {
+  height: 28px;
+  margin: 0;
+  background: url("/static/img/vanilla2006/newsbar.jpg") no-repeat center / 100% 100%;
+  text-indent: -999px;
+  overflow: hidden;
+}
+.v-cols {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 6px 0;
+}
+.v-cols span {
+  background: #12315f;
+  color: #fff;
+  font: bold 11px Arial, Helvetica, sans-serif;
+  padding: 1px 8px;
+}
+.v-story { border-bottom: 1px solid #cbb892; }
+.v-story summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 6px;
+  cursor: pointer;
+  list-style: none;
+}
+.v-story summary::-webkit-details-marker { display: none; }
+.v-story summary::before {
+  content: "+";
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  border: 1px solid #8a7040;
+  background: #f4e6c4;
+  color: #3a2a14;
+  font: bold 11px/12px Arial, sans-serif;
+  text-align: center;
+}
+.v-story[open] summary::before { content: "–"; }
+.v-title { color: #1e4378; font-weight: bold; text-decoration: underline; }
+.v-by { color: #6d5b3e; font-weight: normal; }
+.v-date { margin-left: auto; color: #1e4378; font-weight: bold; }
+.v-copy { padding: 4px 16px 10px 28px; line-height: 1.35; }
+.v-copy p { margin: 0 0 8px; }
+.v-copy ul { margin: 0 0 8px; padding-left: 18px; }
+.v-copy li { margin: 0 0 2px; }
+
+.v-rail { width: 226px; flex: none; padding: 4px 2px 8px 0; }
+.v-rail-art { position: relative; }
+.v-rail-art img { display: block; width: 100%; height: auto; }
+.v-rail-art a.hit {
+  position: absolute;
+  left: 8%;
+  width: 84%;
+  height: 3.2%;
+  color: transparent;
+  overflow: hidden;
+  font-size: 11px;
+}
+.hit-faq { top: 5.6%; }
+.hit-realms { top: 9.4%; }
+.hit-create { top: 13.2%; }
+.hit-manage { top: 17%; }
+.hit-pass { top: 20.4%; }
+.hit-info { top: 31%; height: 18%; }
+.hit-indev { top: 52%; height: 27%; }
+.hit-pvp { top: 82.5%; height: 6%; }
+#ssotd-container,
+.ssotd-container {
+  margin: 0 6px;
+  background: #000;
+  border: 1px solid #6a5428;
+}
+#ssotd-container img,
+.ssotd-container img {
+  display: block;
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+
+/* April 2006 General board: black rows, gold subjects. Thread titles stay live. */
+body.era-vanilla .v-parch:has(.forum-board),
+body.era-vanilla .v-parch:has(.forum-thread) {
+  background: #070709;
+}
+body.era-vanilla .v-center:has(.forum-board),
+body.era-vanilla .v-center:has(.forum-thread) {
+  align-self: stretch;
+  min-height: 640px;
+  background: #050508;
+}
+body.era-vanilla .v-center .forum-board,
+body.era-vanilla .v-center .forum-thread {
+  background: #050508;
+  color: #d5d5d5;
+  border: 1px solid #3a3320;
+  padding: 0 0 8px;
+}
+body.era-vanilla .v-center .forum-board h2,
+body.era-vanilla .v-center .forum-thread h2 {
+  margin: 0;
+  padding: 6px 8px;
+  background: #000;
+  color: #f0d56a;
+  font: bold 16px Arial, Helvetica, sans-serif;
+}
+body.era-vanilla .v-center .forum-board table.grid.forum-threads,
+body.era-vanilla .v-center .forum-board table.grid.forum-threads td,
+body.era-vanilla .v-center .forum-board table.grid.forum-threads th {
+  background: #000;
+  background-image: none;
+  color: #d8d8d8;
+  border: 0;
+  border-bottom: 1px solid #2a2a2a;
+  text-shadow: none;
+}
+body.era-vanilla .v-center .forum-board table.grid.forum-threads th {
+  color: #f0d56a;
+  border-bottom: 1px solid #6a5a30;
+  font: bold 11px Arial, Helvetica, sans-serif;
+}
+body.era-vanilla .v-center .forum-board td.thread-title a.topic {
+  color: #e6c15a;
+  font-weight: normal;
+  font-size: 12px;
+}
+body.era-vanilla .v-center .forum-board td.thread-author,
+body.era-vanilla .v-center .forum-board td.thread-replies,
+body.era-vanilla .v-center .forum-board td.thread-views {
+  color: #eee;
+  text-align: right;
+}
+body.era-vanilla .v-center .forum-board td.thread-last,
+body.era-vanilla .v-center .forum-board .date {
+  color: #9a9a9a;
+  font-weight: normal;
+}
+body.era-vanilla .v-center .forum-board tr.thread-row:hover td {
+  background: #141414;
+}
+body.era-vanilla .v-center .forum-board nav.forum-pager {
+  margin: 8px;
+}
+body.era-vanilla .v-center .forum-board nav.forum-pager a.page {
+  color: #e6c15a;
+  background: #000;
+  border: 1px solid #6a5a30;
+}
+body.era-vanilla .v-center .forum-board p,
+body.era-vanilla .v-center .forum-thread p,
+body.era-vanilla .v-center .forum-board h3,
+body.era-vanilla .v-center .forum-thread h3 {
+  margin: 8px;
+  color: #d5d5d5;
+}
+body.era-vanilla .v-center .forum-board a,
+body.era-vanilla .v-center .forum-thread a { color: #e6c15a; }
+body.era-vanilla .v-center .forum-board input,
+body.era-vanilla .v-center .forum-board textarea,
+body.era-vanilla .v-center .forum-thread textarea {
+  background: #111;
+  color: #eee;
+  border: 1px solid #6a5a30;
+}
+
+.dev-foot {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 8px 12px 16px;
+  color: #c8b48a;
+  text-align: center;
+  font: 11px Arial, Helvetica, sans-serif;
+}
+
+body.era-vanilla-receipt {
+  min-width: 0;
+  background: #fff;
+  color: #222;
+}
+body.era-vanilla-receipt .v-trees { display: none; }
+.r-head {
+  text-align: center;
+  padding: 12px 0 8px;
+  background: #070707;
+}
+.r-head img { width: 198px; height: auto; }
+.r-sub {
+  margin: 0;
+  color: #e7c56a;
+  font: bold 18px Palatino, Georgia, serif;
+  letter-spacing: 0.08em;
+}
+.r-sheet {
+  width: min(720px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 16px 8px 40px;
+  background: #fff;
+  color: #222;
+  font: 13px/1.45 Arial, Helvetica, sans-serif;
+}
+.r-sheet h1 {
+  margin: 0 0 8px;
+  font: bold 22px Georgia, "Times New Roman", serif;
+  color: #222;
+}
+.r-print { font-weight: bold; }
+.r-box { float: right; width: 150px; margin: 0 0 12px 12px; }
+.r-sheet a { color: #1e4378; }
+.r-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  clear: both;
+  margin-top: 12px;
+}
+.r-block h2 {
+  margin: 0 0 0;
+  padding: 4px 8px;
+  background: #0c3d72;
+  color: #fceac6;
+  font: bold 13px Arial, Helvetica, sans-serif;
+}
+.r-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f3e6c4;
+  border: 1px solid #888;
+}
+.r-table th {
+  width: 42%;
+  text-align: left;
+  padding: 4px 6px;
+  font-weight: normal;
+  color: #222;
+}
+.r-table td {
+  padding: 4px 6px;
+  background: #fff;
+}
+.r-blank {
+  display: inline-block;
+  min-width: 72px;
+  min-height: 14px;
+  background: #fff;
+}
+.r-blank-block {
+  display: block;
+  height: 88px;
+  border: 1px solid #888;
+  background: #fff;
+}
+.r-value { font-weight: bold; }
+.r-pay { margin-top: 12px; }
+.r-foot {
+  margin: 18px 0 0;
+  color: #666;
+  font-size: 11px;
+}

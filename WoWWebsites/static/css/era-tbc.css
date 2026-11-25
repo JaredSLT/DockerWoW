@@ -1,0 +1,257 @@
+/* October 2007 community site, 2008 forums, and the desktop Armory.
+   Fel edge, gold menu, parchment column. Forum and Armory frames
+   replace the left menu when the body asks for them. */
+
+html, body { margin: 0; padding: 0; }
+body.era-tbc {
+  background:
+    radial-gradient(ellipse at 8% 18%, rgba(50, 150, 30, .45), transparent 36%),
+    radial-gradient(ellipse at 96% 22%, rgba(110, 20, 140, .4), transparent 40%),
+    #000;
+  color: #e8dcc0;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
+  min-width: 1040px;
+}
+body.era-tbc a { color: #1e4378; }
+body.era-tbc a:hover { color: #c60000; }
+
+.tbc-site { width: 1000px; margin: 0 auto 32px; position: relative; }
+.tbc-top {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  min-height: 28px; padding: 6px 8px 4px;
+  color: #f0d78c; font-size: 11px;
+}
+.tbc-sites { display: flex; gap: 6px; margin: 0; }
+.tbc-sites a, .tbc-who a, .tbc-lang, .tbc-community { color: #f0d78c; text-decoration: none; }
+.tbc-sites span { color: #8a6a22; }
+.tbc-search { display: flex; gap: 4px; align-items: center; margin-left: auto; }
+.tbc-search input, .tbc-armory-find input, .tbc-flogin input, .tbc-postform input, .tbc-postform textarea {
+  background: #040d1a; color: #ffac04; border: 1px solid #7f7f7f;
+  font: 11px Arial, Helvetica, sans-serif; padding: 2px 4px;
+}
+.tbc-search button, .tbc-armory-find button, .tbc-flogin button, .tbc-postform button {
+  background: #640909; color: #fceac6; border: 1px solid #996d11;
+  font: 700 11px Arial, Helvetica, sans-serif; padding: 2px 8px; cursor: pointer;
+}
+.tbc-who { margin: 0; }
+.tbc-lang { margin: 0; }
+.tbc-login-err { margin: 0; color: #ffb0b0; width: 100%; }
+
+.tbc-logo-row { padding: 0 0 6px 8px; }
+.tbc-logo { display: flex; gap: 8px; align-items: center; text-decoration: none; color: #fceac6; }
+.tbc-logo img, .tbc-forum-head img {
+  width: 168px; height: 72px; object-fit: cover; object-position: left center;
+  border: 2px solid #c4a15a; background: #000;
+}
+.tbc-logo span { display: flex; flex-direction: column; }
+.tbc-logo em { font: 700 9px/1 "Trebuchet MS", sans-serif; letter-spacing: .28em; font-style: normal; color: #f0d78c; }
+.tbc-logo strong, .tbc-logo-text strong {
+  font: 900 22px/1 Georgia, "Times New Roman", serif; letter-spacing: .06em; color: #fceac6;
+}
+.tbc-logo span strong { font-size: 13px; font-style: italic; letter-spacing: .04em; color: #d7f58a; }
+
+.tbc-frame {
+  display: flex; align-items: stretch;
+  border: 2px solid #8a6a22;
+  background: #070807;
+  box-shadow: 0 0 22px rgba(70, 170, 40, .28);
+}
+.tbc-nav { width: 168px; flex: none; padding: 6px 4px 10px; background: #070807; }
+.tbc-sec { margin: 0 0 3px; border: 1px solid #3a3018; background: #120f0a; }
+.tbc-sec summary {
+  cursor: pointer; list-style: none; padding: 3px 16px 3px 8px;
+  color: #f0d78c; font: 700 11px/1.3 Arial, Helvetica, sans-serif;
+  background: linear-gradient(#3a3018, #16110a);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tbc-sec summary::-webkit-details-marker { display: none; }
+.tbc-sec summary::after { content: "+"; float: right; color: #d7f58a; }
+.tbc-sec[open] summary::after { content: "–"; }
+.tbc-sub a {
+  display: block; padding: 1px 6px 1px 14px; color: #e7c56a;
+  text-decoration: none; font-size: 11px;
+}
+.tbc-sub a:hover { color: #fff; background: #241c10; }
+
+.tbc-main { display: flex; flex: 1; min-width: 0; background: #1a140c; }
+.tbc-parch {
+  flex: 1; min-width: 0; padding: 12px 14px 18px;
+  color: #2a1c10;
+  background:
+    linear-gradient(rgba(243, 226, 184, .9), rgba(243, 226, 184, .92)),
+    url("/static/img/parchment.jpg");
+  background-size: cover;
+}
+.tbc-parch h2, .tbc-post h2 {
+  margin: 0 0 4px; color: #6a2010;
+  font: 700 15px/1.25 Georgia, "Times New Roman", serif;
+  font-variant: small-caps; letter-spacing: .03em;
+}
+.tbc-parch h2 a, .tbc-post h2 a { color: #6a2010; text-decoration: none; }
+.tbc-parch h2 a:hover, .tbc-post h2 a:hover { color: #c60000; }
+.tbc-post { padding: 8px 2px 10px; border-bottom: 1px solid #c4a574; }
+.tbc-by, .tbc-realm { margin: 0 0 6px; color: #5c4630; font-size: 11px; }
+.tbc-banner { margin: 0 0 8px; border: 2px solid #8a6a22; background: #000; }
+.tbc-banner img { display: block; width: 100%; height: 148px; object-fit: cover; object-position: center 30%; }
+
+.tbc-rail { width: 176px; flex: none; padding: 8px 6px; background: #100e0a; }
+.tbc-quick, #ssotd-container {
+  margin: 0 0 8px; border: 1px solid #8a6a22; background: #1c160f; padding: 4px;
+}
+.tbc-quick h3, #ssotd-container h3 {
+  margin: 0 0 4px; padding: 3px 6px; background: #3a3018; color: #f0d78c;
+  font: 700 11px Arial, Helvetica, sans-serif; text-transform: uppercase;
+}
+.tbc-quick a { display: block; padding: 2px 4px; color: #e7c56a; text-decoration: none; font-size: 11px; }
+.tbc-quick a:hover { color: #fff; }
+#ssotd-container img { display: block; width: 100%; height: 110px; object-fit: cover; background: #000; }
+
+.tbc-foot {
+  margin: 8px 0 0; color: #c8b898; font-size: 10px; text-align: center;
+}
+.tbc-foot a { color: #e7c56a; }
+.tbc-foot span { display: block; margin-top: 3px; }
+
+.tbc-parch .grid, .tbc-parch table { width: 100%; border-collapse: collapse; background: rgba(255, 248, 230, .55); }
+.tbc-parch th { background: #640909; color: #fceac6; text-align: left; padding: 4px 6px; }
+.tbc-parch td { border-bottom: 1px solid #c4a574; padding: 4px 6px; vertical-align: top; }
+.tbc-parch .up { color: #1a7a1a; font-weight: 700; }
+.tbc-parch .down { color: #8b1c14; font-weight: 700; }
+.tbc-parch .trees { display: flex; gap: 8px; align-items: flex-start; }
+.tbc-parch .tree { flex: 1; min-width: 0; background: #1a140c; color: #f3d789; padding: 8px; border: 1px solid #8a6a22; }
+.tbc-parch .tree h3 { margin: 0 0 8px; color: #f3d789; font-size: 13px; }
+.tbc-parch .talent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.tbc-parch .talent { background: #2a2014; color: #f3d789; border: 1px solid #7a5a18; }
+.tbc-acctbar { margin: 0 0 10px; padding: 4px 6px; background: #1a140c; color: #f0d78c; font-size: 11px; }
+.tbc-acctbar a { color: #f0d78c; }
+.tbc-upgraded { position: relative; margin: 12px auto; max-width: 360px; border: 3px solid #5a3e16; }
+.tbc-upgraded img { display: block; width: 100%; height: 220px; object-fit: cover; }
+.tbc-upgraded span {
+  position: absolute; left: 0; right: 0; bottom: 16px; text-align: center;
+  font: 700 28px/1 Georgia, "Times New Roman", serif; color: #f0d040;
+  text-shadow: 0 2px 4px #000; letter-spacing: .04em;
+}
+
+.tbc-site-forums { color: #f0e6c8; }
+.tbc-forum-head { text-align: center; padding: 8px 0; }
+.tbc-logo-text { margin: 4px 0 0; }
+.tbc-logo-text span { display: block; letter-spacing: .22em; font-size: 10px; color: #f0d78c; }
+.tbc-forum-frame {
+  border: 2px solid #8a6a22; background: #070807;
+  box-shadow: 0 0 18px rgba(40, 140, 40, .35); padding: 14px 16px 20px;
+}
+.tbc-forums h1 {
+  margin: 0 0 8px; color: #f0d78c;
+  font: 700 22px Georgia, "Times New Roman", serif;
+}
+.tbc-welcome, .tbc-new {
+  margin: 0 0 10px; padding: 8px; border: 1px solid #6a5420; background: #120f0a;
+}
+.tbc-new { float: right; width: 220px; margin-left: 12px; }
+.tbc-forums a { color: #f0d78c; }
+.tbc-boardgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; clear: both; }
+.tbc-board a { font-weight: 700; text-decoration: none; }
+.tbc-board p, .tbc-fold summary p { margin: 0; color: #c8c0a8; font-size: 11px; font-weight: 400; }
+.tbc-fold {
+  margin-top: 6px; background: #1a140c; border: 1px solid #6a5420; clear: both;
+}
+.tbc-fold summary { cursor: pointer; padding: 6px 10px; color: #f0d78c; font-weight: 700; }
+.tbc-fold .tbc-boardgrid { padding: 0 10px 8px; }
+.tbc-bg { margin: 0; padding: 0 10px 8px; }
+.tbc-copyear { text-align: center; color: #c8b898; font-size: 10px; }
+
+.tbc-threads { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.tbc-threads th { color: #f0d78c; text-align: left; border-bottom: 1px solid #6a5420; padding: 4px; }
+.tbc-threads td { border-bottom: 1px solid #2a2418; padding: 4px; vertical-align: top; }
+.tbc-subject a { color: #f3e2b0; }
+.tbc-flogin, .tbc-postform { margin: 8px 0; }
+.tbc-flogin label, .tbc-postform label { display: inline-block; margin-right: 8px; }
+.tbc-postform label { display: block; margin: 6px 0; }
+.tbc-postform textarea { width: 100%; max-width: 36rem; box-sizing: border-box; }
+.tbc-pager a { margin-right: 6px; }
+.tbc-pager .is-on { color: #fff; font-weight: 700; }
+.tbc-fpost { margin: 0 0 8px; padding: 8px; background: #120f0a; border: 1px solid #3a3018; }
+.tbc-fpost header { color: #f0d78c; margin-bottom: 4px; }
+.tbc-fpost pre { white-space: pre-wrap; font: 12px/1.45 Arial, Helvetica, sans-serif; margin: 0; }
+.tbc-crumb { color: #c8c0a8; }
+
+.tbc-site-armory .tbc-armory-head {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; padding: 4px 0 8px;
+}
+.tbc-armory-logo {
+  font: 900 28px/1 Georgia, "Times New Roman", serif; color: #f0d040;
+  text-decoration: none; letter-spacing: .04em; text-shadow: 0 2px 0 #000;
+}
+.tbc-armory-find { color: #f0d78c; }
+.tbc-armory-frame {
+  background:
+    linear-gradient(rgba(231, 211, 161, .94), rgba(231, 211, 161, .94)),
+    url("/static/img/parchment.jpg");
+  color: #2a1c10; border: 3px solid #5a3e16; padding: 10px;
+}
+.tbc-armory h1 { margin: 0; font: 700 22px Georgia, "Times New Roman", serif; color: #3a2a14; }
+.tbc-armory-err { color: #8b1c14; font-weight: 700; }
+.tbc-results { width: 100%; border-collapse: collapse; background: #f7e7c0; margin: 8px 0; }
+.tbc-results th { background: #c4a15a; color: #2a1c10; text-align: left; padding: 4px 6px; }
+.tbc-results td { border-bottom: 1px solid #d7c49a; padding: 3px 6px; }
+.tbc-results tr:nth-child(even) td { background: #ead7a4; }
+.tbc-mini { width: 18px; height: 18px; vertical-align: middle; margin-right: 2px; border: 1px solid #6a5428; }
+
+.tbc-tabs { display: flex; gap: 2px; margin: 0 0 8px; flex-wrap: wrap; }
+.tbc-tabs a {
+  background: #e7d3a1; color: #3a2a14; text-decoration: none;
+  padding: 4px 8px; border: 1px solid #8a6a22; border-bottom: none;
+}
+.tbc-tabs a.is-on { background: #f7e7c0; font-weight: 700; }
+.tbc-sheet { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 8px; }
+.tbc-ident { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+.tbc-portrait { width: 56px; height: 56px; border: 2px solid #8a6a22; background: #1a1208; }
+.tbc-ident h1 { font-size: 22px; }
+.tbc-gname { margin: 0; color: #8a5a12; font-weight: 700; }
+.tbc-ribbon { text-align: center; font: italic 700 16px Georgia, serif; margin: 0 0 6px; }
+.tbc-doll {
+  display: grid; grid-template-columns: 48px minmax(0, 1fr) 48px; gap: 6px; align-items: start;
+}
+.tbc-slot {
+  display: block; width: 44px; height: 44px; margin: 0 0 3px;
+  background: #1a1208; border: 1px solid #6a5428; box-sizing: border-box;
+}
+.tbc-slot img { width: 42px; height: 42px; object-fit: cover; display: block; }
+.tbc-weapons { grid-column: 1 / -1; display: flex; gap: 4px; justify-content: center; }
+.tbc-mid { background: #1a140c; color: #f0e2b0; border: 1px solid #6a5428; padding: 6px; }
+.tbc-mid h3 { margin: 6px 0 2px; color: #f0d78c; font-size: 11px; text-transform: uppercase; }
+.tbc-mid a { color: #f0d78c; }
+.tbc-mid ul { list-style: none; margin: 0; padding: 0; }
+.tbc-mid li { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; }
+.tbc-statcols { display: flex; gap: 10px; }
+.tbc-statcols > div { flex: 1; }
+.tbc-bars { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.tbc-hp, .tbc-mp { display: block; padding: 1px 4px; color: #fff; font-size: 11px; }
+.tbc-hp { background: #1d7a22; }
+.tbc-mp { background: #1a4e9a; }
+.tbc-updated, .tbc-guildline { font-size: 11px; color: #5c4630; }
+.tbc-roster {
+  background: #f3e2b8; border: 1px solid #8a6a22; padding: 6px; max-height: 640px; overflow: auto;
+}
+.tbc-roster h3 { margin: 0 0 6px; font: italic 13px Georgia, serif; }
+.tbc-roster ul { list-style: none; margin: 0; padding: 0; }
+.tbc-roster li { display: flex; gap: 4px; align-items: center; padding: 2px 3px; font-size: 11px; }
+.tbc-roster .is-self { background: #7eb0e8; }
+.tbc-trees { display: flex; gap: 6px; align-items: flex-start; }
+.tbc-tree { flex: 1; min-width: 0; padding: 6px; border: 1px solid #000; color: #f3d789; }
+.tbc-tree h3 { margin: 0 0 6px; text-align: center; font-size: 13px; }
+.tbc-tree-0 { background: #102818; }
+.tbc-tree-1 { background: #1a1030; }
+.tbc-tree-2 { background: #301410; }
+.tbc-talgrid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 52px; gap: 3px; }
+.tbc-tal { text-align: center; }
+.tbc-tal img { width: 32px; height: 32px; object-fit: cover; border: 1px solid #6a5428; background: #1a1208; }
+.tbc-tal b { display: block; font-size: 9px; color: #f0d78c; }
+.tbc-points, .tbc-pointcap { font-size: 11px; }
+
+@media (max-width: 1100px) {
+  body.era-tbc { min-width: 0; }
+  .tbc-site { width: auto; margin: 0 8px 24px; }
+  .tbc-frame, .tbc-main, .tbc-sheet, .tbc-boardgrid, .tbc-trees { display: block; }
+  .tbc-nav, .tbc-rail { width: auto; }
+}

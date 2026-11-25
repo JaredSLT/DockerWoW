@@ -1,0 +1,10 @@
+.acct-error { color: #8b1e1e; font-weight: bold; }
+.acct-notice { color: #1d6b2f; font-weight: bold; }
+.acct-form label { display: block; margin: 0.6rem 0; }
+.acct-form input { display: block; margin-top: 0.2rem; min-width: 16rem; }
+.acct-form button { margin-top: 0.4rem; }
+.acct-form select { display: block; margin-top: 0.2rem; min-width: 16rem; }
+.acct-services { margin: 1.2rem 0 1.6rem; }
+.acct-services h3 { margin-bottom: 0.3rem; }
+.acct-muted { color: #555; }
+.acct-services-link { margin-top: 1rem; }

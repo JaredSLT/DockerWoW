@@ -1,0 +1,65 @@
+/* gen2, wowcom, and gen4 import gen1. These reset the parchment surfaces
+   (cream rows, navy dates, tan fields) on the dark shells. */
+
+body:is(.gen2, .gen4, .wowcom) table.news,
+body:is(.gen2, .gen4, .wowcom) table.grid {
+  background: transparent;
+  color: inherit;
+}
+body:is(.gen2, .gen4, .wowcom) table.news td,
+body:is(.gen2, .gen4, .wowcom) table.grid td {
+  border-color: rgba(255, 255, 255, .1);
+  color: inherit;
+  background: transparent;
+}
+body:is(.gen2, .gen4, .wowcom) table.news tr.hilite td {
+  background: rgba(255, 255, 255, .05);
+  border-top-color: transparent;
+}
+body:is(.gen2, .gen4, .wowcom) .date,
+body:is(.gen2, .gen4, .wowcom) table.news .date {
+  color: var(--date, #9ec7f0);
+  font-family: inherit;
+}
+body:is(.gen2, .gen4, .wowcom) table.news td.date {
+  white-space: nowrap;
+  width: 1%;
+}
+body:is(.gen2, .gen4, .wowcom) :is(.meta, .kicker, .fine) {
+  color: var(--muted, #c5d4e8);
+}
+body:is(.gen2, .gen4, .wowcom) :is(.acct input, .acct textarea, .acct select, .search input) {
+  background: var(--field, #0e1622);
+  color: var(--ink, #e8eef8);
+  border: 1px solid var(--line, #2e6db5);
+}
+body:is(.gen2, .gen4, .wowcom) .gear .slot {
+  color: var(--muted, #c5d4e8);
+}
+body:is(.gen2, .gen4, .wowcom) .ibox p,
+body:is(.gen2, .gen4, .wowcom) .ibox .fine {
+  color: var(--muted, #c5d4e8);
+}
+body:is(.gen2, .gen4, .wowcom) .flash {
+  background: var(--panel, #121a2c);
+  color: inherit;
+  border-color: var(--line, #2e6db5);
+}
+body.gen2 .hero-cap { display: none; }
+body:is(.gen2, .gen4, .wowcom) .forum-desc { color: var(--muted, #c5d4e8); }
+body:is(.gen2, .gen4, .wowcom) .post {
+  background: rgba(0, 0, 0, .2);
+  border-color: var(--line, #24344c);
+  color: inherit;
+}
+body:is(.gen2, .gen4, .wowcom) .tree {
+  background: rgba(0, 0, 0, .35);
+}
+/* gen1 leaves navy links, red hovers, and parchment rows unscoped. */
+body.gen2 table.grid { display: table; }
+body.gen2 .main-body {
+  background-color: #000;
+  background-image: none;
+  border: 0;
+  box-shadow: none;
+}

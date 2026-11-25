@@ -1,0 +1,542 @@
+/* June 2023 worldofwarcraft.com masthead, plus the forums, realm, and shop references. */
+
+body.era-dragonflight {
+  margin: 0;
+  background: #07080c;
+  color: #e8e4dc;
+  font: 16px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body.era-dragonflight a { color: #f3c15a; }
+body.era-df-home { background: #07060a; }
+body.era-df-forums,
+body.era-df-shop,
+body.era-df-realms { background: #0c0e12; }
+body.era-df-account { margin: 0; background: #1b1e27; }
+body.era-df-account:has(.acct-mode-summary),
+body.era-df-account:has(.acct-mode-password) { background: #071e36; }
+
+.dev-foot {
+  margin: 0;
+  padding: 10px 16px 18px;
+  color: #8d939c;
+  font-size: 12px;
+  text-align: center;
+}
+
+.df-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(1180px, calc(100% - 28px));
+  margin: 14px auto;
+  padding: 8px 12px;
+  background: rgba(22, 14, 12, 0.92);
+  border-radius: 12px;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.df-site-home .df-bar {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.df-blizz {
+  color: #3db5ff;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 13px;
+  padding: 0 6px;
+}
+
+.df-wmark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  background: radial-gradient(circle at 35% 30%, #ffe27a, #c4891a 45%, #6a3d08);
+  color: #2a1604;
+  font-weight: 900;
+  box-shadow: 0 0 0 2px #1a120c;
+}
+
+.df-wmark span { font-family: Georgia, serif; font-size: 18px; }
+
+.df-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.df-drop { position: relative; }
+.df-drop > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f4f1ea;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+.df-drop > a::after { content: "▾"; font-size: 10px; opacity: 0.8; }
+.df-drop > a:hover { background: rgba(255, 255, 255, 0.06); }
+
+.df-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+  min-width: 210px;
+  padding: 8px 0;
+  background: #1b120f;
+  border: 1px solid #3a2a22;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+.df-drop:hover .df-menu,
+.df-drop:focus-within .df-menu { display: block; }
+.df-menu a {
+  display: block;
+  padding: 8px 14px;
+  color: #f4f1ea;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+.df-menu a:hover { background: rgba(255, 255, 255, 0.06); }
+.df-who { margin: 0; padding: 6px 14px 8px; color: #c8b8a4; font-size: 12px; }
+
+.df-search {
+  color: #f4f1ea;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px;
+}
+.df-try,
+.df-sub {
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+.df-try { color: #f4f1ea; background: #3a2c24; }
+.df-sub { color: #1a0c08; background: #ff7a18; }
+
+.df-foot {
+  padding: 28px 16px 36px;
+  text-align: center;
+  color: #9a9186;
+  font-size: 13px;
+}
+.df-foot nav { display: flex; justify-content: center; gap: 16px; margin-bottom: 8px; }
+.df-foot a { color: #d9d0c4; text-decoration: none; }
+
+.df-home {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.28) 46%, rgba(0, 0, 0, 0.15) 100%),
+    url("/static/img/dragonflight/hero.jpg") center 20% / cover no-repeat;
+  min-height: 100vh;
+  color: #f7f4ef;
+}
+.df-hero {
+  min-height: 68vh;
+  display: flex;
+  align-items: center;
+}
+.df-hero-copy {
+  width: min(720px, calc(100% - 80px));
+  margin: 110px 0 40px 7vw;
+}
+.df-hero h1 {
+  margin: 0 0 16px;
+  font-size: clamp(36px, 4.6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+.df-hero p { margin: 0 0 14px; max-width: 38rem; color: #f0ebe4; font-size: 18px; }
+.df-explore { color: #fff; font-weight: 700; }
+.df-cta { display: flex; gap: 12px; margin-top: 18px; }
+.df-buy,
+.df-learn {
+  display: inline-block;
+  min-width: 180px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 12px 18px;
+  border-radius: 2px;
+}
+.df-buy { background: #e07012; color: #1a0d06; border: 1px solid #e07012; }
+.df-learn { background: transparent; color: #f4efe8; border: 1px solid #c7b7a2; }
+
+.df-latest {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 10px 0 48px;
+}
+.df-latest header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.df-latest h2 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.df-latest header a { color: #f0b429; font-weight: 700; font-size: 14px; }
+.df-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.df-card {
+  position: relative;
+  display: block;
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: 4px;
+  color: #fff;
+  text-decoration: none;
+  background: #14120f;
+}
+.df-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.9);
+}
+.df-card-date,
+.df-card-title {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  text-shadow: 0 1px 6px #000;
+}
+.df-card-date { bottom: 58px; font-size: 12px; color: #f3f3f3; }
+.df-card-title { bottom: 12px; font-weight: 800; color: #f5c518; font-size: 16px; line-height: 1.25; }
+
+.df-main { width: min(1100px, calc(100% - 32px)); margin: 0 auto 40px; }
+.df-crumb { margin: 8px 0 12px; font-size: 28px; color: #fff; }
+.df-sheet, .df-self { color: #e8e4dc; }
+.df-sheet h2, .df-sheet h3, .df-self h2, .df-self h3 { color: #fff; }
+.df-sheet a, .df-self a { color: #f0c14a; }
+.df-sheet table, .df-self table { width: 100%; border-collapse: collapse; }
+.df-sheet th, .df-sheet td, .df-self th, .df-self td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2c313a;
+}
+.df-sheet input, .df-sheet textarea, .df-sheet select,
+.df-self input, .df-self textarea, .df-self select {
+  background: #12161d;
+  color: #fff;
+  border: 1px solid #3c4452;
+  padding: 8px;
+  border-radius: 4px;
+}
+.df-sheet button, .df-self button, .df-post button {
+  background: #e07012;
+  color: #1a0d06;
+  border: 0;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+.df-post label { display: block; margin: 12px 0; }
+.df-post input, .df-post textarea { width: min(520px, 100%); box-sizing: border-box; }
+
+.df-newsindex h1, .df-guide h1, .df-board h1, .df-services h1 { margin-top: 0; }
+.df-stories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.df-story {
+  background: #14181f;
+  border: 1px solid #2a313c;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.df-story img { width: 100%; height: 140px; object-fit: cover; display: block; }
+.df-story p, .df-story h2 { margin: 8px 12px; }
+.df-archive { padding-left: 18px; }
+.df-archive p { color: #b7b1a6; }
+
+.df-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+.df-pill {
+  display: block;
+  width: 220px;
+  padding: 10px 12px;
+  background: #141a18;
+  border: 1px solid #1e7a78;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #e7f7f4;
+}
+.df-pill strong { display: block; color: #5ee0c5; }
+.df-pill span { display: block; color: #b7d5d0; font-size: 13px; }
+.df-more { margin-top: 16px; }
+
+.df-profile {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(94, 224, 197, 0.16), transparent 42%),
+    #0e1c22;
+  border: 1px solid #1e7a78;
+  border-radius: 10px;
+  padding: 22px;
+}
+.df-profile-kicker {
+  margin: 0;
+  color: #9aebdc;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 800;
+}
+.df-profile h1 { margin: 4px 0 8px; font-size: 40px; }
+.df-gear { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.df-gear li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #07141a;
+  border: 1px solid #1e7a78;
+  padding: 8px;
+}
+.df-gear img { width: 36px; height: 36px; }
+.df-gear span { color: #9aebdc; min-width: 88px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.df-forums { color: #d9dde6; background: #101216; }
+.df-fhead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 22px;
+  background: #0a0c10;
+  border-bottom: 1px solid #222;
+}
+.df-fhead nav { display: flex; gap: 16px; flex: 1; align-items: center; }
+.df-fhead a, .df-fhead span { color: #d5d8df; text-decoration: none; font-size: 14px; }
+.df-download {
+  background: #148eff;
+  color: #fff !important;
+  text-decoration: none;
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.df-fhero {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(120, 40, 20, 0.45), rgba(0, 0, 0, 0.72)),
+    #1a0e12;
+}
+.df-wowlogo { text-align: center; color: #f6d56a; text-shadow: 0 3px 0 #3a2508; line-height: 0.9; }
+.df-wowlogo span { display: block; letter-spacing: 0.28em; font-size: 14px; }
+.df-wowlogo { font-family: Georgia, "Times New Roman", serif; font-size: 54px; font-weight: 700; margin: 0; }
+.df-fmain { width: min(1080px, calc(100% - 32px)); margin: 0 auto 40px; }
+.df-fmain h1 { text-align: center; letter-spacing: 0.04em; }
+.df-ftools { display: flex; gap: 18px; align-items: center; color: #9aa3b2; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+.df-ftools a { color: #c5cedb; text-decoration: none; font-weight: 700; }
+.df-ftools em { margin-left: auto; font-style: normal; color: #f0c14a; }
+.df-fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.df-fcat {
+  background: #171b22;
+  border: 1px solid #2a3140;
+  border-radius: 4px;
+  padding: 12px 14px 8px;
+  margin: 0 0 12px;
+}
+.df-fcat h3 { margin: 0 0 4px; font-size: 16px; }
+.df-fcat p { margin: 0 0 8px; color: #9aa3b2; font-size: 13px; }
+.df-fcat ul { list-style: none; margin: 0; padding: 0; }
+.df-fcat li { margin: 4px 0; }
+.df-fcat a { color: #d5dbe6; text-decoration: none; font-size: 14px; }
+.df-fcat a:hover { color: #fff; }
+.df-classline { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+.df-classline a { color: #e7edf6; text-decoration: none; font-weight: 700; }
+.df-realms { margin-top: 28px; }
+.df-realms h2 { font-size: 14px; letter-spacing: 0.12em; }
+.df-realms ul, .df-flat {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px 18px;
+}
+.df-realms a, .df-flat a { color: #c5cedb; text-decoration: none; }
+.df-ffoot { text-align: center; padding: 28px 16px 40px; color: #8b93a1; font-size: 13px; }
+.df-ffoot nav { display: flex; justify-content: center; gap: 14px; }
+.df-ffoot .df-blizz { color: #3db5ff; }
+
+.df-rs {
+  position: relative;
+  min-height: 100vh;
+  padding: 48px 6vw 0;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(70, 90, 160, 0.35), transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(20, 40, 80, 0.45), transparent 42%),
+    #070b16;
+}
+.df-rs-help {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a6cff;
+  color: transparent;
+  overflow: hidden;
+}
+.df-rs-help::after { content: ""; }
+.df-rs-head { text-align: center; max-width: 820px; margin: 0 auto 18px; }
+.df-rs-head h1 { margin: 0 0 10px; font-size: 40px; font-weight: 650; }
+.df-rs-head p { color: #d5d8e2; font-size: 14px; }
+.df-rs-head a { color: #f2c14e; }
+.df-tabs { display: flex; gap: 22px; align-items: center; margin: 18px 0; }
+.df-tab { color: #e6c15a; text-decoration: none; font-weight: 700; padding-bottom: 6px; }
+.df-tab-on { background: #e0a825; color: #1a1204; padding: 6px 10px; }
+.df-filters { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 8px; }
+.df-filters label { color: #e6c15a; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.df-filters select, .df-filters input {
+  display: block;
+  margin-top: 4px;
+  background: #120f18;
+  color: #f0e6c8;
+  border: 1px solid #e0a825;
+  padding: 6px 8px;
+  min-width: 140px;
+}
+.df-rs-table { width: 100%; border-collapse: collapse; }
+.df-rs-table th {
+  text-align: left;
+  color: #e6c15a;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px;
+  border-bottom: 1px solid rgba(230, 193, 90, 0.35);
+}
+.df-rs-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.df-up::before, .df-down::before {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  color: #fff;
+}
+.df-up::before { content: "✓"; background: #3c9a42; }
+.df-down::before { content: "×"; background: #a33b3b; }
+.df-pop::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #3c9a42;
+}
+.df-rs-foot {
+  margin: 28px -6vw 0;
+  padding: 16px 6vw;
+  background: #05070d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  letter-spacing: 0.14em;
+}
+.df-rs-foot p { margin: 0; }
+.df-rs-foot a {
+  color: #f2c14e;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.df-warn { color: #ffb4b4; }
+
+.df-shophome { background: #121417; min-height: 100vh; color: #e6e8ee; }
+.df-shopbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 22px;
+  background: #1b1e24;
+}
+.df-shopbar nav { display: flex; gap: 16px; flex: 1; align-items: center; }
+.df-shopbar a, .df-shopbar span { color: #e8eaef; text-decoration: none; font-weight: 700; font-size: 14px; }
+.df-shopsearch input {
+  background: #12141a;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 8px 10px;
+  min-width: 220px;
+}
+.df-balance {
+  background: #2a2e36;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 12px;
+  font-weight: 700;
+}
+.df-shopcrumb { width: min(1180px, calc(100% - 32px)); margin: 18px auto; color: #b7bdc8; }
+.df-shopcrumb a { color: #d5dbe6; text-decoration: none; }
+.df-shoplayout {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto 24px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+}
+.df-shoplayout h1 { margin: 0 0 8px; font-size: 28px; }
+.df-shoplayout aside p { color: #b7bdc8; }
+.df-mounts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.df-mount { background: #1c2128; }
+.df-art { height: 140px; background: #243044 center/cover no-repeat; }
+.df-game {
+  margin: 10px 12px 0;
+  color: #f0c14a;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+.df-game::before { content: "W "; }
+.df-mount h3 { margin: 4px 12px; font-size: 16px; }
+.df-mount p { margin: 0 12px 8px; color: #9aa3b2; font-size: 13px; }
+.df-price { color: #e8eaef !important; font-size: 15px !important; padding-bottom: 8px; }
+.df-shop-note { text-align: center; color: #8b93a1; font-size: 13px; padding-bottom: 28px; }
+
+@media (max-width: 980px) {
+  .df-cards, .df-mounts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .df-fgrid, .df-shoplayout, .df-stories, .df-gear { grid-template-columns: 1fr; }
+  .df-links { flex-wrap: wrap; }
+  .df-bar { flex-wrap: wrap; }
+  .df-hero-copy { margin-left: 20px; width: auto; }
+  .df-realms ul { grid-template-columns: 1fr 1fr; }
+}

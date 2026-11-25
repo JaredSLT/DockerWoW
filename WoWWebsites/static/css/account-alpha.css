@@ -1,0 +1,194 @@
+/* June 2004 account card inside the beta parchment. Ledger: references/screenshots/LEDGER.md */
+
+.acct-alpha {
+  display: flex;
+  justify-content: center;
+  padding: 14px 0 8px;
+}
+
+.acct-alpha .acct-card {
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+  background: #E7CFA3;
+  color: #200F01;
+  border: 2px solid #877D69;
+  border-color: #FFF7E5 #877D69 #877D69 #FFF7E5;
+  padding: 16px 18px 14px;
+}
+
+.acct-alpha .acct-title {
+  margin: 0 0 12px;
+  padding: 0;
+  text-align: center;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 18pt;
+  font-weight: bold;
+  line-height: 1.15;
+  color: #640909;
+}
+
+.acct-alpha .acct-error,
+.acct-alpha .acct-notice,
+.acct-alpha .acct-note,
+.acct-alpha .acct-empty {
+  margin: 0 0 10px;
+  text-align: center;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11pt;
+  line-height: 1.35;
+  color: #200F01;
+}
+
+.acct-alpha .acct-error,
+.acct-alpha .acct-notice {
+  font-weight: bold;
+}
+
+.acct-alpha .acct-error { color: #C60000; }
+.acct-alpha .acct-notice { color: #1d4a12; }
+
+.acct-alpha .acct-well {
+  background: #F8E6C2;
+  border: 1px solid #786743;
+  padding: 8px 8px 10px;
+}
+
+.acct-alpha .acct-table,
+.acct-alpha .acct-chars {
+  width: 100%;
+  border-collapse: collapse;
+  background: #F8E6C2;
+}
+
+.acct-alpha .acct-row th,
+.acct-alpha .acct-row td,
+.acct-alpha .acct-chars th,
+.acct-alpha .acct-chars td {
+  padding: 5px 8px;
+  border: 1px solid #877D69;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.acct-alpha .acct-table .acct-label {
+  width: 46%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.acct-alpha .acct-row:nth-child(odd) th,
+.acct-alpha .acct-row:nth-child(odd) td,
+.acct-alpha .acct-chars tbody tr:nth-child(odd) td {
+  background: #F8E6C2;
+}
+
+.acct-alpha .acct-row:nth-child(even) th,
+.acct-alpha .acct-row:nth-child(even) td,
+.acct-alpha .acct-chars tbody tr:nth-child(even) td {
+  background: #E7CFA3;
+}
+
+.acct-alpha .acct-label,
+.acct-alpha .acct-form label {
+  display: inline;
+  margin: 0;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  font-weight: bold;
+  color: #200F01;
+}
+
+.acct-alpha .acct-chars thead th {
+  background: #393731;
+  color: #ffffff;
+  border-color: #8F8F8F #8F8F8F #171511 #171511;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: left;
+}
+
+.acct-alpha .acct-name {
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 12pt;
+  font-weight: bold;
+  color: #640909;
+}
+
+.acct-alpha .acct-form input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid #786743;
+  background: #ffffff;
+  color: #000000;
+  font: 10pt Arial, Helvetica, sans-serif;
+  padding: 3px 4px;
+}
+
+.acct-alpha .acct-submit {
+  display: block;
+  width: 148px;
+  height: 28px;
+  margin: 10px auto 2px;
+  padding: 0 10px;
+  background: #5F1208;
+  color: #E7CF9E;
+  border: 1px solid #2a0a06;
+  font: 700 8pt/26px Arial, Helvetica, sans-serif;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.acct-alpha .acct-submit:hover {
+  background: #7a1a0c;
+  color: #ffffff;
+}
+
+.acct-alpha .acct-rule {
+  border: 0;
+  border-top: 1px solid #877D69;
+  width: 78%;
+  height: 0;
+  margin: 12px auto 10px;
+}
+
+.acct-alpha .acct-chars {
+  margin-top: 10px;
+}
+
+.acct-alpha .acct-links {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 2px 6px 0;
+}
+
+.acct-alpha .acct-links li {
+  margin: 8px 0;
+  min-height: 13px;
+  padding-left: 18px;
+  font-family: Palatino, Georgia, "Times New Roman", serif;
+  font-size: 11pt;
+  color: #200F01;
+}
+
+.acct-alpha .acct-links li::before {
+  content: "";
+  float: left;
+  width: 11px;
+  height: 11px;
+  margin: 3px 0 0 -18px;
+  background: #5F1208;
+  border: 1px solid #2a0a06;
+}
+
+.acct-alpha .acct-links a {
+  color: #003366;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.acct-alpha .acct-links a:hover { color: #C60000; }
