@@ -12,8 +12,25 @@ from datetime import datetime, timezone
 from wowweb import armory, assets, content, forums, lab, talents
 from wowweb.html.era.common import dev_note, document, esc, styles
 
-_HERO = "/static/img/warwithin/undermine-hero.jpg"
 _IMG = "/static/img/warwithin"
+_HERO = f"{_IMG}/undermine-hero.jpg"
+_NEWS_ART = [f"{_IMG}/news-{i}.jpg" for i in range(1, 5)]
+# Rows visible in the October 2024 status crop. The lab realm is appended if it is not already listed.
+_STATUS_ROWS = (
+    "Aegwynn",
+    "Aerie Peak",
+    "Agamaggan",
+    "Aggramar",
+    "Akama",
+    "Alexstrasza",
+    "Alleria",
+    "Altar of Storms",
+    "Alterac Mountains",
+    "Aman'Thul",
+    "Andorhal",
+    "Anetheron",
+    "Antonidas",
+)
 
 _HORDE = {2, 5, 6, 8, 9, 10, 26, 27, 28, 31, 35, 36}
 _ALLIANCE = {1, 3, 4, 7, 11, 22, 25, 29, 30, 32, 34, 37}
@@ -133,6 +150,8 @@ def _account_menu(user: str | None) -> str:
 
 
 def _mast(user: str | None, collapsed: bool) -> str:
+    logo = f'<img src="{_IMG}/logo-blizzard.png" alt="Blizzard">'
+    mark = f'<img src="{_IMG}/logo-w.png" alt="">'
     if collapsed:
         sections = (
             '<details class="tww-ellipsis"><summary aria-label="Sections">…</summary>'
@@ -147,11 +166,11 @@ def _mast(user: str | None, collapsed: bool) -> str:
         )
     return f"""<a class="tww-skip" href="#main">Skip to main content</a>
 <header class="tww-mast">
-  <a class="tww-blizz" href="/wow/">Blizzard</a>
-  <a class="tww-wmark" href="/wow/" aria-label="World of Warcraft">W</a>
+  <a class="tww-blizz" href="/wow/">{logo}</a>
+  <a class="tww-wmark" href="/wow/" aria-label="World of Warcraft">{mark}</a>
   <nav class="tww-nav" aria-label="World of Warcraft">{sections}</nav>
   <form class="tww-search" action="/wow/search" method="get" role="search">
-    <input type="search" name="q" aria-label="Search">
+    <input type="search" name="q" aria-label="Search" placeholder="Search">
     <button type="submit" aria-label="Search"><span class="tww-glass"></span></button>
   </form>
   {_account_menu(user)}
@@ -190,10 +209,6 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     overview = 'data-chrome="bnet-overview"' in body
     collapsed = 'data-nav="ellipsis"' in body
     bare = 'data-bare="1"' in body or gate or overview
-    if title == "Character Services":
-        body = (
-            '<p class="tww-unshot">There is no services screenshot for this page.</p>' + body
-        )
     if gate:
         inner = body
         klass = "era-warwithin warwithin tww-gate"
@@ -213,6 +228,8 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
             klass += " tww-status-page"
         if 'class="tww-home"' in body:
             klass += " tww-home"
+        if 'class="tww-profile"' in body:
+            klass += " tww-profile-page"
     css = styles("warwithin") + ["/static/css/forums.css", "/static/css/armory.css"]
     return document(
         f"{title} — World of Warcraft",
@@ -224,23 +241,14 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     )
 
 
-def _shots(count: int) -> list[str]:
-    found = [src for src, _caption in assets.screenshots("warwithin", limit=max(count, 1))]
-    if not found:
-        found = [_HERO]
-    while len(found) < count:
-        found.append(found[len(found) % len(found)])
-    return found
-
-
 def _cards(items: list[tuple[str, str, str]], limit: int | None = None) -> str:
     rows = list(items if limit is None else items[:limit])
-    shots = _shots(len(rows) or 1)
     cards = []
     for index, (title, date, _body) in enumerate(rows):
+        src = _NEWS_ART[index % len(_NEWS_ART)]
         cards.append(
             f'<a class="tww-card" href="/wow/news/{index}">'
-            f'<img src="{esc(shots[index])}" alt="">'
+            f'<img src="{esc(src)}" alt="">'
             f"<strong>{esc(title)}</strong><time>{esc(date)}</time></a>"
         )
     return "".join(cards)
@@ -252,16 +260,12 @@ def home_body(exp, news, realm, user) -> str:
     return f"""<div class="tww-home" data-bare="1">
   <section class="tww-hero">
     <img class="tww-hero-img" src="{_HERO}" alt="">
-    <div class="tww-hero-copy">
-      <p class="tww-wordmark"><span class="tww-wm-small">World of</span><span class="tww-wm-big">Warcraft</span></p>
+    <div class="tww-sr">
       <h1>THE UNDERMINE(D) CONTENT UPDATE IS NOW LIVE!</h1>
       <p>{_HERO_COPY}</p>
-      <div class="tww-cta">
-        <a class="tww-fill" href="/shop">SUBSCRIBE TODAY</a>
-        <a class="tww-line" href="/wow/news">LEARN MORE</a>
-      </div>
     </div>
-    <button class="tww-pause" type="button" aria-label="Pause"></button>
+    <a class="tww-hit tww-hit-sub" href="/shop">SUBSCRIBE TODAY</a>
+    <a class="tww-hit tww-hit-learn" href="/wow/news">LEARN MORE</a>
   </section>
   <section class="tww-latest">
     <div class="tww-latest-head">
@@ -340,24 +344,30 @@ def _news_index(exp, _ctx) -> str:
 
 
 def _realm_body(realm: dict, dev: bool) -> str:
-    flag = "up" if realm.get("up") else "down"
-    mark = "✓" if realm.get("up") else "✕"
-    label = "Up" if realm.get("up") else "Down"
-    kind = realm.get("type") or "Normal"
     note = ""
     if dev and realm.get("error"):
         note = f'<p class="tww-warn">{esc(realm.get("error"))}</p>'
+    rows = [(name, True, "Normal") for name in _STATUS_ROWS]
+    lab_name = str(realm.get("name") or "")
+    if lab_name and lab_name.casefold() not in {name.casefold() for name in _STATUS_ROWS}:
+        rows.append((lab_name, bool(realm.get("up")), str(realm.get("type") or "Normal")))
+    body = []
+    for name, up, kind in rows:
+        flag = "up" if up else "down"
+        mark = "✓" if up else "✕"
+        label = "Up" if up else "Down"
+        body.append(
+            "<tr>"
+            f'<td><span class="tww-dot tww-dot-{flag}" aria-label="{label}">{mark}</span></td>'
+            f"<td>{esc(name)}</td>"
+            f"<td>{esc(kind)}</td>"
+            "</tr>"
+        )
     return f"""<div class="tww-status" data-bare="1">
   {note}
   <table>
     <thead><tr><th>Status</th><th>Realm Name</th><th>Type</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><span class="tww-dot tww-dot-{flag}" aria-label="{label}">{mark}</span></td>
-        <td>{esc(realm.get("name") or "")}</td>
-        <td>{esc(kind)}</td>
-      </tr>
-    </tbody>
+    <tbody>{''.join(body)}</tbody>
   </table>
 </div>"""
 
@@ -437,6 +447,10 @@ def _forum_board(exp, slug: str, title: str, ctx: dict) -> str:
             "</tr>"
         )
     body = "".join(rows) or '<tr class="tww-empty"><td colspan="5">No topics yet.</td></tr>'
+    if group == "Support":
+        group_html = f'<a href="/support/">{esc(group)}</a>'
+    else:
+        group_html = esc(group)
     user = ctx.get("user")
     if user:
         form = f"""<form class="tww-post" id="new-topic" method="post" action="/forums/{esc(slug)}/new">
@@ -450,14 +464,20 @@ def _forum_board(exp, slug: str, title: str, ctx: dict) -> str:
         form = ""
         button = '<a class="tww-newtopic" href="/account/login">New Topic</a>'
     return f"""<div class="tww-board" data-bare="1" data-nav="ellipsis">
-  <p class="tww-crumb"><a href="/forums">Forums</a> &gt; {esc(group)} &gt; {esc(label)}</p>
+  <p class="tww-crumb"><a class="tww-crumb-home" href="/forums" aria-label="Forums home"></a><a href="/forums">Forums</a> <span>&gt;</span> {group_html} <span>&gt;</span> {esc(label)}</p>
   <div class="tww-board-head">
     <h1>Latest topics in {esc(label)}</h1>
     {button}
   </div>
   <p class="tww-sort">Topic list, column headers with buttons are sortable.</p>
   <table class="tww-threads">
-    <thead><tr><th>Topic</th><th>Author</th><th>Replies</th><th>Views</th><th>Activity</th></tr></thead>
+    <thead><tr>
+      <th><button type="button">Topic</button></th>
+      <th><button type="button">Author</button></th>
+      <th><button type="button">Replies</button></th>
+      <th><button type="button">Views</button></th>
+      <th><button type="button">Activity</button></th>
+    </tr></thead>
     <tbody>{body}</tbody>
   </table>
   {form}
@@ -486,6 +506,38 @@ def _forum_thread(slug: str, thread: dict, user: str | None) -> str:
         f'<p class="tww-crumb"><a href="/forums">Forums</a> &gt; <a href="/forums/{esc(slug)}">{esc(slug)}</a></p>'
         f"<h1>{esc(thread.get('title'))}</h1>{''.join(posts)}{form}</div>"
     )
+
+
+def _below_armory_level(ctx: dict, name: str) -> dict | None:
+    """The shared armory hides characters under level 10. The sheet still uses lab data."""
+    exp = ctx["exp"]
+    cfg = ctx["labcfg"]
+    db = cfg.chars_db(exp)
+    safe = name.replace("\\", "\\\\").replace("'", "''")
+    rows = lab.mysql_rows(
+        cfg,
+        f"SELECT name, race, class, level FROM `{db}`.`characters` WHERE name='{safe}' LIMIT 1;",
+    )
+    if not rows:
+        return None
+    from wowweb.armory.constants import CLASSES, RACES
+
+    row = rows[0]
+    try:
+        race_id = int(row[1] or 0)
+        class_id = int(row[2] or 0)
+    except (TypeError, ValueError):
+        race_id = class_id = 0
+    return {
+        "name": row[0],
+        "race_id": race_id,
+        "race": RACES.get(race_id, row[1]),
+        "class": CLASSES.get(class_id, row[2]),
+        "level": row[3],
+        "realm": exp.realm_name,
+        "equipment": [],
+        "achievements": 0,
+    }
 
 
 def _faction(char: dict) -> str:
@@ -566,13 +618,20 @@ def character_body(char: dict, tab: str = "character", exp=None) -> str:
     guild = ""
     if char.get("guild") and isinstance(char.get("guild"), dict) and char["guild"].get("name"):
         guild = f'<p class="tww-guild">{esc(char["guild"]["name"])}</p>'
+    title = char.get("title")
+    titled = f" ({esc(title)})" if title else ""
+    faction = _faction(char)
+    if faction == "horde":
+        crest = f'<img class="tww-crestimg" src="{_IMG}/crest-horde.png" alt="">'
+    else:
+        crest = f'<span class="tww-crest tww-crest-{faction}" aria-hidden="true"></span>'
     return f"""<div class="tww-profile" data-bare="1">
   <header class="tww-profile-head">
-    <span class="tww-crest tww-crest-{_faction(char)}" aria-hidden="true"></span>
+    {crest}
     <div>
       <h1>{esc(char.get("name"))}</h1>
-      <p class="tww-score"><span>{esc(char.get("achievements") or 0)}</span> <span>ILVL {ilvl_text}</span></p>
-      <p class="tww-ident">{ident} <span>{esc(char.get("realm") or "")}</span></p>
+      <p class="tww-score"><span class="tww-ach">{esc(char.get("achievements") or 0)}</span> <span class="tww-ilvl">{ilvl_text} ILVL</span></p>
+      <p class="tww-ident">{ident}{titled} <span>{esc(char.get("realm") or "")}</span></p>
       {guild}
     </div>
   </header>
@@ -607,16 +666,14 @@ def _forums(path: str, ctx: dict):
 def _shop_cards() -> str:
     cards = (
         {
-            "new": True,
             "kicker": "CALL OF DUTY BLACK OPS 6",
             "title": "Call of Duty: Black Ops 6",
             "line": "Wreak havoc in Season 01",
             "kind": "Action Shooter",
             "price": "$69.99",
-            "art": "cod",
+            "art": "shop-cod.jpg",
         },
         {
-            "new": False,
             "kicker": "WORLD OF WARCRAFT",
             "title": "World of Warcraft: Subscription",
             "line": (
@@ -625,56 +682,48 @@ def _shop_cards() -> str:
             ),
             "kind": "Subscriptions",
             "price": "From $12.99/month",
-            "art": "sub",
+            "art": "shop-sub.jpg",
             "anchor": "subscription",
         },
         {
-            "new": False,
             "kicker": "WORLD OF WARCRAFT",
             "title": "World of Warcraft: The War Within",
             "line": "Now live! Get a Level 70 Boost included in all editions and get back in the fight.",
             "kind": "Massively Multiplayer RPG",
             "price": "From $49.99",
-            "art": "tww",
+            "art": "shop-tww.jpg",
             "anchor": "war-within",
         },
         {
-            "new": False,
             "kicker": "DIABLO IV",
             "title": "Diablo IV Expansion Bundle",
             "line": "Vessel of Hatred Available Now!",
             "kind": "Action RPG",
             "price": "$69.99",
-            "art": "d4",
+            "art": "shop-d4.jpg",
         },
         {
-            "new": True,
             "kicker": "CALL OF DUTY BLACK OPS 6",
             "title": "Call of Duty: Black Ops 6 - Vault Edition",
             "line": "Wreak havoc in Season 01",
             "kind": "Action Shooter",
             "price": "$99.99",
-            "art": "vault",
+            "art": "shop-vault.jpg",
         },
     )
     bits = []
     for card in cards:
-        badge = '<span class="bnet-new">NEW</span>' if card["new"] else ""
         anchor = card.get("anchor")
         ident = f' id="{anchor}"' if anchor else ""
-        if card["art"] == "sub":
-            art = f'<img src="{_IMG}/shop-sub.jpg" alt="">'
-        elif card["art"] == "tww":
-            art = f'<img src="{_IMG}/shop-tww.jpg" alt="">'
-        else:
-            art = f'<div class="bnet-art bnet-art-{esc(card["art"])}"></div>'
+        art = f'<img src="{_IMG}/{card["art"]}" alt="">'
         bits.append(
-            f'<article class="bnet-card"{ident}>{badge}{art}'
+            f'<article class="bnet-card"{ident}>{art}'
+            f'<div class="bnet-copy">'
             f'<p class="bnet-kicker">{esc(card["kicker"])}</p>'
             f'<h3>{esc(card["title"])}</h3>'
             f'<p class="bnet-line">{esc(card["line"])}</p>'
             f'<p class="bnet-kind">{esc(card["kind"])}</p>'
-            f'<p class="bnet-price">{esc(card["price"])}</p></article>'
+            f'<p class="bnet-price">{esc(card["price"])}</p></div></article>'
         )
     return "".join(bits)
 
@@ -682,11 +731,11 @@ def _shop_cards() -> str:
 def _shop_document(exp, dev: bool) -> str:
     inner = f"""<div class="bnet-shop">
   <header class="bnet-shop-top">
-    <a class="bnet-brand" href="/shop"><i aria-hidden="true"></i>BATTLE.NET</a>
+    <a class="bnet-brand" href="/shop"><img src="{_IMG}/logo-bnet.png" alt="Battle.net"></a>
     <nav aria-label="Battle.net">
-      <a href="/wow/">Download Battle.net</a>
-      <a href="/support/">Support</a>
-      <a href="/account/">Account</a>
+      <a class="bnet-dl" href="/wow/">Download Battle.net</a>
+      <a class="bnet-help" href="/support/">Support</a>
+      <a class="bnet-acct" href="/account/">Account</a>
     </nav>
   </header>
   <div class="bnet-shop-nav">
@@ -706,16 +755,17 @@ def _shop_document(exp, dev: bool) -> str:
   <section class="bnet-promo">
     <img src="{_IMG}/shop-promo.jpg" alt="">
     <div>
-      <p class="bnet-hs">Hearthstone Battlegrounds</p>
+      <img class="bnet-hs" src="{_IMG}/shop-hs.jpg" alt="Hearthstone Battlegrounds">
       <p>Get the new Battlegrounds Season Pass Plus now!</p>
       <a class="bnet-buy" href="#war-within">Buy Now</a>
     </div>
   </section>
+  <div class="bnet-dots" aria-hidden="true"><b></b><i></i><i></i><i></i><i></i><i></i></div>
   <section class="bnet-recommended" id="recommended">
     <h2>Recommended</h2>
     <div class="bnet-grid" id="diablo">{_shop_cards()}</div>
+    <img class="bnet-more" id="overwatch" src="{_IMG}/shop-more.jpg" alt="">
   </section>
-  <p class="bnet-note" id="overwatch">Nothing here is charged.</p>
   <p id="cod"></p><p id="more"></p>
 </div>"""
     return document(
@@ -764,6 +814,8 @@ def take(path: str, ctx: dict):
         if not name:
             return None
         char = armory.get_character(ctx["labcfg"], exp, name)
+        if not char:
+            char = _below_armory_level(ctx, name)
         if not char:
             return None
         raw = (ctx.get("qs") or {}).get("tab") or ["character"]

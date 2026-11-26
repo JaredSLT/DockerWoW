@@ -178,10 +178,10 @@ class WarWithinSiteTests(unittest.TestCase):
         self.assertIn("/wow/info/classes/warrior/talents.html", guide[1])
         self.assertIn('href="/wow/info/races/earthen"', guide[1])
 
-    def test_services_page_says_there_is_no_screenshot(self):
+    def test_services_page_stays_in_the_march_shell(self):
         html = warwithin.full("/account/services", _ctx("/account/services"))
         self.assertIsNotNone(html)
-        self.assertIn("There is no services screenshot", html)
+        self.assertNotIn("no services screenshot", html.lower())
         self.assertIn("Character Services", html)
         self.assertIn("Game Info", html)
         self.assertIn('href="/account/login"', html)

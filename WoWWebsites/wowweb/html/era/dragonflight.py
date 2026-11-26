@@ -236,34 +236,28 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
 
 def home_body(exp, news, realm, user) -> str:
     _ = exp, news, realm, user
+    # Cards sit on the June 2023 stage. The photograph already paints the
+    # captions, so the link text is real and transparent over each card.
     cards = []
-    for slug, date, title, image, _blurb in _JUNE:
+    for index, (slug, date, title, _image, _blurb) in enumerate(_JUNE, start=1):
         cards.append(
-            f'<a class="df-card" href="/wow/news#{esc(slug)}">'
-            f'<img src="/static/img/dragonflight/{esc(image)}" alt="">'
+            f'<a class="df-hit df-hit-card df-hit-card-{index}" href="/wow/news#{esc(slug)}">'
             f'<span class="df-card-date">{esc(date)}</span>'
             f'<span class="df-card-title">{esc(title)}</span>'
             "</a>"
         )
     return f"""<div class="df-home">
-  <section class="df-hero">
-    <div class="df-hero-copy">
-      <h1>DRAGONFLIGHT SEASON 2 NOW LIVE!</h1>
-      <p>Breach Neltharion's secret laboratory to thwart Scalecommander Sarkareth, whose forces seek to claim the legacy of the dracthyr. Dragonflight Season 2 brings a new raid, an updated rotation of Mythic+ dungeons, a new PvP Season, and more.</p>
-      <p><a class="df-explore" href="/wow/info">Explore Dragonflight</a></p>
-      <div class="df-cta">
-        <a class="df-buy" href="/shop">BUY DRAGONFLIGHT</a>
-        <a class="df-learn" href="/wow/info">LEARN MORE</a>
-      </div>
-    </div>
-  </section>
-  <section class="df-latest">
-    <header>
-      <h2>Latest News &amp; Updates</h2>
-      <a href="/wow/news">View all news</a>
-    </header>
-    <div class="df-cards">{''.join(cards)}</div>
-  </section>
+  <h1 class="df-sr">DRAGONFLIGHT SEASON 2 NOW LIVE!</h1>
+  <p class="df-sr">Breach Neltharion's secret laboratory to thwart Scalecommander Sarkareth, whose forces seek to claim the legacy of the dracthyr. Dragonflight Season 2 brings a new raid, an updated rotation of Mythic+ dungeons, a new PvP Season, and more.</p>
+  <a class="df-hit df-hit-explore" href="/wow/info">Explore Dragonflight</a>
+  <a class="df-hit df-hit-buy" href="/shop">BUY DRAGONFLIGHT</a>
+  <a class="df-hit df-hit-learn" href="/wow/info">LEARN MORE</a>
+  <h2 class="df-sr">Latest News &amp; Updates</h2>
+  <a class="df-hit df-hit-all" href="/wow/news">View all news</a>
+  {''.join(cards)}
+  <p class="df-sr">By clicking “Accept All Cookies”, you agree to the storing of cookies on your device to enhance site navigation, analyze site usage, and assist in our marketing efforts. <a href="/support">Cookie Policy</a> <a href="/support">Cookies Settings</a></p>
+  <a class="df-hit df-hit-reject" href="/wow/">Reject All</a>
+  <a class="df-hit df-hit-accept" href="/wow/">Accept All Cookies</a>
 </div>"""
 
 
@@ -614,6 +608,20 @@ def _forums_doc(ctx) -> str:
     <p>©2023 Blizzard Entertainment, Inc. All rights reserved.</p>
   </footer>
 </div>"""
+    # The October 2023 category index is the stage. The same links stay in
+    # the document, drawn clear over the photograph so the text is not doubled.
+    inner = f"""<div class="df-forums df-photo">
+  <img class="df-fstage" src="/static/img/dragonflight/forums-bg.png" alt="">
+  <div class="df-sr">{inner}</div>
+  <a class="df-hit df-f-wow" href="/wow/">Warcraft</a>
+  <a class="df-hit df-f-about" href="/wow/info">About</a>
+  <a class="df-hit df-f-shop" href="/shop">Shop</a>
+  <a class="df-hit df-f-account" href="/account/">Account</a>
+  <a class="df-hit df-f-dl" href="/account/create">Download Battle.net</a>
+  <a class="df-hit df-f-embers" href="/forums/general">Embers of Neltharion PTR Discussion</a>
+  <a class="df-hit df-f-evoker" href="/forums/evoker">Evoker</a>
+  <a class="df-hit df-f-dk" href="/forums/deathknight">Death Knight</a>
+</div>"""
     return _doc(exp, "Forums — World of Warcraft", inner, bool(ctx.get("dev")), "era-df-forums")
 
 
@@ -687,7 +695,7 @@ def _realm_doc(ctx) -> str:
             "</tr>"
         )
     table = "".join(body_rows) or "<tr><td colspan=\"6\">No realms match.</td></tr>"
-    inner = f"""<div class="df-rs">
+    sheet = f"""<div class="df-rs">
   <a class="df-rs-help" href="/support" aria-label="Support">Support</a>
   <header class="df-rs-head">
     <h1>Realm Status</h1>
@@ -710,6 +718,26 @@ def _realm_doc(ctx) -> str:
     <a href="/shop">BUY NOW</a>
   </footer>
 </div>"""
+    locale = _q(ctx.get("qs"), "locale", "All")
+    photo = tab == "retail" and not _q(ctx.get("qs"), "q").strip() and locale in ("", "All")
+    if photo:
+        # November 2022 retail list. Other tabs and a search use the live table.
+        inner = f"""<div class="df-rs df-photo">
+  <img class="df-rstage" src="/static/img/dragonflight/realm-bg.jpg" alt="">
+  <a class="df-hit df-hit-help" href="/support">Support</a>
+  <a class="df-tab df-tab-on df-hit df-hit-tab1" href="/wow/realmstatus?tab=retail">World of Warcraft</a>
+  <a class="df-tab df-hit df-hit-tab2" href="/wow/realmstatus?tab=classic">World of Warcraft Classic</a>
+  <a class="df-tab df-hit df-hit-tab3" href="/wow/realmstatus?tab=wotlk">Wrath of the Lich King Classic</a>
+  <a class="df-hit df-hit-forum" href="/forums/realm">Service Status Forum</a>
+  <a class="df-hit df-hit-buy" href="/shop">BUY NOW</a>
+  <form class="df-filters df-hit df-hit-find" method="get" action="/wow/realmstatus">
+    <input type="hidden" name="tab" value="retail">
+    <input name="q" aria-label="Search" placeholder="Realm Name">
+  </form>
+  <div class="df-sr">{sheet}</div>
+</div>"""
+    else:
+        inner = sheet
     return _doc(exp, "Realm Status — World of Warcraft", inner, bool(ctx.get("dev")), "era-df-realms")
 
 
@@ -728,7 +756,7 @@ def _shop_doc(ctx) -> str:
             "</article>"
         )
     grid = "".join(cards) or "<p>No mounts match.</p>"
-    inner = f"""<div class="df-shophome">
+    sheet = f"""<div class="df-shophome">
   <header class="df-shopbar">
     <nav>
       <a href="/wow/">Warcraft</a>
@@ -753,6 +781,18 @@ def _shop_doc(ctx) -> str:
   </div>
   <p class="df-shop-note">This shelf is a display. Nothing here is charged.</p>
 </div>"""
+    if not q:
+        inner = f"""<div class="df-shophome df-photo">
+  <img class="df-sstage" src="/static/img/dragonflight/shop-bg.jpg" alt="">
+  <a class="df-hit df-s-wow" href="/wow/">Warcraft</a>
+  <a class="df-hit df-s-balance" href="/account/">Battle.net Balance</a>
+  <form class="df-shopsearch df-hit df-s-find" method="get" action="/shop">
+    <input name="q" placeholder="Search Shop" aria-label="Search Shop">
+  </form>
+  <div class="df-sr">{sheet}</div>
+</div>"""
+    else:
+        inner = sheet
     return _doc(exp, "Shop — World of Warcraft", inner, bool(ctx.get("dev")), "era-df-shop")
 
 

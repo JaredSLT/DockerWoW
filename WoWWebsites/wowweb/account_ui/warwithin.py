@@ -39,10 +39,15 @@ def _side(active: str) -> str:
         cls = "acct-navlink is-current" if active == key else "acct-navlink"
         return f'<a class="{cls}" href="{href}">{label}</a>'
 
-    overview = item("/account/", "Overview", "overview")
-    security = item("/account/password", ERA_TITLE, "security")
+    # The photographed sidebar says Security. The page it opens is still Sign-in & Security.
+    security = (
+        '<a class="acct-navlink is-current" href="/account/password">Security'
+        f'<span class="acct-sr"> {ERA_TITLE}</span></a>'
+        if active == "security"
+        else f'<a class="acct-navlink" href="/account/password">Security<span class="acct-sr"> {ERA_TITLE}</span></a>'
+    )
     return f"""<nav class="acct-menu" aria-label="Account">
-  {overview}
+  {item("/account/", "Account Overview", "overview")}
   <a class="acct-navlink" href="/account/">Account Details</a>
   <a class="acct-navlink" href="/account/services">Games &amp; Subscriptions</a>
   <a class="acct-navlink" href="/support/">Parental Controls</a>
@@ -58,11 +63,11 @@ def _side(active: str) -> str:
 def _top(show_logout: bool) -> str:
     logout = '<a href="/account/logout">Log Out</a>' if show_logout else ""
     return f"""<header class="bnet-top">
-  <a class="bnet-brand" href="/account/"><i aria-hidden="true"></i>Battle.net</a>
+  <a class="bnet-brand" href="/account/"><img src="/static/img/warwithin/logo-bnet.png" alt="Battle.net"></a>
   <nav class="bnet-topnav" aria-label="Battle.net">
-    <a href="/wow/">Download Battle.net</a>
-    <a href="/support/">Support</a>
-    <a href="/account/">Account</a>
+    <a class="bnet-dl" href="/wow/">Download Battle.net</a>
+    <a class="bnet-help" href="/support/">Support</a>
+    <a class="bnet-acct" href="/account/">Account</a>
     {logout}
   </nav>
 </header>"""
@@ -70,21 +75,22 @@ def _top(show_logout: bool) -> str:
 
 def _social() -> str:
     buttons = (
-        ("soc-google", "Google", "G"),
-        ("soc-facebook", "Facebook", "f"),
-        ("soc-apple", "Apple", ""),
-        ("soc-xbox", "Xbox", "X"),
-        ("soc-ps", "PlayStation", "P"),
-        ("soc-nintendo", "Nintendo", "N"),
-        ("soc-bnet", "Battle.net", "B"),
+        ("soc-google", "Google"),
+        ("soc-facebook", "Facebook"),
+        ("soc-apple", "Apple"),
+        ("soc-xbox", "Xbox"),
+        ("soc-ps", "PlayStation"),
+        ("soc-nintendo", "Nintendo"),
+        ("soc-bnet", "Battle.net"),
     )
     first, second = buttons[:3], buttons[3:]
 
     def row(items) -> str:
         bits = []
-        for cls, name, mark in items:
+        for cls, name in items:
             bits.append(
-                f'<button class="{cls}" type="button" aria-label="{name}" title="{name}">{mark}</button>'
+                f'<a class="{cls}" href="/account/login" aria-label="{name}" title="{name}">'
+                f'<img src="/static/img/warwithin/{cls}.png" alt="{name}"></a>'
             )
         return f'<div>{"".join(bits)}</div>'
 
@@ -94,17 +100,15 @@ def _social() -> str:
 def _login(login_kind: str) -> str:
     label, input_type, placeholder = _identity(login_kind)
     return f"""<div class="bnet-gate">
-  <p class="bnet-logo"><i aria-hidden="true"></i>BATTLE.NET</p>
+  <p class="bnet-logo"><img src="/static/img/warwithin/logo-bnet.png" alt="Battle.net"></p>
   <h1>Log in</h1>
   <p class="bnet-new">New to Battle.net? <a href="/account/create">Sign up</a></p>
   <form class="acct-form" method="post" action="/account/login">
-    <label class="acct-label">{label}
-      <input class="acct-input" name="identity" type="{input_type}" placeholder="{placeholder}" required autocomplete="username">
-    </label>
-    <p class="bnet-forgot"><a href="/support/password">Forgot email?</a></p>
-    <label class="acct-label">Password
-      <input class="acct-input" type="password" name="password" required autocomplete="current-password">
-    </label>
+    <label class="acct-label acct-sr">{label}</label>
+    <input class="acct-input" name="identity" type="{input_type}" placeholder="{placeholder}" required autocomplete="username">
+    <p class="bnet-forgot"><a href="/support/">Forgot email?</a></p>
+    <label class="acct-label acct-sr">Password</label>
+    <input class="acct-input" type="password" name="password" placeholder="Password" required autocomplete="current-password">
     <button class="acct-button bnet-continue" type="submit">Continue</button>
   </form>
   <p class="bnet-legal">By continuing, you acknowledge our <a href="/support/">Privacy Policy</a>.</p>
@@ -124,7 +128,7 @@ def _create(login_kind: str, separate_game_name: bool) -> str:
     </label>
     """
     return f"""<div class="bnet-gate">
-  <p class="bnet-logo"><i aria-hidden="true"></i>BATTLE.NET</p>
+  <p class="bnet-logo"><img src="/static/img/warwithin/logo-bnet.png" alt="Battle.net"></p>
   <h1>Sign up</h1>
   <p class="bnet-new">The email is the Battle.net login. The World of Warcraft account name is what you type in the game.</p>
   <form class="acct-form" method="post" action="/account/create">
@@ -180,41 +184,53 @@ def _characters(characters: list) -> str:
 
 
 def _summary(user: str, email: str, characters: list) -> str:
+    # Name, BattleTag, and phone are covered in the photograph. Do not invent them.
+    # The webcam covers the lower left, so only the two fully visible purchase rows are listed.
     return f"""<h1 class="acct-title">Account Overview</h1>
 <div class="bnet-cards">
   <section class="bnet-card">
     <h2>Redeem a code</h2>
-    <input class="acct-input" placeholder="XXXX-XXXX-XXXX-XXXX" readonly aria-label="Redeem a code">
-    <button class="acct-button" type="button">Redeem Code</button>
+    <div class="bnet-redeem">
+      <input class="acct-input" placeholder="XXXX-XXXX-XXXX-XXXX" readonly aria-label="Redeem a code">
+      <button class="acct-button" type="button">Redeem Code</button>
+    </div>
   </section>
   <section class="bnet-card">
-    <h2>Battle.net Balance</h2>
+    <div class="bnet-cardhead"><h2>Battle.net Balance</h2><a href="/account/">Payment Methods</a></div>
     <p class="bnet-balance">$0.00</p>
-    <p><a href="/account/">Payment Methods</a></p>
   </section>
   <section class="bnet-card">
-    <h2>Your Information</h2>
+    <div class="bnet-cardhead"><h2>Your Information</h2><a href="/account/">Account Details</a></div>
     <ul class="acct-rows">
+      <li class="acct-row"><span class="acct-rowlabel">Name</span><span class="acct-rowvalue">—</span></li>
+      <li class="acct-row"><span class="acct-rowlabel">BattleTag</span><span class="acct-rowvalue">—</span></li>
       <li class="acct-row"><span class="acct-rowlabel">Email</span><span class="acct-rowvalue">{_e(email)}</span></li>
+      <li class="acct-row"><span class="acct-rowlabel">Phone</span><a href="/account/">Add Phone Number</a></li>
       <li class="acct-row"><span class="acct-rowlabel">World of Warcraft account name</span><span class="acct-rowvalue">{_e(user)}</span></li>
     </ul>
   </section>
   <section class="bnet-card">
-    <h2>Security Checkup</h2>
-    <p><a href="/account/password">{ERA_TITLE}</a></p>
-    <p class="acct-note">There is no emailed password reset. Change the password here.</p>
+    <div class="bnet-cardhead"><h2>Security Checkup</h2><a href="/account/password">{ERA_TITLE}</a></div>
+    <div class="bnet-secure">
+      <p class="bnet-ring" aria-label="33 percent complete"><span>33%<small>COMPLETE</small></span></p>
+      <ul class="bnet-checks">
+        <li class="is-ok">Email Verified</li>
+        <li>Attach Battle.net Authenticator</li>
+        <li><a href="/account/">Add Phone Number</a></li>
+      </ul>
+    </div>
   </section>
 </div>
 <section class="bnet-card bnet-wide">
-  <h2>Subscriptions &amp; Game Time</h2>
+  <div class="bnet-cardhead"><h2>Subscriptions &amp; Game Time</h2><a href="/account/services">Games &amp; Subscriptions</a></div>
   <table class="bnet-sub">
-    <thead><tr><th>Game</th><th>Status</th><th>Last Played</th><th>Next Billing Date</th></tr></thead>
     <tbody>
       <tr>
-        <td>World of Warcraft (WoW1)</td>
-        <td>Active</td>
-        <td>—</td>
-        <td>—</td>
+        <td>World of Warcraft (WoW1)<span>Americas &amp; Oceania</span></td>
+        <td>Active<span>Status</span></td>
+        <td>Jan 24, 2025<span>Last Played</span></td>
+        <td>Feb 2, 2025<span>Next Billing Date</span></td>
+        <td><a href="/account/services">Manage</a></td>
       </tr>
     </tbody>
   </table>
@@ -222,8 +238,23 @@ def _summary(user: str, email: str, characters: list) -> str:
   {_characters(characters)}
 </section>
 <section class="bnet-card bnet-wide">
-  <h2>Recent Purchases</h2>
-  <p class="acct-empty">No purchases listed on this page.</p>
+  <div class="bnet-cardhead"><h2>Recent Purchases</h2><a href="/account/">Transaction History</a></div>
+  <table class="bnet-sub">
+    <tbody>
+      <tr>
+        <td>Jan 3, 2025</td>
+        <td>World of Warcraft Subscription - 1 Month</td>
+        <td>$15.99</td>
+        <td>Complete</td>
+      </tr>
+      <tr>
+        <td>Dec 2, 2024</td>
+        <td>World of Warcraft Subscription - 1 Month</td>
+        <td>$15.99</td>
+        <td>Complete</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 <p class="acct-actions"><a href="/account/password">Change Password</a> · <a href="/account/logout">Log Out</a></p>"""
 

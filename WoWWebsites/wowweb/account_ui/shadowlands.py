@@ -30,7 +30,7 @@ def _rail(mode: str) -> str:
     security = mode == "password"
     return (
         '<nav class="acct-rail" aria-label="Account">'
-        + link("/account/", "Overview", summary)
+        + link("/account/", "Account Overview", False)
         + link("/account/", "Account Details", False)
         + link("/account/#games", "Games & Subscriptions", summary)
         + link("/support/", "Parental Controls", False)
@@ -67,14 +67,20 @@ def _game_field(separate_game_name: bool) -> str:
 
 
 def _mark() -> str:
-    return '<p class="bn-mark" aria-hidden="true"><span>Blizzard</span> Entertainment</p>'
+    return (
+        '<p class="bn-mark"><img src="/static/img/shadowlands/logo-blizz.png" alt="Blizzard">'
+        '<span>Entertainment</span></p>'
+    )
 
 
 def _social() -> str:
     return (
         '<div class="bn-or"><span>Or log in with</span></div>'
         '<div class="bn-social" aria-hidden="true">'
-        '<span class="bn-fb">f</span><span class="bn-g">G</span><span class="bn-apple">A</span>'
+        '<span class="bn-fb">f</span><span class="bn-g">G</span>'
+        '<span class="bn-apple"><svg viewBox="0 0 16 20" aria-hidden="true">'
+        '<path fill="#111" d="M11.2 3.2c.6-.8 1-1.8.9-2.8-1 .1-2.1.6-2.8 1.4-.6.7-1.1 1.7-.9 2.7 1.1.1 2.1-.5 2.8-1.3zM13.4 10.6c0-2.2 1.8-3.2 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.3-.1-2.6.8-3.3.8s-1.7-.8-2.8-.7c-1.5.1-2.8.8-3.6 2.1-1.5 2.7-.4 6.6 1.1 8.8.7 1.1 1.6 2.3 2.7 2.2 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7 1.9-1.1 2.6-2.2c.8-1.2 1.2-2.3 1.2-2.4-.1 0-2.2-.8-2.2-3.6z"/>'
+        "</svg></span>"
         "</div>"
     )
 
@@ -86,9 +92,10 @@ def _login(login_kind: str) -> str:
         '<h3 class="acct-panel-title">Sign in</h3>'
         '<form class="acct-form" method="post" action="/account/login">'
         f"{_identity_field(login_kind)}"
-        '<label class="acct-field"><span class="acct-label">Password</span> '
+        '<label class="acct-field acct-pass"><span class="acct-label">Password</span> '
         '<input class="acct-input" type="password" name="password" required '
-        'autocomplete="current-password" placeholder="Password"></label>'
+        'autocomplete="current-password" placeholder="Password">'
+        '<span class="bn-eye" aria-hidden="true"></span></label>'
         '<button class="acct-submit" type="submit">Log In</button>'
         "</form>"
         f"{_social()}"
@@ -169,11 +176,25 @@ def _summary(user: str, email: str, characters: list) -> str:
         '<div class="bn-game">'
         '<span class="bn-w" aria-hidden="true">W</span>'
         '<div><strong>World of Warcraft</strong>'
-        f'<span class="bn-sub">{_e(email)}</span>'
+        f'<span class="bn-sub">{_e(user)}</span>'
         '<span class="bn-sub">Game account</span></div>'
-        f'<div><strong class="acct-fact-value">{_e(user)}</strong>'
-        '<span class="bn-sub">Account Status</span><span class="bn-sub">Active</span></div>'
+        '<div><strong class="acct-fact-value">Active</strong>'
+        '<span class="bn-sub">Account Status</span></div>'
+        '<div class="bn-manage"><a href="/account/password">Manage</a></div>'
+        "</div></section>"
+        '<section class="bn-panel bn-extra"><h4 class="acct-subhead">Starter Editions &amp; Public Test Regions</h4>'
+        '<div class="bn-game">'
+        '<span class="bn-w" aria-hidden="true">W</span>'
+        '<div><strong>Create a Starter Edition account to start playing World of Warcraft for free.</strong></div>'
+        '<div class="bn-manage"><a href="/account/create">+ Create Starter Account</a>'
+        '<a href="/trial">Learn More</a></div>'
         "</div>"
+        '<div class="bn-game">'
+        '<span class="bn-w" aria-hidden="true">W</span>'
+        '<div><strong>Create a Public Test Realm (PTR) account to access new World of Warcraft content before it goes live.</strong></div>'
+        '<div class="bn-manage"><a href="/account/create">+ Create PTR Account</a>'
+        '<a href="/wow/news">Learn More</a></div>'
+        "</div></section>"
         '<dl class="acct-facts">'
         '<div class="acct-fact"><dt class="acct-fact-label">Email</dt>'
         f'<dd class="acct-fact-value">{_e(email)}</dd></div>'
@@ -185,7 +206,7 @@ def _summary(user: str, email: str, characters: list) -> str:
         '<p class="acct-actions">'
         '<a class="acct-link" href="/account/password">Change Password</a>'
         '<a class="acct-link" href="/account/logout">Log Out</a>'
-        "</p></section></div>"
+        "</p></div>"
     )
 
 

@@ -5,7 +5,7 @@
   max-width: none;
   width: 100%;
   color: #2a2116;
-  font: 12px/1.45 Arial, Helvetica, sans-serif;
+  font: 12px/1.45 Verdana, Arial, Helvetica, sans-serif;
 }
 
 .acct-wotlk .acct-title {
@@ -18,7 +18,7 @@
 
 .acct-wotlk .acct-kicker {
   margin: 0;
-  color: #8eb4d4;
+  color: #8a6230;
   font-size: 11px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -45,7 +45,7 @@
 .acct-wotlk .acct-panel {
   margin: 0 0 12px;
   padding: 12px 14px;
-  background: rgba(255, 248, 230, 0.55);
+  background: rgba(255, 248, 230, 0.35);
   border: 1px solid #8a6a2a;
 }
 
@@ -60,7 +60,8 @@
   font-weight: 700;
 }
 
-.acct-wotlk .acct-form input {
+.acct-wotlk .acct-form input[type="text"],
+.acct-wotlk .acct-form input[type="password"] {
   display: block;
   width: 16rem;
   max-width: 100%;
@@ -70,27 +71,46 @@
   background: #fff;
   border: 1px solid #8a6a2a;
   color: #1a1a1a;
-  font: 13px Arial, Helvetica, sans-serif;
+  font: 13px Verdana, Arial, Helvetica, sans-serif;
 }
 
-.acct-wotlk button {
+.acct-wotlk button,
+.acct-wotlk .acct-back {
   margin-top: 4px;
-  background: #2a2118;
+  background: linear-gradient(#3a3428, #1a140c);
   color: #f3e2bc;
-  border: 1px solid #8a6a2a;
-  font: 700 12px Arial, Helvetica, sans-serif;
-  padding: 4px 12px;
+  border: 1px solid #c6a56a;
+  font: 700 12px Verdana, Arial, sans-serif;
+  padding: 4px 14px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
+.acct-wotlk .acct-actions { display: flex; gap: 8px; align-items: center; }
 
 .acct-wotlk a { color: #1a3f72; }
 .acct-wotlk .acct-links { margin: 10px 0 0; }
+.acct-wotlk .acct-copy { text-align: center; color: #6a5a40; font-size: 11px; }
+.acct-wotlk fieldset {
+  margin: 10px 0;
+  border: 1px solid #8a6a2a;
+  background: rgba(255, 255, 255, 0.35);
+}
+.acct-wotlk legend {
+  background: #1a3a28;
+  color: #f3e2bc;
+  padding: 2px 8px;
+  font-weight: 700;
+}
+.acct-wotlk .acct-check { font-weight: 400; }
 
 .acct-login-grid { display: block; }
 
 .acct-wotlk .acct-summary h4 {
-  margin: 12px 0 6px;
+  margin: 14px 0 6px;
   color: #1e4378;
+  border-bottom: 1px solid #8a6a2a;
+  padding-bottom: 3px;
 }
 
 .acct-wotlk .acct-chars {
@@ -124,19 +144,29 @@
 .acct-wotlk .acct-password .acct-heading,
 .acct-wotlk .acct-password .acct-field { color: #1e4378; }
 
+.bn-help { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.bn-help h4 { margin: 0 0 4px; font-size: 12px; }
+.bn-help a { display: block; font-size: 11px; }
+
 /* Battle.net login, summary, and password. */
 body.era-wotlk-account .acct-wotlk { color: #d5e6f8; }
 body.era-wotlk-account .acct-title {
   background: none;
   padding: 0;
   color: #8eb4d4;
-  font: 700 11px Arial, sans-serif;
+  font: 700 11px Verdana, Arial, sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
+}
+body.era-wotlk-account .acct-kicker {
+  color: #8eb4d4;
+  letter-spacing: 2px;
 }
 body.era-wotlk-account .acct-heading {
   color: #fff;
   font: 700 28px Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 body.era-wotlk-account .acct-panel {
   background: transparent;
@@ -149,39 +179,86 @@ body.era-wotlk-account .acct-login-grid {
   gap: 24px;
   align-items: start;
 }
-body.era-wotlk-account .acct-side h3 { margin: 0 0 6px; font-size: 20px; }
-body.era-wotlk-account .acct-wotlk .acct-form input {
+body.era-wotlk-account .acct-side h3 { margin: 28px 0 6px; font-size: 22px; color: #fff; }
+body.era-wotlk-account .acct-side p { color: #7ec8ea; }
+body.era-wotlk-account .acct-wotlk .acct-form input[type="text"],
+body.era-wotlk-account .acct-wotlk .acct-form input[type="password"] {
   background: #fff;
   border-color: #9aa;
   color: #111;
+  width: 220px;
+  height: 22px;
 }
 body.era-wotlk-account .acct-wotlk button,
 body.era-wotlk-account .acct-cta {
-  background: #f5b400;
+  background: linear-gradient(#ffd24a, #e0a000);
   color: #1a1a1a;
   border: 1px solid #c48a00;
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 6px 18px;
+  font-weight: 700;
+  box-shadow: inset 0 1px 0 #ffe9a0;
 }
 body.era-wotlk-account .acct-note,
 body.era-wotlk-account .acct-links a,
 body.era-wotlk-account .acct-field { color: #d5e6f8; }
+body.era-wotlk-account .acct-links a { margin-right: 10px; }
 body.era-wotlk-account .acct-error { color: #ffb4b4; }
 body.era-wotlk-account .acct-notice { color: #b7dcff; }
+body.era-wotlk-account .bn-help {
+  margin-top: 22px;
+  padding-top: 10px;
+  border-top: 1px solid #1e4e78;
+}
+body.era-wotlk-account .bn-help h4 { color: #9fd0ff; }
+body.era-wotlk-account .bn-help a { color: #7eb6e0; }
 
 body.era-wotlk-account .acct-summary {
   background: transparent;
   border: 0;
   color: #d5e6f8;
 }
-body.era-wotlk-account .acct-summary h4,
-body.era-wotlk-account .acct-name { color: #fff; }
+body.era-wotlk-account .acct-summary h4 {
+  color: #fff;
+  border-bottom-color: #1e4e78;
+  font-size: 18px;
+}
+body.era-wotlk-account .acct-name,
+body.era-wotlk-account .acct-prow a,
+body.era-wotlk-account .acct-game a { color: #8ec6ff; }
+body.era-wotlk-account .acct-prow a { margin-right: 14px; text-decoration: none; }
+body.era-wotlk-account .acct-game a {
+  display: inline-block;
+  margin: 6px 0 10px;
+  padding: 18px 16px;
+  min-width: 120px;
+  text-align: center;
+  background: #071018 url("/static/img/wotlk/logo.jpg") center 8px / 100px auto no-repeat;
+  border: 1px solid #3d7eb0;
+  color: #f6e2a8;
+  padding-top: 72px;
+  font-weight: 700;
+}
 body.era-wotlk-account .acct-password {
-  background: #d4e4f0;
+  background: #0c2438;
   border: 1px solid #1e4378;
   padding: 12px;
-  color: #102033;
+  color: #d5e6f8;
 }
-body.era-wotlk-account .acct-password .acct-heading { color: #1e4378; font-size: 22px; }
+body.era-wotlk-account .acct-password .acct-heading { color: #fff; font-size: 22px; }
 body.era-wotlk-account .acct-password .acct-field,
-body.era-wotlk-account .acct-password .acct-lead { color: #102033; }
+body.era-wotlk-account .acct-password .acct-lead { color: #d5e6f8; }
+
+/* Parchment signup keeps the brown sheet, not the blue Battle.net panel. */
+body.era-wotlk-signup .acct-title {
+  background: none;
+  color: #6a3a10;
+  text-align: center;
+  letter-spacing: 0;
+  text-transform: none;
+  font: 700 16px Georgia, "Times New Roman", serif;
+}
+body.era-wotlk-signup .acct-heading { text-align: center; }
+body.era-wotlk-signup .acct-form { max-width: 420px; margin: 0 auto; }
+body.era-wotlk-signup .acct-field { text-align: left; }
+body.era-wotlk-signup .acct-actions { justify-content: center; }

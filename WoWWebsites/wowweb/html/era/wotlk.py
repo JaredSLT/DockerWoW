@@ -49,9 +49,12 @@ _LEFT_SLOTS = ("Head", "Neck", "Shoulders", "Back", "Chest", "Shirt", "Tabard", 
 _RIGHT_SLOTS = ("Hands", "Waist", "Legs", "Feet", "Finger 1", "Finger 2", "Trinket 1", "Trinket 2")
 _WEAPON_SLOTS = ("Main Hand", "Off Hand", "Ranged")
 
-_BASE_STATS = ("Strength", "Agility", "Stamina", "Intellect", "Spirit")
+_BASE_STATS = ("Strength", "Agility", "Stamina", "Intellect", "Spirit", "Armor")
 _MELEE_STATS = ("Damage", "Speed", "Power", "Hit Rating", "Crit", "Expertise")
+_RANGED_STATS = ("Damage", "Speed", "Power", "Hit Rating", "Crit")
+_SPELL_STATS = ("Power", "Hit Rating", "Crit", "Haste", "Mana Regen")
 _DEF_STATS = ("Armor", "Defense", "Dodge", "Parry", "Block", "Resilience")
+_RES_STATS = ("Arcane", "Fire", "Nature", "Frost", "Shadow")
 
 
 def _mdy(iso: str) -> str:
@@ -182,21 +185,32 @@ def _menu() -> str:
 
 
 def _who(user: str | None) -> str:
-    if user:
-        return (
-            f'<span class="wlk-who">Signed in as <strong>{esc(user)}</strong>'
-            f' · <a href="/account/">Account</a>'
-            f' · <a href="/account/logout">Log Out</a></span>'
-        )
-    return '<span class="wlk-who"><a href="/account/login">Log In</a></span>'
+    if not user:
+        return ""
+    return (
+        f'<span class="wlk-who">Signed in as <strong>{esc(user)}</strong>'
+        f' · <a href="/account/">Account</a>'
+        f' · <a href="/account/logout">Log Out</a></span>'
+    )
+
+
+def _tools(user: str | None) -> str:
+    return f"""<div class="wlk-tools">
+      <form class="wlk-search" action="/wow/search" method="get">
+        <input type="search" name="q" placeholder="Search World of Warcraft" aria-label="Search World of Warcraft">
+        <button type="submit">Search</button>
+      </form>
+      <span class="wlk-lang">English (USA)</span>
+      {_who(user)}
+    </div>"""
 
 
 def _rail() -> str:
     return """<aside class="wlk-rail">
-  <a class="ad ad-trial" href="/account/create"><span>10 Day Free Trial</span></a>
-  <a class="ad ad-gift" href="/shop"><span>Gift World of Warcraft</span></a>
-  <a class="ad ad-cata" href="/wow/news"><span>World of Warcraft Cataclysm</span></a>
-  <a class="ad ad-raf" href="/account/create"><span>Recruit a Friend</span></a>
+  <a class="ad ad-trial" href="/account/create"><img src="/static/img/wotlk/ad-trial.jpg" alt="10 Day Free Trial"></a>
+  <a class="ad ad-gift" href="/shop"><img src="/static/img/wotlk/ad-gift.jpg" alt="Gift World of Warcraft"></a>
+  <a class="ad ad-cata" href="/wow/news"><img src="/static/img/wotlk/ad-cata.jpg" alt="World of Warcraft Cataclysm"></a>
+  <a class="ad ad-raf" href="/account/create"><img src="/static/img/wotlk/ad-raf.jpg" alt="Recluta a un amigo"></a>
   <div class="ql">
     <h3>Quicklinks</h3>
     <a href="/account/">Account Management</a>
@@ -218,19 +232,10 @@ def _community(exp, title, body, user, crumb, dev, extra_js) -> str:
   <a href="/forums/">Forums</a>
 </div></div>
 <div class="wlk">
-  <header class="wlk-head">
-    <a class="wlk-logo" href="/wow/">
-      <span class="world">World of</span>
-      <span class="wm">Warcraft</span>
-      <span class="ribbon">Wrath of the Lich King</span>
-    </a>
-    <form class="wlk-search" action="/wow/search" method="get">
-      <input type="search" name="q" placeholder="Search World of Warcraft" aria-label="Search World of Warcraft">
-      <button type="submit">Search</button>
-    </form>
-    <span class="wlk-lang">English (USA)</span>
-    {_who(user)}
-  </header>
+  <div class="wlk-chain">
+    <a class="wlk-logo" href="/wow/"><img src="/static/img/wotlk/logo.jpg" alt="World of Warcraft Wrath of the Lich King"></a>
+    {_tools(user)}
+  </div>
   <div class="wlk-cols">
     <nav class="wlk-menu" aria-label="Community">{_menu()}</nav>
     <div class="wlk-center"><div class="wlk-parch">{banner}{body}</div></div>
@@ -276,7 +281,7 @@ def _account_doc(exp, title, body, user, dev, extra_js) -> str:
         welcome = '<p class="bn-lang">Language: English (US)</p>'
     inner = f"""<div class="bn">
   <header class="bn-bar">
-    <a class="bn-logo" href="/bnet"><span class="bn-swirl" aria-hidden="true"></span> Battle.net</a>
+    <a class="bn-logo" href="/bnet"><img src="/static/img/wotlk/bnet-sky.jpg" alt="Battle.net"></a>
     <div class="bn-user">{welcome}</div>
   </header>
   <div class="bn-panel">{body}</div>
@@ -325,14 +330,10 @@ def home_body(exp, news, realm, user) -> str:
     return f"""<div class="wlk-home">
   <div class="wlk-hero">
     <a class="slide-gift" href="/shop">
-      <span class="gift-box">World of Warcraft</span>
-      <span class="hero-copy">
-        <strong>Gift World of Warcraft</strong>
-        <em>Click here to order</em>
-      </span>
+      <img src="/static/img/wotlk/hero-gift.jpg" alt="Gift World of Warcraft">
+      <span class="off">Gift World of Warcraft</span>
     </a>
-    <a class="slide-fall" href="/wrath">Fall of the Lich King</a>
-    <span class="hero-nav">Back Next</span>
+    <a class="slide-fall" href="/wrath"><span class="off">Fall of the Lich King</span></a>
   </div>
   <div class="wlk-poll" aria-hidden="true">
     <span class="bar"><span>100%</span></span>
@@ -438,11 +439,12 @@ def take(path: str, ctx: dict):
 
 def _top_links(forum: bool = False) -> str:
     home = "WoW-Europe.com" if forum else "WorldofWarcraft.com"
+    armory = "Armory" if forum else "The Armory"
     store = '<a href="/shop">Blizzard Store</a>' if forum else ""
     return (
         '<nav class="site-links">'
         f'<a href="/wow/">{home}</a>'
-        '<a href="/armory/">The Armory</a>'
+        f'<a href="/armory/">{armory}</a>'
         '<a href="/forums/">Forums</a>'
         f"{store}</nav>"
     )
@@ -454,29 +456,34 @@ def _forum_index(exp) -> str:
     boards = forums.boards_for(exp)
     by_slug = {slug: title for slug, title in boards}
     left = (
-        ("/armory/arena", "Arena Pass", "Arena ratings, teams, and the ladder on this realm."),
-        ("/support/", "In-Game Customer Support", "Game masters and in-game help."),
-        ("/forums/", "Website and Forums", "The community site and these forums."),
-        ("/wow/news", "Cataclysm", "Cataclysm is still upcoming. News and previews are posted here."),
-        ("/story", "Warcraft Story", "Stories of Azeroth, Northrend, and the Frozen Throne."),
-        ("/forums/quests", by_slug.get("quests", "Quests"), "Quests in Northrend and the older continents."),
-        ("/forums/ui", by_slug.get("ui", "Interface and Macros"), "Custom interfaces and macros."),
-        ("/forums/dungeons", by_slug.get("dungeons", "Raid & Dungeons"), "Dungeons, raids, and Icecrown Citadel."),
-        ("/forums/guilds", by_slug.get("guilds", "Guild Management"), "Guild recruitment and guild business."),
-        ("/forums/bugs", by_slug.get("bugs", "Bug Report"), "Report a bug on this realm."),
+        ("/armory/arena", "Arena Pass", "Discuss all aspects of the Arena Pass with your fellow players."),
+        ("/support/", "In-Game Customer Support", "GM moderated forum to discuss in-game issues."),
+        ("/forums/", "Website and Forums", "Discussions, suggestions and error reports for the forums and website."),
+        ("/wow/news", "Cataclysm", "With new Goblin and Worgen allies at your side. Cataclysm is still upcoming."),
+        ("/story", "Warcraft Story", "We invite you to discuss the Warcraft Universe and storylines of Azeroth here."),
+        ("/forums/quests", by_slug.get("quests", "Quests"), "Talk about and get help with the countless quests in World of Warcraft."),
+        ("/forums/ui", by_slug.get("ui", "Interface and Macros"), "Work with other players to create your own custom interface and macros."),
+        ("/forums/dungeons", by_slug.get("dungeons", "Raid & Dungeons"), "Share your victories and discuss tactics, encounters and group composition."),
+        ("/forums/guilds", by_slug.get("guilds", "Guild Management"), "Step in and share ideas and experiences on in-guild and inter-guild relationships."),
+        ("/forums/guilds", "Looking for Alliance players", "If you are looking for a guild, guild members or leveling partners among the Alliance."),
+        ("/forums/general", "Suggestions", "Have a suggestion for World of Warcraft?"),
+        ("/shop", "Trading Card Game", "Discuss the World of Warcraft Trading Card Game."),
+        ("/wow/news", "Diablo III", "Discuss Blizzard's upcoming Action RPG title, Diablo III."),
     )
     right = (
-        ("/wow/news", "Blizzard Archive", "Older announcements live in the news archive."),
-        ("/support/", "Technical Support", "Technical support articles for this client."),
-        ("/wow/info/basics", "Newcomers", "Getting started at level 1, through the death gate at 55."),
-        ("/forums/general", by_slug.get("general", "General Discussion"), "The place for discussions that do not fit another board."),
-        ("/forums/professions", by_slug.get("professions", "Professions"), "Gathering, crafting, and Inscription."),
-        ("/armory/", "Achievements", "Achievement scores are on character profiles."),
-        ("/forums/pvp", by_slug.get("pvp", "Player vs. Player"), "Battlegrounds, Wintergrasp, and arenas."),
-        ("/forums/general", "Roleplaying", "Stories and role-play. This realm keeps that talk on General Discussion."),
-        ("/wow/news", "Events and Fan Creations", "Contests and community events."),
-        ("/wow/info/patches", "Public Test Realm", "Patch notes and what is still under development."),
-        ("/wow/news", "Off-Topic", "Off-topic posts stay on General Discussion."),
+        ("/wow/news", "Blizzard Archive", "A collection of important messages and announcements, including the extended forum guidelines."),
+        ("/support/", "Technical Support", "If you're experiencing technical problems playing World of Warcraft, post here for assistance."),
+        ("/wow/info/basics", "Newcomers", "Newcomers of all levels are welcomed with their questions."),
+        ("/forums/general", by_slug.get("general", "General Discussion"), "The place for World of Warcraft discussions that don't fit into any other forum."),
+        ("/forums/professions", by_slug.get("professions", "Professions"), "The place for discussions, as well as hints and tips, about gathering and crafting."),
+        ("/armory/", "Achievements", "Discussion forum for the many World of Warcraft Achievements."),
+        ("/forums/pvp", by_slug.get("pvp", "Player vs. Player"), "Discuss Player versus Player mechanics and tactics."),
+        ("/forums/general", "Roleplaying", "Pull up a chair, drink a mug of ale, meet new friends, tell stories, and role-play in this forum."),
+        ("/wow/news", "Events and Fan Creations", "Promote, share and read about in-game and out-of-game events and creations."),
+        ("/forums/guilds", "Looking for Horde players", "If you are looking for a guild, guild members or leveling partners among the Horde."),
+        ("/wow/info/patches", "Public Test Realm", "Participate in the testing of upcoming changes and features."),
+        ("/forums/general", "Off-Topic", "Off-topic posts of interest to the World of Warcraft community."),
+        ("/wow/news", "BlizzCon", "The BlizzCon discussion forum."),
     )
 
     def cell(href: str, title: str, blurb: str) -> str:
@@ -501,14 +508,18 @@ def _forum_index(exp) -> str:
     return f"""<div class="fi">
   {_top_links(forum=True)}
   <header class="fi-logo">
-    <a href="/wow/"><span class="world">World of</span> <span class="wm">Warcraft</span></a>
-    <span class="ribbon">Wrath of the Lich King</span>
+    <a href="/wow/"><img src="/static/img/wotlk/forums-logo.jpg" alt="World of Warcraft Wrath of the Lich King"></a>
   </header>
-  <p class="fi-lang">English (US)</p>
+  <p class="fi-lang">Select Language: World of Warcraft (en)</p>
   <div class="fi-sheet">
-    <h1>Forums Index</h1>
-    <p class="fi-welcome">Welcome to the official World of Warcraft forums!</p>
-    <p class="fi-lead">Blizzard provides these forums for players to chat, exchange ideas, and submit feedback. Posting requires an account on this realm. Anyone may read. Follow the <a href="/support/">forum guidelines</a>.</p>
+    <div class="fi-intro">
+      <div>
+        <h1>Forums Index</h1>
+        <p class="fi-welcome">Welcome to the official World of Warcraft forums!</p>
+        <p class="fi-lead">Blizzard provides the World of Warcraft community forums for its players to chat, exchange ideas, and submit feedback. Posting requires an account on this realm. Anyone may read. Follow the <a href="/support/">Forum Guidelines</a>.</p>
+      </div>
+      <a class="fi-poster" href="/shop"><img src="/static/img/wotlk/forums-poster.jpg" alt="Original art posters. Available now."></a>
+    </div>
     <div class="fi-cols">
       <div>{''.join(cell(*row) for row in left)}</div>
       <div>{''.join(cell(*row) for row in right)}</div>
@@ -589,12 +600,9 @@ def _board_page(exp, slug: str, user, page: int, data_dir) -> str | None:
         )
     else:
         form = '<p class="fi-post"><a href="/account/login">Log in</a> with a realm account to post.</p>'
-    return f"""<div class="fi fi-board">
+    return f"""<div class="fi fi-page">
   {_top_links(forum=True)}
-  <header class="fi-logo">
-    <a href="/forums/"><span class="world">World of</span> <span class="wm">Warcraft</span></a>
-    <span class="ribbon">Wrath of the Lich King</span>
-  </header>
+  <a class="eu-banner" href="/forums/"><img src="/static/img/wotlk/forums-eu-head.jpg" alt="World of Warcraft Forums"></a>
   <div class="fi-sheet">
     <p class="crumb"><a href="/forums/">Forums</a> · {esc(title)}</p>
     <h1>{esc(title)}</h1>
@@ -682,9 +690,14 @@ def _forums_doc(path: str, ctx: dict) -> str | None:
     )
 
 
-def _arm_bar(user, tab: str) -> str:
+def _arm_login(user) -> str:
+    if user:
+        return '<a class="arm-login" href="/account/logout">Log Out</a>'
+    return '<a class="arm-login" href="/account/login">Login</a>'
+
+
+def _arm_bar(user, tab: str, field: str = "") -> str:
     tabs = (
-        ("search", "/armory/", "Search"),
         ("items", "/armory/?kind=items", "Items"),
         ("arena", "/armory/arena", "Arena"),
         ("info", "/armory/?kind=info", "Info"),
@@ -694,16 +707,13 @@ def _arm_bar(user, tab: str) -> str:
         f'<a href="{esc(href)}"' + (' class="on"' if key == tab else "") + f">{esc(label)}</a>"
         for key, href, label in tabs
     )
-    if user:
-        login = f'<a class="arm-login" href="/account/logout">Log Out</a>'
-    else:
-        login = '<a class="arm-login" href="/account/login">Login</a>'
     return f"""<div class="arm-top">{_top_links()}</div>
 <header class="arm-head">
-  <a class="arm-logo" href="/armory/"><span class="world">World of</span><span class="wm">Warcraft</span><span class="arm">The Armory</span></a>
-  {login}
+  <a class="arm-logo" href="/armory/"><img src="/static/img/wotlk/armory-logo.jpg" alt="World of Warcraft The Armory"></a>
+  <a class="arm-raf" href="/account/create"><img src="/static/img/wotlk/armory-raf.jpg" alt="Recruit a Friend"></a>
+  {_arm_login(user)}
 </header>
-<nav class="arm-tabs">{links}</nav>"""
+<div class="arm-toolbar">{field}<nav class="arm-tabs">{links}</nav></div>"""
 
 
 def _icon(exp, display_id) -> str:
@@ -751,9 +761,15 @@ def character_markup(exp, char: dict) -> str:
         )
 
     color = _CLASS_COLOR.get(str(char.get("class") or ""), "#8aa0b8")
-    base = "".join(f"<tr><th>{esc(label)}</th><td>—</td></tr>" for label in _BASE_STATS)
-    melee = "".join(f"<tr><th>{esc(label)}</th><td>—</td></tr>" for label in _MELEE_STATS)
-    defense = "".join(f"<tr><th>{esc(label)}</th><td>—</td></tr>" for label in _DEF_STATS)
+    def stat_rows(labels) -> str:
+        return "".join(f"<tr><th>{esc(label)}</th><td>—</td></tr>" for label in labels)
+
+    base = stat_rows(_BASE_STATS)
+    melee = stat_rows(_MELEE_STATS)
+    ranged = stat_rows(_RANGED_STATS)
+    spell = stat_rows(_SPELL_STATS)
+    defense = stat_rows(_DEF_STATS)
+    resist = stat_rows(_RES_STATS)
     talents_href = f"/wow/info/classes/{esc(slug)}/talents.html" if slug else "/wow/info/classes/"
     return f"""<div class="sheet" id="profile">
   <p class="sheet-btns"><span class="arm-btn on">Character</span>{guild_btn}</p>
@@ -795,12 +811,12 @@ def character_markup(exp, char: dict) -> str:
   </div>
   <div class="weapons">{''.join(slot_html(slot) for slot in _WEAPON_SLOTS)}</div>
   <div class="stats" id="statistics">
-    <h3>Base Stats</h3>
-    <table>{base}</table>
-    <h3>Melee</h3>
-    <table>{melee}</table>
-    <h3>Defense</h3>
-    <table>{defense}</table>
+    <div><h3>Base Stats</h3><table>{base}</table></div>
+    <div><h3>Melee</h3><table>{melee}</table></div>
+    <div><h3>Ranged</h3><table>{ranged}</table></div>
+    <div><h3>Spell</h3><table>{spell}</table></div>
+    <div><h3>Defense</h3><table>{defense}</table></div>
+    <div><h3>Resistances</h3><table>{resist}</table></div>
     <p class="updated">Last Updated at last logout.</p>
   </div>
   <section id="reputation"><h3>Reputation</h3><p>Faction standings are not on this profile.</p></section>
@@ -859,17 +875,12 @@ def _armory_doc(exp, user, dev, main: str, tab: str, search: str = "") -> str:
         if tab != "home"
         else ""
     )
-    bar = "" if tab == "home" else _arm_bar(user, tab)
     if tab == "home":
-        if user:
-            login = f'<a class="arm-login" href="/account/logout">Log Out</a>'
-        else:
-            login = '<a class="arm-login" href="/account/login">Login</a>'
-        bar = f"""<div class="arm-top">{_top_links()}</div>
-<header class="arm-head arm-home-head">
-  <a class="arm-logo" href="/armory/"><span class="world">World of</span><span class="wm">Warcraft</span><span class="arm">The Armory</span></a>
-  {login}
-</header>"""
+        bar = f'<div class="arm-top">{_top_links()}</div>'
+        field = ""
+    else:
+        bar = _arm_bar(user, tab, field)
+        field = ""
     html = f'<div class="arm">{bar}{field}{main}</div>'
     return document(
         "The Armory — World of Warcraft",
@@ -928,21 +939,31 @@ def _armory(path: str, ctx: dict) -> str | None:
             return _armory_doc(exp, user, dev, main, "search", query)
         error = _safe_store(armory.character_store(cfg, exp)) if cfg is not None else ""
         note = f'<p class="arm-err">{esc(error)}</p>' if error else ""
-        main = f"""<div class="arm-landing">
-  <h1>The Armory</h1>
-  <form action="/armory/" method="get">
-    <input name="q" aria-label="Character name">
-    <button type="submit">Search</button>
-  </form>
-  {note}
-  <h2>News</h2>
-  <p><strong>Character Profiles Now Feature a 3D Model</strong> <span>1/13/2010</span></p>
-  <p>Profiles show the gear a character was wearing at last logout.</p>
-  <h2>Frequently Asked Questions</h2>
-  <ul>
-    <li>What is the Armory? A profile read from this realm at logout.</li>
-    <li>How often does it update? The next time that character logs out.</li>
-  </ul>
+        main = f"""<div class="arm-home">
+  <div class="arm-frame">
+    <a class="arm-logo" href="/armory/"><img src="/static/img/wotlk/armory-logo.jpg" alt="World of Warcraft The Armory"></a>
+    {_arm_login(user)}
+    <form action="/armory/" method="get">
+      <input name="q" aria-label="Character name">
+      <button type="submit">Search</button>
+    </form>
+    {note}
+  </div>
+  <div class="arm-split">
+    <div class="arm-news">
+      <h2>News</h2>
+      <p><a href="/armory/?kind=info"><strong>Character Profiles Now Feature a 3D Model</strong></a> <span>1/13/2010</span></p>
+      <p>The character profile has been updated. Profiles now feature a 3D model viewer, based on the gear worn at last logout.</p>
+      <h2>Frequently Asked Questions</h2>
+      <ul>
+        <li>What is the Armory? A profile read from this realm at logout.</li>
+        <li>How often does it update? The next time that character logs out.</li>
+        <li>What information can be accessed? The gear, guild, and achievement score from the last logout.</li>
+        <li>Where do I find my character? Search the name above.</li>
+      </ul>
+    </div>
+    <a class="arm-mobile" href="/armory/?kind=info"><img src="/static/img/wotlk/armory-mobile.jpg" alt="World of Warcraft Armory"></a>
+  </div>
 </div>"""
         return _armory_doc(exp, user, dev, main, "home")
     if path == "/armory/arena":
@@ -970,6 +991,7 @@ def _armory(path: str, ctx: dict) -> str | None:
 
 def _wrath_doc(exp, dev: bool) -> str:
     inner = """<div class="wr">
+  <img class="wr-art" src="/static/img/wotlk/expansion.jpg" alt="">
   <nav class="wr-nav">
     <a href="/wrath">Home</a>
     <a href="#features">Features</a>
@@ -980,29 +1002,25 @@ def _wrath_doc(exp, dev: bool) -> str:
     <a href="/support/">FAQ</a>
     <a href="/forums/">Forum</a>
   </nav>
-  <div class="wr-panel">
-    <p class="wr-logo"><span>World of</span> Warcraft <em>Wrath of the Lich King</em></p>
-    <p class="wr-watch"><a href="/wow/media/screenshots">Watch Video Trailer</a></p>
-    <p class="wr-pills">
-      <a href="/wow/media/screenshots">Cinematic Trailer</a>
-      <a href="/wow/info/classes/deathknight/talents.html">Talent Calculator</a>
-      <a href="/armory/">Achievements</a>
-    </p>
+  <a class="wr-trailer" href="/wow/media/screenshots">Watch Video Trailer</a>
+  <a class="wr-pill wr-cine" href="/wow/media/screenshots">Cinematic Trailer</a>
+  <a class="wr-pill wr-calc" href="/wow/info/classes/deathknight/talents.html">Talent Calculator</a>
+  <a class="wr-pill wr-ach" href="/armory/">Achievements</a>
+  <a class="wr-back" href="/wow/">Return to WoW-Europe.com</a>
+  <div class="wr-copy" id="features">
     <h1>In the cold, harsh northlands...</h1>
-    <p>The Lich King has set in motion events that reach from Icecrown to the living kingdoms. Heroes sail for Northrend, and the war ends at the Frozen Throne.</p>
-    <h2 id="features">Features</h2>
+    <p>The Lich King Arthas has set in motion events that could lead to the extinction of all life on Azeroth. Heroes sail for Northrend.</p>
+    <h2>Features</h2>
     <ul>
-      <li>Master the necromantic powers of the Death Knight, the first hero class.</li>
-      <li>Quest to level 80, and spend points in the talent trees along the way.</li>
-      <li>Take up Inscription, and mill herbs into glyphs.</li>
-      <li>Brave Northrend, from Borean Tundra and Howling Fjord to Icecrown.</li>
-      <li>Lay siege with engines that break the walls of the Scourge.</li>
-      <li>Explore dungeons and raids built for this continent, up to Icecrown Citadel.</li>
+      <li>Master the necromantic powers of the Death Knight, World of Warcraft's first hero class.</li>
+      <li>Quest to level 80, gaining potent new abilities and talents along the way.</li>
+      <li>Learn the craft of spell augmentation with the new Inscription profession.</li>
+      <li>Brave the harsh new continent of Northrend, the icy domain of the Lich King.</li>
+      <li>Engage in epic siege warfare, deploying mighty siege engines.</li>
+      <li>Explore perilous new dungeons on Azeroth's north.</li>
     </ul>
-    <p>And much, much more.</p>
+    <p class="wr-legal">©2008 Blizzard Entertainment. All rights reserved.</p>
   </div>
-  <p class="wr-back"><a href="/wow/">Return to WoW-Europe.com</a></p>
-  <p class="wr-legal">©2008 Blizzard Entertainment. All rights reserved.</p>
 </div>"""
     return document(
         "Wrath of the Lich King",
@@ -1015,31 +1033,13 @@ def _wrath_doc(exp, dev: bool) -> str:
 
 def _portal_doc(exp, dev: bool) -> str:
     inner = """<div class="portal">
-  <header class="portal-logo"><span class="bn-swirl" aria-hidden="true"></span> Battle.net</header>
-  <div class="portal-card">
-    <div class="portal-shot" aria-hidden="true">
-      <p>Account Home</p>
-      <p>My Profile</p>
-      <p>Manage My Games</p>
-    </div>
-    <div>
-      <p class="kicker">Introducing the new</p>
-      <h1>Battle.net Account</h1>
-      <p>Beginning with World of Warcraft, the new Battle.net account grants access to Blizzard Entertainment games, websites, and online services.</p>
-      <p>Signing up is fast, easy, and free.</p>
-      <a class="portal-cta" href="/account/">Create or Manage a Battle.net Account</a>
-      <p class="or">Or <a href="/account/create">learn more</a></p>
-    </div>
-  </div>
-  <div class="portal-row">
-    <a href="/wow/"><span>Classic Community Site</span><strong>Continue to Community Site</strong></a>
-    <a href="/forums/"><span>Classic Forums</span><strong>Continue to Forums</strong></a>
-  </div>
-  <footer>
-    <p>Language: English (US)</p>
-    <p><a href="/support/">Need Help? Support Site</a></p>
-    <p>©2009 Blizzard Entertainment, Inc. All rights reserved.</p>
-  </footer>
+  <img class="portal-art" src="/static/img/wotlk/bnet-portal.jpg" alt="">
+  <a class="hit hit-create" href="/account/">Create or Manage a Battle.net Account</a>
+  <a class="hit hit-learn" href="/account/create">learn more</a>
+  <a class="hit hit-wow" href="/wow/">Classic Community Site</a>
+  <a class="hit hit-forums" href="/forums/">Classic Forums</a>
+  <a class="hit hit-support" href="/support/">Support Site</a>
+  <p class="portal-copy">Introducing the new Battle.net Account. Beginning with World of Warcraft. ©2009 Blizzard Entertainment, Inc. All rights reserved.</p>
 </div>"""
     return document(
         "Battle.net",

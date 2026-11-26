@@ -16,6 +16,7 @@ from .common import dev_note, document, esc, styles
 
 _SHOT = "/static/img/ssotd-elwynn.jpg"
 _HERO = "/static/img/hero-tbc.jpg"
+_IMG = "/static/img/tbc"
 _PAGE = 20
 
 # Open sections match the 26 October 2007 home. Closed sections keep
@@ -27,10 +28,12 @@ _NAV = (
     )),
     ("account", "Account", False, (
         ("/account/", "Account Management"),
+        ("/account/login", "Log In"),
         ("/account/create", "Account Creation"),
         ("/account/retrieve", "Retrieve Password"),
         ("/account/", "Parental Controls"),
         ("/wow/realmstatus", "Realm Status"),
+        ("/wow/info/patches", "Public Test Realm"),
     )),
     ("guide", "Game Guide", True, (
         ("/wow/info", "Game Guide"),
@@ -53,14 +56,15 @@ _NAV = (
     ("workshop", "Workshop", True, (
         ("/armory", "Armory"),
         ("/armory/arena", "Arena"),
-        ("/wow/info", "Encyclopedia"),
+        ("/armory", "Game Statistics"),
         ("/wow/info/classes", "Talent Calculators"),
-        ("/wow/info", "Events Calendar"),
+        ("/wow/news", "Events Calendar"),
         ("/wow/info", "Armor Sets"),
         ("/wow/info/basics/map", "World Map"),
         ("/wow/pvp/rankings", "Battlegroups"),
+        ("/wow/search", "Encyclopedia"),
     )),
-    ("media", "Media", True, (
+    ("media", "Media", False, (
         ("/wow/media/screenshots", "Overview"),
         ("/wow/media/screenshots", "Screenshots"),
         ("/wow/media/screenshots", "Movies"),
@@ -68,7 +72,7 @@ _NAV = (
         ("/wow/media/wallpapers", "Wallpapers"),
         ("/wow/media/wallpapers", "Other Downloads"),
     )),
-    ("forums", "Forums", False, (
+    ("forums", "Forums", True, (
         ("/forums/general", "General"),
         ("/forums/", "Class Forums"),
         ("/forums/realm", "Realm Forums"),
@@ -157,6 +161,7 @@ _UPGRADE_LINKS = (
     ("/account/", "PTR Character Copy"),
     ("/account/", "Parental Controls"),
     ("/account/", "Recruit-a-Friend"),
+    ("/account/services", "Scroll of Resurrection"),
 )
 
 
@@ -200,11 +205,20 @@ def _sites() -> str:
 
 def _search_form() -> str:
     return (
+        '<div class="tbc-tools">'
         '<form class="tbc-search" action="/wow/search" method="get">'
-        '<a class="tbc-community" href="/wow/">Community Site</a>'
         '<input type="text" name="q" aria-label="Search">'
+        '<select name="searchType" aria-label="Search in">'
+        '<option value="site">Community Site</option>'
+        '<option value="encyclopedia">Encyclopedia</option>'
+        '<option value="ingamesupport">In-game Support</option>'
+        '<option value="techsupport">Tech Support</option>'
+        "</select>"
         '<button type="submit">Search</button>'
         "</form>"
+        '<details class="tbc-lang"><summary>Choose a Language</summary>'
+        '<a href="/wow/">English</a></details>'
+        "</div>"
     )
 
 
@@ -228,6 +242,8 @@ def _rail(exp) -> str:
     links = "".join(f'<a href="{esc(href)}">{esc(label)}</a>' for href, label in _QUICK)
     shot = esc(_shot(exp))
     return f"""<aside class="tbc-rail">
+  <a class="tbc-banner-link" href="/account/create"><img src="{_IMG}/download.jpg" alt="World of Warcraft. Download Now!"></a>
+  <a class="tbc-banner-link" href="/wow/info"><img src="{_IMG}/wrath.jpg" alt="World of Warcraft: Wrath of the Lich King"></a>
   <div class="tbc-quick">
     <h3>Quick Links</h3>
     {links}
@@ -235,6 +251,22 @@ def _rail(exp) -> str:
   <div id="ssotd-container">
     <h3>Screenshot of the Day</h3>
     <a href="/wow/media/screenshots"><img src="{shot}" alt="Screenshot of the Day"></a>
+    <a class="tbc-ssotd-submit" href="/forums/general">Submit your Shots to the RSPA</a>
+  </div>
+  <a class="tbc-banner-link" href="/account/burning-crusade-upgrade.html"><img src="{_IMG}/upgrade-box.jpg" alt="The Burning Crusade Digital Upgrade $39.99"></a>
+  <a class="tbc-banner-link" href="/account/"><img src="{_IMG}/raf.jpg" alt="Recruit a Friend"></a>
+  <div class="tbc-newcomers">
+    <h3>Newcomers Section</h3>
+    <p class="tbc-discover">Discover World of Warcraft</p>
+    <p>Looking to purchase World of Warcraft? Follow the links below to learn more.</p>
+    <a href="/wow/media/screenshots">Cinematic Trailer</a>
+    <a href="/wow/info">Features Page</a>
+    <a href="/shop">Online Store</a>
+    <p class="tbc-journey">Begin Your Journey</p>
+    <p>Lost in Azeroth? Find your way with our Beginner's Guide!</p>
+    <a class="tbc-btn" href="/wow/info/basics">Beginner's Guide</a>
+    <p>Read everything you ever wanted to know about Azeroth.</p>
+    <a class="tbc-btn" href="/support/">General FAQ</a>
   </div>
 </aside>"""
 
@@ -242,32 +274,38 @@ def _rail(exp) -> str:
 def _footer(kind: str) -> str:
     if kind == "forums":
         year = "&copy;2008"
-    elif kind == "armory":
-        year = "&copy;2007"
-    else:
+    elif kind == "wide":
         year = "&copy;2004&ndash;2007"
+    else:
+        year = "&copy;2007"
+    links = (
+        '<a href="/support/">Online Privacy Policy</a>'
+        ' | <a href="/support/">Legal Documents</a>'
+        ' | <a href="/support/">Policies</a>'
+    )
+    if kind == "forums":
+        return (
+            f'<footer class="tbc-foot"><p class="tbc-copyear">{links}<br>'
+            f"{year} Blizzard Entertainment. All rights reserved.</p></footer>"
+        )
     return (
-        f'<footer class="tbc-foot">{year} Blizzard Entertainment. All rights reserved.'
-        ' <a href="/support/">Online Privacy Policy</a>'
-        ' · <a href="/support/">Legal Documents</a>'
-        ' · <a href="/support/">Policies</a>'
-        "<span>Game Experience May Change During Online Play</span></footer>"
+        f'<footer class="tbc-legal">'
+        '<div class="tbc-esrb"><b>TEEN</b> Blood, Suggestive Themes, Use of Alcohol, Violence</div>'
+        f'<p class="tbc-copyear">{links}<br>{year} Blizzard Entertainment. All rights reserved.</p>'
+        '<div class="tbc-notice"><b>ESRB Notice:</b> Game Experience May Change During Online Play</div>'
+        "</footer>"
     )
 
 
 def _frame(kind: str, body: str, exp, user: str | None, login_error: str) -> str:
     err = f'<p class="tbc-login-err">{esc(login_error)}</p>' if login_error else ""
-    top = (
-        f'<header class="tbc-top">{_sites()}{_search_form()}'
-        f'<p class="tbc-lang">Choose a Language</p>'
-        f'<p class="tbc-who">{_who(user)}</p>{err}</header>'
-    )
+    who = f'<p class="tbc-who">{_who(user)}</p>' if user else ""
+    top = f'<header class="tbc-top">{_sites()}</header>'
     if kind == "forums":
         return f"""<div class="tbc-site tbc-site-forums">
 {top}
 <div class="tbc-forum-head">
-  <a href="/wow/"><img src="{_HERO}" alt=""></a>
-  <p class="tbc-logo-text"><span>World of Warcraft</span><strong>The Burning Crusade</strong></p>
+  <a href="/forums"><img src="{_IMG}/forum-logo.jpg" alt="World of Warcraft: The Burning Crusade"></a>
 </div>
 <div class="tbc-forum-frame">{body}</div>
 {_footer(kind)}
@@ -276,24 +314,32 @@ def _frame(kind: str, body: str, exp, user: str | None, login_error: str) -> str
         return f"""<div class="tbc-site tbc-site-armory">
 {top}
 <div class="tbc-armory-head">
-  <a class="tbc-armory-logo" href="/armory">The Armory</a>
-  <form class="tbc-armory-find" action="/armory" method="get">
-    <label>Search the Armory <input type="text" name="q"></label>
-    <button type="submit">Search</button>
-  </form>
+  <a class="tbc-armory-logo" href="/armory"><img src="{_IMG}/armory-logo.jpg" alt="The Armory"></a>
+  <div class="tbc-armory-center">
+    <a href="/wow/"><img class="tbc-wowmark" src="{_IMG}/wow-logo.jpg" alt="World of Warcraft"></a>
+    <form class="tbc-armory-find" action="/armory" method="get">
+      <span>Quick Search</span>
+      <select name="kind" aria-label="Quick Search"><option value="characters">Characters</option><option value="arena">Arena Teams</option></select>
+      <input type="text" name="q" aria-label="Search the Armory">
+      <button type="submit">Search</button>
+    </form>
+    <p class="tbc-armory-adv"><a href="/armory">Advanced Search</a> <a href="/armory/arena">Items</a></p>
+  </div>
+  <img class="tbc-elf" src="{_IMG}/elf.png" alt="">
 </div>
 <div class="tbc-armory-frame">{body}</div>
 {_footer(kind)}
 </div>"""
     rail = "" if kind == "wide" else _rail(exp)
     return f"""<div class="tbc-site">
-{top}
-<div class="tbc-logo-row">
-  <a class="tbc-logo" href="/wow/">
-    <img src="{_HERO}" alt="World of Warcraft: The Burning Crusade">
-    <span><em>World of</em> Warcraft<strong>The Burning Crusade</strong></span>
-  </a>
+{top}{err}
+<div class="tbc-mast">
+  <a class="tbc-logo" href="/wow/"><img src="{_IMG}/logo.jpg" alt="World of Warcraft: The Burning Crusade"></a>
+  {_search_form()}
+  {who}
 </div>
+<img class="tbc-side-left" src="{_IMG}/side-left.jpg" alt="">
+<img class="tbc-side-right" src="{_IMG}/side-right.jpg" alt="">
 <div class="tbc-frame">
   {_nav()}
   <div class="tbc-main">
@@ -334,27 +380,78 @@ def _byline(body: str) -> str:
     return "Blizzard"
 
 
+def _home_tail() -> str:
+    return """<div class="tbc-lower">
+<section class="tbc-spot">
+  <h3>Community</h3>
+  <p><strong>Community Spotlight.</strong> Machinima, fan art, and comics from players. Read the latest on the <a href="/wow/news">news page</a> or talk it over on the <a href="/forums/general">forums</a>.</p>
+  <p><a href="/forums/general">Warcraft Weekly</a> · <a href="/wow/news">Spotlight Archive</a></p>
+</section>
+<div class="tbc-split">
+  <div class="tbc-help"><h3>Need Help</h3><p>For support related issues, <a href="/support/">click here</a>.</p></div>
+  <div class="tbc-jobs"><h3>Jobs</h3><p><a href="/wow/news">Blizzard is hiring.</a></p></div>
+</div>
+<div class="tbc-links">
+  <div>
+    <h3>WoW: Wrath of the Lich King</h3>
+    <ul>
+      <li><a href="/wow/info">Wrath of the Lich King</a></li>
+      <li><a href="/wow/media/screenshots">Screenshots</a></li>
+      <li><a href="/wow/info">Features</a></li>
+      <li><a href="/wow/media/screenshots">Movies</a></li>
+    </ul>
+  </div>
+  <div>
+    <h3>Movies and Trailers</h3>
+    <ul>
+      <li><a href="/wow/media/screenshots">Lament of the Highborne</a></li>
+      <li><a href="/wow/news">BlizzCon</a></li>
+      <li><a href="/wow/media/wallpapers">Wallpapers</a></li>
+      <li><a href="/wow/info/patches">Latest Patch Notes</a></li>
+    </ul>
+  </div>
+</div>
+<div class="tbc-split">
+  <div class="tbc-insider">
+    <h3>World of Warcraft Insider</h3>
+    <p>Your source of up-to-date, behind the scenes information about World of Warcraft.</p>
+    <p><a href="/wow/news">Latest issue</a></p>
+  </div>
+  <div class="tbc-store">
+    <h3>Online Store</h3>
+    <ul>
+      <li><a href="/account/burning-crusade-upgrade.html">Burning Crusade Digital Upgrade</a></li>
+      <li><a href="/shop">Online Store</a></li>
+    </ul>
+  </div>
+</div>
+<p class="tbc-blizz">BLIZZARD<span>ENTERTAINMENT</span></p>
+</div>"""
+
+
 def home_body(exp, news, realm, user) -> str:
-    _ = user
+    _ = user, realm
     stories = list(news) if news else content.news_for(exp)
     posts = []
     for i, (title, date, body) in enumerate(stories):
         copy = ""
         text = (body or "").strip()
         if text and not text.lower().startswith("posted by"):
-            copy = f"<p>{esc(text)}</p>"
+            copy = f'<p class="tbc-copy">{esc(text)}</p>'
         posts.append(
             f'<article class="tbc-post">'
             f'<h2><a href="/wow/news/{i}">{esc(title)}</a></h2>'
-            f'<p class="tbc-by">Posted by: {esc(_byline(text))} | {esc(_stamp(date))}</p>'
+            f'<p class="tbc-by"><a href="/wow/news/{i}">Posted by: {esc(_byline(text))}</a> | {esc(_stamp(date))}</p>'
             f"{copy}</article>"
         )
-    up = "Up" if realm.get("up") else "Down"
-    name = realm.get("name") or getattr(exp, "realm_name", "")
     return f"""<div class="tbc-home">
-<div class="tbc-banner"><img src="{_HERO}" alt="The Burning Crusade"></div>
+<div class="tbc-feature">
+  <a href="/wow/media/screenshots"><img src="{_IMG}/feature.jpg" alt="Lament of the Highborne music video"></a>
+  <p class="tbc-feature-nav"><a href="/wow/media/screenshots">Back</a><a href="/wow/news">Next</a></p>
+</div>
+<p class="tbc-credit">Fan art by Jiao Qiao</p>
 <section class="tbc-news">{''.join(posts)}</section>
-<p class="tbc-realm">Realm {esc(name)} is {esc(up)}.</p>
+{_home_tail()}
 </div>"""
 
 
@@ -410,16 +507,19 @@ def _realm_markup(exp, realm: dict) -> str:
 
 
 def _upgrade() -> str:
-    links = " | ".join(f'<a href="{esc(href)}">{esc(label)}</a>' for href, label in _UPGRADE_LINKS)
-    return f"""<div class="tbc-wide">
+    def _line(rows) -> str:
+        return " | ".join(f'<a href="{esc(href)}">{esc(label)}</a>' for href, label in rows)
+    links = f"{_line(_UPGRADE_LINKS[:5])}<br>{_line(_UPGRADE_LINKS[5:])}"
+    return f"""<div class="tbc-wide tbc-upgrade">
 <nav class="tbc-acctbar">{links}</nav>
 <h2>Upgrade Your Account</h2>
-<p>Congratulations! You have successfully upgraded your World of Warcraft account.</p>
+<p><span class="tbc-drop">C</span>ongratulations! You have successfully upgraded your World of Warcraft account.</p>
 <p>You can launch your World of Warcraft: The Burning Crusade game client now and log in with your account. Enter the game and explore Outland, the new world waiting for you beyond the Dark Portal, and discover the countless secrets and rewards of this shattered realm.</p>
 <p>If you would like to learn more about all the new features included in World of Warcraft: The Burning Crusade, you can check out the expansion <a href="/wow/info">features page</a> to learn more. And if you would like to modify your billing or account information, simply return to <a href="/account/">Account Management</a> now.</p>
 <p>Thank you for purchasing World of Warcraft: The Burning Crusade. Best of luck in all your journeys, both in Azeroth... and beyond.</p>
 <p>Blizzard Entertainment</p>
-<div class="tbc-upgraded"><img src="{_HERO}" alt=""><span>Account Upgraded</span></div>
+<div class="tbc-upgraded"><img src="{_IMG}/upgraded.jpg" width="468" height="280" alt="Account Upgraded"></div>
+<p class="tbc-blizz">BLIZZARD<span>ENTERTAINMENT</span></p>
 </div>"""
 
 
@@ -467,20 +567,72 @@ def _board_card(slug: str, title: str) -> str:
     )
 
 
+_INDEX_PAIRS = (
+    (
+        ("support", "Customer Service Forum", "GM moderated forum to discuss in-game issues."),
+        ("bugs", "Bug Report Forum", "Found a bug in the game? Help us squash it by reporting it here!"),
+    ),
+    (
+        ("tech", "Technical Support", "If you are experiencing problems installing or patching World of Warcraft, connecting to the realms or are crashing during game play, post here for assistance."),
+        ("mac", "Mac Technical Support", "If you are experiencing problems installing or patching World of Warcraft, connecting to the realms or are crashing during game play, and you are using a Macintosh computer, post here for assistance."),
+    ),
+    (
+        ("arena-tournament", "Arena Tournament", "A forum for players participating in the 2008 World of Warcraft Arena Tournament to discuss all aspects of the competition."),
+        ("archive", "Blizzard Archive", "An archive of official Blizzard responses to various topics related to World of Warcraft."),
+    ),
+    (
+        ("general", "General Discussion", "Discuss World of Warcraft."),
+        ("guide", "Guide Forum", "Share your guides for classes, professions, leveling and more."),
+    ),
+    (
+        ("guildrelations", "Guild Relations", "This forum is designed to be a place for the open discussion of any item important to guild structure."),
+        ("guilds", "Guild Recruitment - Alliance", "Searching for an Alliance guild, or do you want to advertise your Alliance guild? Come on in!"),
+    ),
+    (
+        ("guilds-horde", "Guild Recruitment - Horde", "Searching for a Horde guild, or do you want to advertise your horde guild? Come on in!"),
+        ("offtopic", "Off-topic Discussion", "Off-topic posts of interest to the World of Warcraft community."),
+    ),
+    (
+        ("realm", "Realm Status", "Collection of important messages regarding the status of the Realms."),
+        ("rp", "Role-Playing", "Pull up a chair, drink a mug of ale, meet new friends, tell stories, and role-play in this forum."),
+    ),
+    (
+        ("suggestions", "Suggestions", "Have a suggestion for World of Warcraft? Please post it here."),
+        ("ui", "UI & Macros Forum", "Work with other players to create your own special custom interfaces and macros."),
+    ),
+    (
+        ("welcome", "Welcome to WoW - A Beginner's Forum", "New to the World of Warcraft? Ask questions from experienced players and learn more about the adventures that await you!"),
+        ("ptr", "Test Realm Forum", "Submit bugs and discuss changes from the latest World of Warcraft Public Test Realms."),
+    ),
+    (
+        ("wrath", "Wrath of the Lich King", "Discuss the upcoming Wrath of the Lich King expansion."),
+        ("starcraft", "StarCraft II", "Discuss Blizzard's upcoming RTS (Real Time Strategy) title, StarCraft II."),
+    ),
+    (
+        ("invitational", "Worldwide Invitational Forum", "Discuss the Blizzard Worldwide Invitational happening this June in Paris!"),
+        None,
+    ),
+)
+
+
+def _index_card(row) -> str:
+    if not row:
+        return "<article class=\"tbc-board\"></article>"
+    slug, label, blurb = row
+    return (
+        f'<article class="tbc-board">'
+        f'<a href="/forums/{esc(slug)}">{esc(label)}</a>'
+        f"<p>{esc(blurb)}</p></article>"
+    )
+
+
 def _forum_index(exp) -> str:
     rows = _boards(exp)
     by_slug = {slug: title for slug, title in rows}
-    main = []
-    seen = set()
-    for slug in _MAIN_ORDER:
-        if slug in by_slug and slug not in _CLASS_SLUGS and slug not in _GAMEPLAY:
-            seen.add(slug)
-            main.append(_board_card(slug, by_slug[slug]))
-    for slug, title in rows:
-        if slug in seen or slug in _CLASS_SLUGS or slug in _GAMEPLAY:
-            continue
-        seen.add(slug)
-        main.append(_board_card(slug, title))
+    cells = []
+    for left, right in _INDEX_PAIRS:
+        cells.append(_index_card(left))
+        cells.append(_index_card(right))
     play = "".join(
         _board_card(slug, by_slug[slug]) for slug in ("pvp", "quests", "professions") if slug in by_slug
     )
@@ -491,14 +643,18 @@ def _forum_index(exp) -> str:
     return f"""<div class="tbc-forums">
 <h1>Forum Community</h1>
 <div class="tbc-welcome">
-  <p><strong>Welcome to the World of Warcraft community forums!</strong></p>
-  <p>Blizzard provides the World of Warcraft community forums for its players to chat, exchange ideas, and submit feedback. Posting on the World of Warcraft community forums requires a World of Warcraft account. Only customers are allowed to post on these forums, but anyone can read them. Please note that you must adhere to the <a href="/support/">Forum Guidelines</a> if you wish to post on the forums.</p>
+  <div>
+    <p><strong>Welcome to the World of Warcraft community forums!</strong></p>
+    <p><span class="tbc-dropb">B</span>lizzard provides the World of Warcraft community forums for its players to chat, exchange ideas, and submit feedback. Posting on the World of Warcraft community forums requires a World of Warcraft account. Only customers are allowed to post on these forums, but anyone can read them. Please note that you must adhere to the <a href="/support/">Forum Guidelines</a> if you wish to post on the forums.</p>
+  </div>
+  <aside class="tbc-aside">
+    <p><strong>New to the forums?</strong></p>
+    <p>Read our <a href="/wow/info/basics">Introduction to the Forums</a>. This includes information about getting started, forum features, forum icons, and more.</p>
+    <p><strong>Found a bad post or account name?</strong></p>
+    <p>If you find a bad forum post or account name that violates the forum guidelines, you can report it <a href="/support/">here</a>.</p>
+  </aside>
 </div>
-<aside class="tbc-new">
-  <p><strong>New to the forums?</strong></p>
-  <p>Read our <a href="/wow/info/basics">Introduction to the Forums</a>. This includes information about getting started, forum features, forum icons, and more.</p>
-</aside>
-<div class="tbc-boardgrid">{''.join(main)}</div>
+<div class="tbc-boardgrid">{''.join(cells)}</div>
 <details class="tbc-fold">
   <summary>Gameplay Discussion Forums<p>Various forums related to the discussion of in-game topics.</p></summary>
   <div class="tbc-boardgrid">{play}</div>
@@ -511,20 +667,27 @@ def _forum_index(exp) -> str:
   <summary>WoW Realm Forums<p>Discuss topics related to World of Warcraft with players on your specific realm.</p></summary>
   <div class="tbc-boardgrid">{realm}</div>
 </details>
-<details class="tbc-fold">
-  <summary>Battlegroup Forums<p>Discuss your latest wins and losses with your Battlegroup and show off your realm pride.</p></summary>
-  <p class="tbc-bg">Don't know which Battlegroup your realm is in? Click <a href="/wow/pvp/rankings">here</a> to find out.</p>
+<details class="tbc-fold" open>
+  <summary>Battlegroup Forums<p>Discuss your latest wins and losses with your Battlegroup and show off your realm pride!</p></summary>
+  <p class="tbc-bg">Don't know which Battlegroup your realm is in? Click <a href="/wow/pvp/rankings">here</a> to find out!</p>
 </details>
 </div>"""
+
+
+def _extra_titles() -> dict[str, str]:
+    found = {"guildrelations": "Guild Relations"}
+    for left, right in _INDEX_PAIRS:
+        for row in (left, right):
+            if row:
+                found[row[0]] = row[1]
+    return found
 
 
 def _resolve_board(exp, slug: str) -> str | None:
     title = forums.board_title(exp, slug)
     if title:
         return title
-    if slug == "guildrelations":
-        return "Guild Relations"
-    return None
+    return _extra_titles().get(slug)
 
 
 def _when(value) -> str:
@@ -593,15 +756,20 @@ def _forum_board(exp, slug: str, title: str, threads: list[dict], user, page: in
     if not heading.lower().endswith("forum"):
         heading = f"{heading} Forum"
     return f"""<div class="tbc-forums tbc-one-board">
-<p class="tbc-crumb"><a href="/forums">Forum Community</a> · {esc(heading)}</p>
-<h1>{esc(heading)}</h1>
-{_login_box(user)}
+<div class="tbc-boardtop">
+  <div>
+    <p class="tbc-crumb"><a href="/forums">Forum Community</a> · {esc(heading)}</p>
+    <h1>{esc(heading)}</h1>
+  </div>
+  {_login_box(user)}
+</div>
+<p class="tbc-boardtools"><a href="#post">New Topic</a> <a href="/wow/search">Quick Search</a> <a href="/wow/search">Advanced Search</a></p>
 <table class="tbc-threads">
 <thead><tr><th>Subject</th><th>Author</th><th>Replies</th><th>Views</th><th>Last Post</th></tr></thead>
 <tbody>{rows}</tbody>
 </table>
 {pager}
-{_post_form(slug, user)}
+<div id="post">{_post_form(slug, user)}</div>
 </div>"""
 
 
@@ -696,15 +864,15 @@ def search_markup(exp, rows: list[dict], q: str, error: str = "") -> str:
         name = row.get("name") or ""
         href = "/armory/character/" + quote(str(name), safe="")
         guild = row.get("guild") or "—"
+        faction = row.get("faction") or _faction(str(row.get("race") or ""))
+        fac_cls = "tbc-fac-alliance" if faction == "Alliance" else "tbc-fac-horde" if faction == "Horde" else "tbc-fac"
         body.append(
             "<tr>"
-            f'<td>{_mini(exp, "class", row.get("class"))}'
-            f'{_mini(exp, "race", row.get("race"))}'
-            f'<a href="{esc(href)}">{esc(name)}</a></td>'
+            f'<td><a href="{esc(href)}">{esc(name)}</a></td>'
             f'<td>{esc(row.get("level"))}</td>'
-            f'<td>{esc(row.get("race"))}</td>'
-            f'<td>{esc(row.get("class"))}</td>'
-            f'<td>{esc(row.get("faction") or _faction(str(row.get("race") or "")))}</td>'
+            f'<td>{_mini(exp, "race", row.get("race"))}{esc(row.get("race"))}</td>'
+            f'<td>{_mini(exp, "class", row.get("class"))}{esc(row.get("class"))}</td>'
+            f'<td><span class="{fac_cls}" title="{esc(faction)}"></span>{esc(faction)}</td>'
             f"<td>{esc(guild)}</td>"
             f'<td>{esc(row.get("realm") or getattr(exp, "realm_name", ""))}</td>'
             "</tr>"
@@ -715,14 +883,16 @@ def search_markup(exp, rows: list[dict], q: str, error: str = "") -> str:
         body.append(f'<tr><td colspan="7">{esc(message)}</td></tr>')
     err = f'<p class="tbc-armory-err">{esc(note)}</p>' if note else ""
     return f"""<div class="tbc-armory">
-<h1>The Armory</h1>
+<h1>Search</h1>
 <p>Search characters on {esc(getattr(exp, "realm_name", ""))}.</p>
+<nav class="tbc-result-tabs"><a class="is-on" href="/armory">Characters</a><a href="/armory/arena">Arena Teams</a></nav>
 {err}
+<p class="tbc-pageline">1 of 1</p>
 <table class="tbc-results">
 <thead><tr><th>Name</th><th>Level</th><th>Race</th><th>Class</th><th>Faction</th><th>Guild</th><th>Realm</th></tr></thead>
 <tbody>{''.join(body)}</tbody>
 </table>
-<p><a href="/armory/arena">Arena</a></p>
+<p class="tbc-pageline">1 of 1</p>
 </div>"""
 
 
@@ -778,7 +948,7 @@ def _profile(exp, char: dict) -> str:
   <div class="tbc-slots">{_slots(exp, _LEFT_SLOTS, equipped)}</div>
   <div class="tbc-mid">
     <h3>Talent Specialization</h3>
-    <p><a href="?tab=talents">Talents</a> — not recorded on this logout.</p>
+    <p class="tbc-spec"><a href="?tab=talents">Talents</a></p>
     <h3>Primary Professions</h3>
     <p>Not recorded on this logout.</p>
     <h3>Resistances</h3>
@@ -794,6 +964,7 @@ def _profile(exp, char: dict) -> str:
 </div>
 <p class="tbc-updated">Last Updated: —</p>
 <p class="tbc-guildline">{guild_html}</p>
+<section class="tbc-arena-block"><h3>Arena</h3><p>2v2 · 3v3 · 5v5</p><p><a href="/armory/arena">More Arena Teams</a></p></section>
 </div>"""
 
 
@@ -820,7 +991,8 @@ def _trees(exp, class_name: str) -> str:
         )
     points = talents.points_available(exp)
     return (
-        f'<p class="tbc-pointcap">{esc(points)} points at level 70.</p>'
+        f'<p class="tbc-ribbon">Talents</p>'
+        f'<p class="tbc-pointcap">{esc(points)}-point cap</p>'
         f'<div class="tbc-trees">{"".join(columns)}</div>'
     )
 
@@ -872,19 +1044,22 @@ def character_markup(exp, char: dict, tab: str, guild: dict | None = None) -> st
     else:
         center = _profile(exp, char)
     icon = assets.class_icon(exp.id, (char.get("class") or "").lower().replace(" ", ""))
-    portrait = f'<img class="tbc-portrait" src="{esc(icon)}" alt="">' if icon else ""
+    portrait = f'<img class="tbc-portrait" src="{esc(icon)}" alt="">' if icon else '<span class="tbc-portrait"></span>'
     guild_name = (char.get("guild") or {}).get("name") or ""
     guild_html = f"&lt;{esc(guild_name)}&gt;" if guild_name else ""
+    level = esc(char.get("level"))
+    race = esc(char.get("race"))
+    klass = esc(char.get("class"))
     return f"""<div class="tbc-armory">
 <nav class="tbc-tabs">{''.join(tabs)}</nav>
 <div class="tbc-sheet">
   <div class="tbc-sheet-main">
     <header class="tbc-ident">
-      {portrait}
+      <div class="tbc-portrait-wrap">{portrait}<span class="tbc-level">{level}</span></div>
       <div>
         <h1>{esc(name)}</h1>
         <p class="tbc-gname">{guild_html}</p>
-        <p>Level {esc(char.get("level"))} {esc(char.get("race"))} {esc(char.get("class"))}</p>
+        <p>Level {level} {race} {klass}</p>
         <p>{esc(char.get("realm") or getattr(exp, "realm_name", ""))}</p>
       </div>
     </header>

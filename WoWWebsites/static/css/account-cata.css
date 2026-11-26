@@ -1,39 +1,100 @@
-/* Cataclysm Services account panel. Stone field, red accent. */
+/* Cataclysm Battle.net account panels. The 2011 home is blue; errors stay red. */
 
-body.cata .acct-cata {
-  color: #efc9a0;
-  font: 12px/1.5 Arial, Verdana, sans-serif;
+body.cata .acct-cata,
+body.acct-bnet {
+  color: #d5e4f2;
+  font: 12px/1.45 Arial, Helvetica, sans-serif;
 }
 
-body.cata .acct-cata .acct-brand {
-  margin: 0 0 4px;
-  color: #7ec8ea;
-  font: 700 14px/1 Arial, sans-serif;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+body.acct-bnet {
+  margin: 0;
+  background: #07111f;
 }
 
-body.cata .acct-cata .acct-kicker {
-  margin: 0 0 4px;
-  color: #c4a078;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+body.acct-bnet.mode-login {
+  background: #12161c;
 }
+
+body.acct-bnet.mode-create {
+  background: #cfcfcf;
+  color: #333;
+}
+
+body.acct-bnet.mode-summary,
+body.acct-bnet.mode-password {
+  background:
+    radial-gradient(ellipse at 78% 8%, rgba(90, 120, 190, 0.55), transparent 42%),
+    radial-gradient(ellipse at 12% 90%, rgba(30, 60, 120, 0.45), transparent 46%),
+    #071422;
+}
+
+.bnet-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: #101820;
+  color: #9ec4e4;
+}
+
+.bnet-bar a { color: #8ec8ea; text-decoration: none; }
+.bnet-brand { font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; }
+.bnet-find { margin-left: auto; display: flex; }
+.bnet-find input {
+  width: 220px;
+  padding: 6px 8px;
+  border: 0;
+  background: #fff;
+  color: #222;
+}
+.bnet-find button {
+  padding: 6px 10px;
+  background: #1a6ea8;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+}
+.bnet-links a { margin-left: 12px; }
+.bnet-explore {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 6px 10px;
+  background: #1a6ea8;
+  color: #fff !important;
+}
+
+body.acct-bnet .acct-cata { max-width: 920px; margin: 18px auto; padding: 0 16px 32px; }
+body.mode-login .acct-cata { max-width: 460px; margin-top: 48px; }
 
 body.cata .acct-cata .acct-title {
-  margin: 0 0 14px;
-  padding: 0 0 8px;
-  border-bottom: 1px solid #5a3214;
-  box-shadow: inset 0 -2px 0 #a32020;
+  margin: 0 0 12px;
   color: #efe3d2;
-  font: 400 28px/1.1 Palatino, Georgia, "Times New Roman", serif;
-  letter-spacing: -0.03em;
+  font: 400 22px/1.1 Palatino, Georgia, serif;
 }
+
+body.mode-login .acct-title,
+.acct-mode-login .acct-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+body.mode-create .acct-title,
+.acct-mode-create .acct-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+body.mode-summary .acct-title,
+body.mode-password .acct-title { color: #fff; letter-spacing: 0.04em; }
 
 body.cata .acct-cata .acct-error {
   margin: 0 0 12px;
-  color: #e24b3b;
+  color: #a32020;
   font-weight: 700;
 }
 
@@ -51,171 +112,235 @@ body.cata .acct-cata .acct-layout {
 
 body.cata .acct-cata .acct-nav {
   flex: 0 0 210px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.28)),
-    #1a0f08;
-  border: 1px solid #5a3214;
-  box-shadow: inset 0 0 0 1px #2a160e;
+  background: #0d1a2a;
+  border: 1px solid #1a0f08;
+  box-shadow: inset 0 0 0 1px #16324a;
 }
 
-body.cata .acct-cata .acct-menu {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-body.cata .acct-cata .acct-item {
-  border-top: 1px solid #3a2818;
-}
-
-body.cata .acct-cata .acct-item:first-child {
-  border-top: 0;
-}
+body.cata .acct-cata .acct-menu { margin: 0; padding: 0; list-style: none; }
+body.cata .acct-cata .acct-item { border-top: 1px solid #16324a; }
+body.cata .acct-cata .acct-item:first-child { border-top: 0; }
 
 body.cata .acct-cata .acct-link {
   display: block;
-  padding: 11px 12px 11px 14px;
+  padding: 10px 12px;
   border-left: 3px solid transparent;
-  color: #c4a078;
+  color: #9ec4e4;
   font-size: 11px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
 }
 
 body.cata .acct-cata .acct-link:hover,
 body.cata .acct-cata .acct-active {
-  background: #24160e;
+  background: #13283c;
   border-left-color: #a32020;
   color: #fff;
 }
 
-body.cata .acct-cata .acct-main {
-  flex: 1 1 auto;
-  min-width: 0;
-}
+body.cata .acct-cata .acct-main { flex: 1 1 auto; min-width: 0; }
 
 body.cata .acct-cata .acct-panel {
   margin: 0 0 16px;
-  padding: 14px 16px 16px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.22)),
-    #1a0f08;
-  border: 1px solid #5a3214;
-  border-top: 2px solid #a32020;
+  padding: 16px 18px 18px;
+  background: rgba(6, 18, 36, 0.82);
+  border: 1px solid #1d4e78;
+  border-top: 2px solid #3d8ec4;
+}
+
+body.mode-create .acct-panel,
+body.cata .acct-mode-create .acct-panel {
+  background: #eee;
+  border: 1px solid #bbb;
+  border-top: 0;
+  color: #333;
+}
+
+body.cata .acct-cata .acct-kicker {
+  margin: 0;
+  color: #9ec4e4;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 body.cata .acct-cata .acct-heading {
   margin: 0 0 10px;
-  color: #efe3d2;
-  font: 400 18px/1.2 Palatino, Georgia, "Times New Roman", serif;
+  color: #fff;
+  font: 400 26px/1.15 Arial, Helvetica, sans-serif;
+}
+
+body.mode-create .acct-heading,
+body.cata .acct-mode-create .acct-heading { color: #222; font-size: 28px; }
+
+body.cata .acct-cata .acct-dialog {
+  background: #1b222b;
+  border: 1px solid #3a4654;
+  border-top: 1px solid #3a4654;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.bnet-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 16px;
+  color: #fff;
+  font: 700 28px/1 Arial, Helvetica, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bnet-atom {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 38%, #1aa3e8 39%, #1aa3e8 46%, transparent 47%),
+    linear-gradient(60deg, transparent 46%, #1aa3e8 47%, #1aa3e8 53%, transparent 54%),
+    linear-gradient(-60deg, transparent 46%, #1aa3e8 47%, #1aa3e8 53%, transparent 54%);
 }
 
 body.cata .acct-cata .acct-signed,
 body.cata .acct-cata .acct-note,
 body.cata .acct-cata .acct-empty,
 body.cata .acct-cata .acct-switch,
-body.cata .acct-cata .acct-actions {
+body.cata .acct-cata .acct-actions,
+body.cata .acct-cata .acct-help,
+body.cata .acct-cata .acct-privacy {
   margin: 0 0 8px;
-  color: #c4a078;
+  color: #b7c9da;
 }
 
-body.cata .acct-cata .acct-user {
-  color: #efc9a0;
-}
+body.mode-create .acct-privacy,
+body.cata .acct-mode-create .acct-privacy,
+body.mode-create .acct-switch,
+body.cata .acct-mode-create .acct-switch { color: #444; }
 
-body.cata .acct-cata a {
-  color: #efc9a0;
-  text-decoration: none;
-}
+body.cata .acct-cata .acct-user { color: #fff; }
+body.cata .acct-cata a { color: #6cb4e6; text-decoration: none; }
+body.cata .acct-cata a:hover { color: #fff; }
+body.mode-create .acct-cata a,
+body.cata .acct-mode-create a { color: #0b63a8; }
+body.cata .acct-cata .acct-actions a { margin-right: 14px; }
 
-body.cata .acct-cata a:hover {
-  color: #fff;
-}
-
-body.cata .acct-cata .acct-actions a {
-  margin-right: 16px;
-}
-
-body.cata .acct-cata .acct-chars {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
+body.cata .acct-cata .acct-chars { margin: 0; padding: 0; list-style: none; }
 body.cata .acct-cata .acct-char {
   display: grid;
   grid-template-columns: 1.4fr 0.7fr 1fr;
   gap: 8px;
   padding: 8px 0;
-  border-top: 1px solid #3a2818;
+  border-top: 1px solid #1a3e5c;
 }
+body.cata .acct-cata .acct-name { color: #fff; font-weight: 700; }
+body.cata .acct-cata .acct-level { color: #b7c9da; }
+body.cata .acct-cata .acct-class { color: #e7c56a; }
 
-body.cata .acct-cata .acct-name {
-  color: #efc9a0;
-  font-weight: 700;
+body.cata .acct-cata .acct-game {
+  display: inline-block;
+  width: 180px;
+  margin-top: 8px;
+  padding: 10px;
+  background: #102033;
+  border: 1px solid #1d4e78;
 }
+body.cata .acct-cata .acct-game h4 { margin: 0 0 8px; color: #fff; font-size: 13px; }
 
-body.cata .acct-cata .acct-level {
-  color: #c4a078;
-}
+body.cata .acct-cata .acct-form label { display: block; margin: 0 0 12px; color: #c5d4e2; }
+body.mode-create .acct-form label,
+body.cata .acct-mode-create .acct-form label { color: #333; }
 
-body.cata .acct-cata .acct-class {
-  color: #e24b3b;
-}
-
-body.cata .acct-cata .acct-form label {
-  display: block;
-  margin: 0 0 10px;
-  color: #c4a078;
-}
-
-body.cata .acct-cata .acct-form input {
+body.cata .acct-cata .acct-form input,
+body.cata .acct-cata .acct-form select {
   display: block;
   width: 100%;
-  max-width: 280px;
+  max-width: 420px;
   margin-top: 4px;
-  padding: 6px 8px;
+  padding: 8px 10px;
   box-sizing: border-box;
-  background: #24160e;
-  border: 1px solid #5a3214;
-  color: #efc9a0;
-  font: 12px Arial, Verdana, sans-serif;
+  background: #fff;
+  border: 1px solid #8aa;
+  color: #222;
+  font: 14px Arial, Helvetica, sans-serif;
 }
 
-body.cata .acct-cata .acct-form input:focus {
-  outline: none;
-  border-color: #a32020;
+body.cata .acct-cata .acct-dialog .acct-form input {
+  max-width: none;
+  border: 0;
+  padding: 10px;
 }
+
+body.cata .acct-cata .acct-form input:focus,
+body.cata .acct-cata .acct-form select:focus {
+  outline: none;
+  border-color: #1a6ea8;
+}
+
+body.cata .acct-cata .acct-birth,
+body.cata .acct-cata .acct-namepair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+body.cata .acct-cata .acct-birth legend { width: 100%; margin: 0 0 4px; color: #333; }
+body.mode-create .acct-birth label,
+body.cata .acct-mode-create .acct-birth label,
+body.mode-create .acct-namepair label,
+body.cata .acct-mode-create .acct-namepair label { margin: 0; }
+body.cata .acct-cata .acct-birth select,
+body.cata .acct-cata .acct-namepair input { width: 140px; }
+
+body.cata .acct-cata .acct-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 16px;
+  margin: 4px 0 12px;
+}
+body.cata .acct-cata .acct-form .acct-row button {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 112px;
+  white-space: nowrap;
+}
+body.cata .acct-cata .acct-form .acct-keep {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+  color: #d5e4f2;
+  font-weight: 400;
+  white-space: nowrap;
+}
+body.cata .acct-cata .acct-keep input { display: inline; width: auto; margin: 0 6px 0 0; }
 
 body.cata .acct-cata .acct-form button {
-  margin-top: 4px;
-  padding: 7px 16px;
-  background: #7a1c1c;
-  border: 1px solid #c4453c;
-  color: #fff8f2;
-  font: 700 11px Arial, sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 8px 22px;
+  background: #1484c4;
+  border: 1px solid #0d6ea8;
+  color: #fff;
+  font: 700 14px Arial, sans-serif;
   cursor: pointer;
 }
+body.cata .acct-cata .acct-form button:hover { background: #1a96dc; }
 
-body.cata .acct-cata .acct-form button:hover {
-  background: #a32020;
-  color: #fff;
+/* The photographed dialog has no side menu. Labels stay in the markup. */
+.acct-mode-login .acct-nav {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 
 @media (max-width: 720px) {
-  body.cata .acct-cata .acct-layout {
-    display: block;
-  }
-
-  body.cata .acct-cata .acct-nav {
-    margin: 0 0 14px;
-  }
-
-  body.cata .acct-cata .acct-char {
-    grid-template-columns: 1fr;
-    gap: 2px;
-  }
+  body.cata .acct-cata .acct-layout { display: block; }
+  body.cata .acct-cata .acct-nav { margin: 0 0 14px; }
+  body.cata .acct-cata .acct-char { grid-template-columns: 1fr; }
+  .bnet-bar { flex-wrap: wrap; }
 }

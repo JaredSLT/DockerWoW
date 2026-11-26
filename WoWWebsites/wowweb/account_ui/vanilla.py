@@ -6,12 +6,7 @@ import html
 
 ERA_TITLE = "Account Management"
 _BOX = "/new-hp/images/image-retailbox.gif"
-
-_NAV = (
-    ("summary", "/account/", "Account Summary"),
-    ("password", "/account/password", "Change Password"),
-    ("create", "/account/create", "Create Account"),
-)
+_BANNER = "/static/img/vanilla/acct-banner.jpg"
 
 
 def _e(value) -> str:
@@ -76,11 +71,17 @@ def _password() -> str:
 
 
 def _manage() -> str:
+    # Order matches the December 2006 summary. Character Services stays so the link works.
+    rows = (
+        ("/account/", "Account Summary", True),
+        ("/account/password", "Change Password", False),
+        ("/support/account", "Change Contact Info", False),
+        ("/account/services", "Character Services", False),
+    )
     items = []
-    for key, href, label in _NAV:
-        mark = ' class="acct-here"' if key == "summary" else ""
+    for href, label, here in rows:
+        mark = ' class="acct-here"' if here else ""
         items.append(f'<li><a href="{href}"{mark}>{label}</a></li>')
-    items.append('<li><a href="/account/services">Character Services</a></li>')
     return (
         '<aside class="acct-manage">'
         '<p class="acct-manage-title">Manage Your Account:</p>'
@@ -113,23 +114,30 @@ def _summary(exp, user: str, email: str, characters: list) -> str:
             '<tr><td class="acct-empty" colspan="3">No characters on this realm yet.</td></tr>'
         )
     mail = _e(email) if email else "Not on file"
-    return f"""{_manage()}
-<p class="acct-welcome"><span class="acct-drop">W</span>elcome, <strong class="acct-name">{_e(user)}</strong>. Should you have any questions regarding your account, please contact World of Warcraft Support by email at <a href="mailto:billing@blizzard.com">billing@blizzard.com</a>. You may also call (800) 59-BLIZZARD from 9AM to 6PM Pacific Time, Monday through Friday, except holidays.</p>
+    return f"""<div class="acct-hero"><img class="acct-hero-art" src="{_BANNER}" alt="Account Management"></div>
+{_manage()}
+<p class="acct-welcome"><img class="acct-dropimg" src="/static/img/vanilla/acct-w.png" alt="">elcome, <strong class="acct-name">{_e(user)}</strong>. Should you have any questions regarding your account, please contact World of Warcraft Support by email at <a href="mailto:billing@blizzard.com">billing@blizzard.com</a>. You may also call (800) 59-BLIZZARD from 9AM to 6PM Pacific Time, Monday through Friday, except holidays.</p>
 <h3 class="acct-band">Upgrade Your Trial Account</h3>
 <div class="acct-card">
   <img class="acct-box" src="{_BOX}" alt="World of Warcraft">
-  <p class="acct-help">If this account is still a trial, upgrade it to keep playing. A retail box can also be unlocked with the authentication key in the game client.</p>
+  <p class="acct-help"><img class="acct-dropimg" src="/static/img/vanilla/acct-y.png" alt="">our account can be upgraded if you wish to continue the epic adventure. Use one of the options below.</p>
   <p class="acct-label">Upgrade Online Now</p>
-  <p class="acct-actions"><a class="acct-btn" href="/shop">Upgrade Online Now</a></p>
+  <div class="acct-offer">
+    <p class="acct-help">Click on the button below to upgrade your account quickly and easily online!</p>
+    <p class="acct-actions"><a class="acct-btn" href="/shop">Upgrade Online Right Now!</a></p>
+  </div>
   <p class="acct-label">Retail Authentication Key</p>
-  <p class="acct-keys"><span class="acct-key"></span><span class="acct-key"></span><span class="acct-key"></span><span class="acct-key"></span></p>
+  <p class="acct-help">If you've purchased a retail copy of World of Warcraft, enter the authentication key below.</p>
+  <p class="acct-keys"><span class="acct-key"></span><span class="acct-dash">-</span><span class="acct-key"></span><span class="acct-dash">-</span><span class="acct-key"></span><span class="acct-dash">-</span><br><span class="acct-key"></span><span class="acct-dash">-</span><span class="acct-key"></span></p>
+  <p class="acct-actions"><a class="acct-btn" href="/shop">Upgrade Account</a></p>
   <p class="acct-fine">Blizzard Entertainment reserves the right to disable this feature based upon server space considerations.</p>
 </div>
 <div class="acct-split">
   <section class="acct-info">
     <h3 class="acct-band">Account Information</h3>
-    <p class="acct-who">Account name <strong class="acct-name">{_e(user)}</strong></p>
-    <p class="acct-help">Account Status Active</p>
+    <p class="acct-who"><strong class="acct-name">{_e(user)}</strong> <a class="acct-inline" href="/account/logout">Logout</a></p>
+    <p class="acct-bar">Account Status</p>
+    <p class="acct-help">Active</p>
     <p class="acct-lead">{lead}</p>
     <table class="acct-chars">
       <thead><tr><th>Name</th><th>Level</th><th>Class</th></tr></thead>
@@ -139,12 +147,15 @@ def _summary(exp, user: str, email: str, characters: list) -> str:
   </section>
   <section class="acct-info">
     <h3 class="acct-band">Contact Information</h3>
-    <p class="acct-mail">Email Address <span class="acct-email">{mail}</span></p>
+    <p class="acct-bar">Email Address</p>
+    <p class="acct-mail"><span class="acct-email">{mail}</span></p>
+    <p class="acct-bar">Phone Number</p>
+    <p class="acct-blankline"></p>
     <p class="acct-help">Address and phone are not stored on this page.</p>
-    <p class="acct-actions"><a href="/account/password">Change Password</a></p>
+    <p class="acct-actions"><a class="acct-btn" href="/support/account">Change Contact Info</a></p>
   </section>
 </div>
-<p class="acct-fine">Cancel Trial Account — trial accounts do not require cancellation. <a href="/support/">Learn more</a></p>
+<p class="acct-fine"><span class="acct-dot"></span> Cancel Trial Account - Trial accounts do not require cancellation. <a href="/support/">Learn more</a></p>
 <p class="acct-actions"><a href="/account/create">Create Account</a></p>
 """
 

@@ -5,6 +5,19 @@
    August 2023 summary is the blue Account Overview. The crop ends at
    Battle.net Balance, so the license block sits under that, not as a game tile. */
 
+.acct-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .acct-df {
   --accent: #5ee0c5;
   --line: #1e7a78;
@@ -17,23 +30,29 @@
   margin: 0;
   color: #f4f7fb;
   font-family: "Helvetica Neue", Arial, sans-serif;
-  background: #1b1e27;
+  background: #14171e;
 }
+
+body.era-dragonflight.era-df-account { background: #14171e; }
+body.era-dragonflight .acct-df a { color: #8ec8ff; }
 
 .acct-mode-summary,
 .acct-mode-password {
-  background: #071e36;
+  background: #021428;
   color: #e7eef8;
 }
+
+body.era-df-account:has(.acct-mode-summary),
+body.era-df-account:has(.acct-mode-password) { background: #021428; }
 
 .acct-top {
   display: flex;
   align-items: center;
-  gap: 22px;
-  min-height: 52px;
-  padding: 0 22px;
-  background: #041526;
-  color: #d5e4f5;
+  gap: 18px;
+  min-height: 34px;
+  padding: 0 16px;
+  background: #0e4a7c;
+  color: #fff;
 }
 
 .acct-blizzard {
@@ -44,6 +63,7 @@
   text-decoration: none;
   font-size: 14px;
 }
+.acct-blizzard img { display: block; height: 18px; width: auto; }
 
 .acct-toplinks {
   display: flex;
@@ -65,24 +85,24 @@
 
 .acct-frame {
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  min-height: 560px;
+  grid-template-columns: 172px minmax(0, 1fr);
+  min-height: 0;
   background: transparent;
 }
 
 .acct-mode-login .acct-frame,
 .acct-mode-create .acct-frame {
   display: block;
-  max-width: 460px;
+  width: min(420px, calc(100% - 32px));
   margin: 0 auto;
   min-height: 0;
-  padding: 48px 16px 32px;
+  padding: 36px 16px 48px;
 }
 
 .acct-nav {
-  background: #07111c;
-  border-right: 1px solid #12304d;
-  padding: 18px 0 24px;
+  background: #000714;
+  border-right: 1px solid #06203c;
+  padding: 0;
 }
 
 .acct-mode-login .acct-nav,
@@ -116,13 +136,36 @@
 }
 
 .acct-nav-link {
-  display: block;
-  padding: 11px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
   border-left: 3px solid transparent;
   color: #c5d4e6;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 11px;
+  white-space: nowrap;
+  line-height: 1.2;
 }
+.acct-mode-summary .acct-nav-link::before,
+.acct-mode-password .acct-nav-link::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  background: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat;
+  mask: var(--ico) center / contain no-repeat;
+}
+.acct-nav-overview { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M8 1.5 1.5 7H3v7h4V9h2v5h4V7h1.5z'/%3E%3C/svg%3E"); }
+.acct-nav-details { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle fill='black' cx='8' cy='5' r='2.4'/%3E%3Cpath fill='black' d='M3 13.5c.6-2.4 2.5-3.6 5-3.6s4.4 1.2 5 3.6z'/%3E%3C/svg%3E"); }
+.acct-nav-games { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M2 6h12v5.2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z'/%3E%3Ccircle fill='white' cx='5' cy='8.6' r='.7'/%3E%3Ccircle fill='white' cx='11' cy='8.6' r='.7'/%3E%3C/svg%3E"); }
+.acct-nav-parental { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle fill='black' cx='5.5' cy='5' r='2'/%3E%3Ccircle fill='black' cx='10.5' cy='5.4' r='1.7'/%3E%3Cpath fill='black' d='M1.5 13c.4-2 1.8-3 4-3s3.6 1 4 3zM9 10.2c.8.2 1.6.7 2 1.6.3.6.4 1.2.5 1.7H14c-.3-1.8-1.4-3-3.2-3.3z'/%3E%3C/svg%3E"); }
+.acct-nav-security { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M8 1.2 2.5 3.4V8c0 3 2.2 5 5.5 6.4C11.3 13 13.5 11 13.5 8V3.4z'/%3E%3C/svg%3E"); }
+.acct-nav-privacy { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M4.5 7V5a3.5 3.5 0 0 1 7 0v2H13v7H3V7z'/%3E%3C/svg%3E"); }
+.acct-nav-connections { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M6.2 9.8a2.6 2.6 0 0 1 0-3.6l1.4-1.4a2.6 2.6 0 0 1 3.7 3.6L10 9.7l-1-1 1.2-1.2a1.2 1.2 0 0 0-1.7-1.7L7.2 7.1a1.2 1.2 0 0 0 0 1.7zM9.8 6.2a2.6 2.6 0 0 1 0 3.6l-1.4 1.4a2.6 2.6 0 0 1-3.7-3.6L6 6.3l1 1-1.2 1.2a1.2 1.2 0 0 0 1.7 1.7l1.3-1.3a1.2 1.2 0 0 0 0-1.7z'/%3E%3C/svg%3E"); }
+.acct-nav-payment { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M2 4h12v8H2z'/%3E%3Cpath fill='white' d='M2 6.2h12v1.4H2z'/%3E%3C/svg%3E"); }
+.acct-nav-history { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M3 3h7l3 3v7H3z'/%3E%3Cpath fill='white' d='M5 8h6v1.1H5zm0 2.2h6v1.1H5z'/%3E%3C/svg%3E"); }
 
 .acct-mode-login .acct-nav-link,
 .acct-mode-create .acct-nav-link {
@@ -139,8 +182,8 @@
 
 .acct-nav-current {
   color: #fff;
-  border-left-color: #148eff;
-  background: #0c3f73;
+  border-left-color: #3aa0e6;
+  background: #0a5f96;
   font-weight: 700;
 }
 
@@ -154,7 +197,10 @@
 .acct-main { padding: 28px 32px 40px; }
 
 .acct-mode-summary .acct-main,
-.acct-mode-password .acct-main { background: #0c2c4e; }
+.acct-mode-password .acct-main { background: #03284d; padding: 8px 16px 12px; }
+.acct-mode-summary .acct-block-title { margin: 0 0 4px; font-size: 11px; }
+.acct-mode-summary .acct-code,
+.acct-mode-summary .acct-redeem-btn { padding: 6px 10px; }
 
 .acct-mode-login .acct-main,
 .acct-mode-create .acct-main {
@@ -204,11 +250,17 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 8px 0 28px;
+  margin: 4px 0 22px;
   color: #fff;
   font-weight: 800;
   letter-spacing: 0.16em;
   font-size: 18px;
+}
+
+.acct-logo-img {
+  display: block;
+  height: 28px;
+  width: auto;
 }
 
 .acct-mark {
@@ -229,10 +281,11 @@
 
 .acct-mode-summary .acct-sub,
 .acct-mode-password .acct-sub {
-  font-size: 26px;
-  letter-spacing: 0.08em;
+  font-size: 18px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   text-align: left;
+  margin: 0 0 8px;
 }
 
 .acct-subhead {
@@ -264,29 +317,29 @@
 
 .acct-socials {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
-  max-width: 280px;
   margin: 0 auto 18px;
 }
 
+.acct-social-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 .acct-social {
-  width: 46px;
+  width: 44px;
   height: 40px;
   border: 0;
   border-radius: 3px;
-  background: #fff;
-  color: #1a1a1a;
-  font-size: 11px;
-  font-weight: 800;
+  background: #fff center / cover no-repeat;
+  color: transparent;
+  font-size: 0;
+  padding: 0;
   cursor: default;
 }
-
-.acct-social-facebook { background: #1877f2; color: #fff; }
-.acct-social-xbox { background: #107c10; color: #fff; }
-.acct-social-playstation { background: #00439c; color: #fff; }
-.acct-social-nintendo { background: #e60012; color: #fff; }
 
 .acct-or {
   display: flex;
@@ -327,11 +380,28 @@
 }
 
 .acct-alert {
-  margin: 0 0 18px;
-  padding: 16px 18px;
-  background: #0a3c78;
-  border: 1px solid #1d6ec4;
+  margin: 0 0 4px;
+  padding: 8px 12px 8px 42px;
+  background: #0c6eab;
+  border: 0;
   text-align: left;
+  position: relative;
+}
+
+.acct-alert::before {
+  content: "!";
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  width: 18px;
+  height: 16px;
+  background: #f5c518;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  color: #0c6eab;
+  font-weight: 900;
+  font-size: 11px;
+  text-align: center;
+  line-height: 20px;
 }
 
 .acct-alert-title,
@@ -344,15 +414,33 @@
   text-transform: uppercase;
 }
 
-.acct-alert-title { color: #d6e8ff; }
+.acct-alert-title { color: #fff; letter-spacing: 0.02em; font-size: 11px; margin: 0 0 2px; white-space: nowrap; }
+.acct-alert-copy { margin: 0 0 2px; color: #e7f3ff; font-size: 12px; line-height: 1.3; }
+.acct-resend { color: #d6ecff; text-decoration: underline; }
 .acct-block-title { color: #d6e8ff; }
 
 .acct-redeem,
 .acct-balance {
-  margin: 0 0 16px;
-  padding: 16px 0;
+  margin: 0;
+  padding: 8px 0 0;
   border-top: 1px solid #1a4e7a;
   text-align: left;
+}
+
+.acct-balance {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.acct-balance .acct-meta { margin: 0; }
+
+.acct-license {
+  margin-top: 12px;
+  padding-top: 8px;
+  text-align: left;
+  border-top: 1px solid #123a5c;
 }
 
 .acct-redeem-row {
@@ -437,7 +525,21 @@
 
 .acct-form { max-width: 440px; text-align: left; }
 .acct-mode-login .acct-form,
-.acct-mode-create .acct-form { margin: 0 auto; }
+.acct-mode-create .acct-form { margin: 0 auto; max-width: 280px; }
+
+.acct-mode-login .acct-sub,
+.acct-mode-create .acct-sub {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: 0;
+  margin-bottom: 16px;
+}
+
+.acct-mode-login .acct-note,
+.acct-mode-create .acct-note { text-align: center; }
+
+.acct-mode-login .acct-note a,
+.acct-mode-create .acct-note a { color: #8eb4d4; font-size: 14px; }
 
 .acct-df .acct-form label,
 .acct-df .acct-field {
@@ -448,7 +550,19 @@
   letter-spacing: 0.03em;
 }
 
-.acct-mode-login .acct-field { font-size: 0; color: transparent; }
+.acct-df.acct-mode-login .acct-field {
+  position: relative;
+  font-size: 0;
+  color: transparent;
+  margin-bottom: 12px;
+}
+
+.acct-mode-login .acct-form input,
+.acct-mode-create .acct-form input,
+.acct-mode-login .acct-submit,
+.acct-mode-create .acct-submit {
+  max-width: none;
+}
 
 .acct-df .acct-form input,
 .acct-code {
@@ -464,6 +578,21 @@
   border: 1px solid #5c6573;
   border-radius: 2px;
   font-size: 15px;
+}
+.acct-df.acct-mode-login .acct-form input[name="identity"],
+.acct-df.acct-mode-login .acct-form input[name="password"] {
+  background-color: #12151c;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 36px;
+}
+.acct-df.acct-mode-login .acct-form input[name="identity"] {
+  background-image: url("/static/img/dragonflight/field-keyboard.png");
+  background-size: 16px 14px;
+}
+.acct-df.acct-mode-login .acct-form input[name="password"] {
+  background-image: url("/static/img/dragonflight/field-eye.png");
+  background-size: 18px 14px;
 }
 
 .acct-mode-summary .acct-form input,
@@ -512,7 +641,7 @@
 
 .acct-services-link a { color: #7ec8ff; }
 
-@media (max-width: 720px) {
+@media (max-width: 480px) {
   .acct-frame { grid-template-columns: 1fr; }
   .acct-nav {
     display: flex;

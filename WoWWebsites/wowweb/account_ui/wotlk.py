@@ -1,7 +1,7 @@
 """Wrath of the Lich King account page (3.3.5a, 2009–2010).
 
-Account-name login. The community shell picks Battle.net chrome for this
-inner HTML, and the parchment signup sheet for account creation.
+The 2009 Battle.net login and account home, and the parchment signup
+sheet. The posted identity is the account name. There is no email field.
 """
 
 from __future__ import annotations
@@ -25,27 +25,49 @@ def _messages(error: str, notice: str) -> str:
 
 
 def _login(era: str) -> str:
-    return f"""<div class="acct-panel">
+    # The photographed login labels the first box E-mail Address. This realm
+    # still posts that value as the account name (name="identity").
+    del era
+    return """<div class="acct-panel">
   <p class="acct-kicker">Battle.net Account</p>
   <h3 class="acct-heading">Account Login</h3>
   <div class="acct-login-grid">
     <form class="acct-form" method="post" action="/account/login">
-      <label class="acct-field">Account Name
+      <label class="acct-field">E-mail Address
         <input name="identity" type="text" required autocomplete="username">
       </label>
       <label class="acct-field">Password
         <input type="password" name="password" required autocomplete="current-password">
       </label>
       <button type="submit">Log In</button>
+      <p class="acct-note">There is no emailed password reset. Sign in and change the password here.</p>
+      <p class="acct-links"><a href="/account/retrieve">Forgot your account password?</a>
+        <a href="/account/create">Sign up now!</a></p>
     </form>
     <div class="acct-side">
       <h3>Need an account?</h3>
-      <p>Sign in with the account name you use in the {_e(era)} client.</p>
+      <p>Creating a Battle.net Account is fast, easy, and free.</p>
       <a class="acct-cta" href="/account/create">Create an Account</a>
     </div>
   </div>
-  <p class="acct-note">There is no emailed password reset. Sign in and change the password here.</p>
-  <p class="acct-links"><a href="/account/create">Create Account</a></p>
+  <div class="bn-help">
+    <div>
+      <h4>Battle.net Account</h4>
+      <a href="/bnet">What is the Battle.net Account?</a>
+      <a href="/support/">Battle.net Account Help</a>
+      <a href="/support/">Terms of Use</a>
+    </div>
+    <div>
+      <h4>Account Access &amp; Security</h4>
+      <a href="/account/retrieve">Password Retrieval</a>
+      <a href="/support/">General Login Issues</a>
+    </div>
+    <div>
+      <h4>Account Profile</h4>
+      <a href="/account/password">Changing an e-mail address or password</a>
+      <a href="/support/">Editing your contact information</a>
+    </div>
+  </div>
 </div>"""
 
 
@@ -63,12 +85,17 @@ def _create() -> str:
     <label class="acct-field">Confirm password
       <input type="password" name="confirm" required autocomplete="new-password">
     </label>
-    <button type="submit">Create Account</button>
+    <fieldset class="acct-news">
+      <legend>Blizzard Insider Newsletter Signup</legend>
+      <label class="acct-check"><input type="checkbox" name="newsletter" value="1"> Subscribe to the Blizzard Insider newsletter for news on Blizzard games.</label>
+    </fieldset>
+    <div class="acct-terms">
+      <h3>Terms of Use</h3>
+      <p>This account name is what you type at the World of Warcraft login screen. There is no separate game name on this form.</p>
+    </div>
+    <p class="acct-actions"><a class="acct-back" href="/account/login">Back</a><button type="submit">Continue</button></p>
   </form>
-  <div class="acct-terms">
-    <h3>Terms of Use</h3>
-    <p>This account name is what you type at the World of Warcraft login screen. There is no separate game name on this form.</p>
-  </div>
+  <p class="acct-copy">©2009 Blizzard Entertainment. All rights reserved.</p>
   <p class="acct-links"><a href="/account/login">Log In</a></p>
 </div>"""
 
@@ -113,11 +140,19 @@ def _summary(user: str, characters: list) -> str:
   <h3 class="acct-heading">Account Home</h3>
   <h4>My Profile</h4>
   <p class="acct-name">Account name <strong>{_e(user)}</strong></p>
+  <p class="acct-prow">
+    <a href="/account/password">Change Password</a>
+    <a href="/support/">Change Contact Info</a>
+    <a href="/support/">Communication Preferences</a>
+  </p>
   <h4>Manage My Games</h4>
+  <p class="acct-game"><a href="/wow/">World of Warcraft</a></p>
   <table class="acct-chars">
     <thead><tr><th>Name</th><th>Level</th><th>Class</th></tr></thead>
     <tbody>{body}</tbody>
   </table>
+  <h4>My Payment, Contact &amp; Shipping Information</h4>
+  <p class="acct-prow"><a href="/shop">My Payment Options</a></p>
 </div>
 <p class="acct-links"><a href="/account/password">Change Password</a> · <a href="/account/logout">Log Out</a></p>"""
 

@@ -35,7 +35,7 @@ def _nav(mode: str) -> str:
     )
 
     def link(key: str, href: str, label: str) -> str:
-        cls = "acct-nav-link"
+        cls = f"acct-nav-link acct-nav-{key}"
         aria = ""
         if key == current:
             cls += " acct-nav-current"
@@ -45,7 +45,7 @@ def _nav(mode: str) -> str:
     # Login still has to expose Overview and Security. The crop is the card.
     if mode in ("login", "create"):
         return (
-            f'<nav class="acct-nav" aria-label="{ERA_TITLE}">'
+            f'<nav class="acct-nav acct-sr" aria-label="{ERA_TITLE}">'
             f'<p class="acct-brand">{ERA_TITLE}</p>'
             f'{link("overview", "/account/", "Overview")}'
             f'{link("security", "/account/password", "Security")}'
@@ -54,7 +54,7 @@ def _nav(mode: str) -> str:
     links = "".join(link(key, href, label) for key, href, label in items)
     return (
         f'<nav class="acct-nav" aria-label="{ERA_TITLE}">'
-        f'<p class="acct-brand">{ERA_TITLE}</p>'
+        f'<p class="acct-brand acct-sr">{ERA_TITLE}</p>'
         f"{links}"
         "</nav>"
     )
@@ -65,7 +65,7 @@ def _top(mode: str) -> str:
         return ""
     return (
         '<header class="acct-top">'
-        '<a class="acct-blizzard" href="/wow/">Blizzard</a>'
+        '<a class="acct-blizzard" href="/wow/"><img src="/static/img/dragonflight/blizz-logo.png" alt=""><span class="acct-sr">Blizzard</span></a>'
         '<nav class="acct-toplinks" aria-label="Blizzard">'
         '<a class="acct-toplink" href="/wow/">Games</a>'
         '<a class="acct-toplink" href="/shop">Shop</a>'
@@ -84,34 +84,43 @@ def _identity(login_kind: str) -> tuple[str, str]:
 
 
 def _socials() -> str:
-    buttons = (
-        ("acct-social-google", "G"),
-        ("acct-social-facebook", "f"),
-        ("acct-social-apple", "A"),
-        ("acct-social-xbox", "X"),
-        ("acct-social-playstation", "P"),
-        ("acct-social-nintendo", "N"),
-        ("acct-social-battlenet", "B"),
+    # Icons are cropped from the login photograph. The red arrow is not included.
+    rows = (
+        (
+            ("acct-social-google", "Google", "social-google.png"),
+            ("acct-social-facebook", "Facebook", "social-facebook.png"),
+            ("acct-social-apple", "Apple", "social-apple.png"),
+        ),
+        (
+            ("acct-social-xbox", "Xbox", "social-xbox.png"),
+            ("acct-social-playstation", "PlayStation", "social-playstation.png"),
+            ("acct-social-nintendo", "Nintendo", "social-nintendo.png"),
+            ("acct-social-battlenet", "Battle.net", "social-battlenet.png"),
+        ),
     )
-    bits = "".join(
-        f'<button class="acct-social {name}" type="button">{label}</button>'
-        for name, label in buttons
-    )
-    return f'<div class="acct-socials">{bits}</div>'
+    built = []
+    for row in rows:
+        buttons = "".join(
+            f'<button class="acct-social {name}" type="button" aria-label="{label}"'
+            f' style="background-image:url(\'/static/img/dragonflight/{image}\')"></button>'
+            for name, label, image in row
+        )
+        built.append(f'<div class="acct-social-row">{buttons}</div>')
+    return f'<div class="acct-socials">{"".join(built)}</div>'
 
 
 def _login(login_kind: str) -> str:
     label, input_type = _identity(login_kind)
-    return f"""<p class="acct-logo"><span class="acct-mark" aria-hidden="true"></span> BATTLE.NET</p>
+    return f"""<p class="acct-logo"><img class="acct-logo-img" src="/static/img/dragonflight/bnet-logo.png" alt=""><span class="acct-sr">BATTLE.NET</span></p>
 <h3 class="acct-sub">Log In</h3>
 {_socials()}
 <p class="acct-or"><span>Or log in with</span></p>
 <form class="acct-form" method="post" action="/account/login">
-  <label class="acct-field">{label} <input name="identity" type="{input_type}" required placeholder="{label}" autocomplete="username"></label>
-  <label class="acct-field">Password <input type="password" name="password" required placeholder="Password" autocomplete="current-password"></label>
+  <label class="acct-field"><span class="acct-sr">{label}</span> <input name="identity" type="{input_type}" required placeholder="{label}" autocomplete="username"></label>
+  <label class="acct-field"><span class="acct-sr">Password</span> <input type="password" name="password" required placeholder="Password" autocomplete="current-password"></label>
   <button class="acct-submit" type="submit">Log In</button>
 </form>
-<p class="acct-lead">There is no emailed password reset. Sign in and change the password here.</p>
+<p class="acct-lead acct-sr">There is no emailed password reset. Sign in and change the password here.</p>
 <p class="acct-note"><a href="/account/create">Create Account</a></p>"""
 
 
@@ -123,7 +132,7 @@ def _create(login_kind: str, separate_game_name: bool) -> str:
             '<label class="acct-field">World of Warcraft license name '
             '<input name="game_name" required maxlength="16" autocomplete="off"></label>'
         )
-    return f"""<p class="acct-logo"><span class="acct-mark" aria-hidden="true"></span> BATTLE.NET</p>
+    return f"""<p class="acct-logo"><img class="acct-logo-img" src="/static/img/dragonflight/bnet-logo.png" alt=""><span class="acct-sr">BATTLE.NET</span></p>
 <h3 class="acct-sub">Create Account</h3>
 <p class="acct-lead">Email is the Blizzard login. The license name is the World of Warcraft account, up to 16 characters. There is no emailed password reset.</p>
 <form class="acct-form" method="post" action="/account/create">
@@ -165,12 +174,13 @@ def _summary(exp, user: str, email: str, characters: list) -> str:
     else:
         char_block = '<p class="acct-meta">No characters on this realm yet.</p>'
     realm = _e(getattr(exp, "realm_name", "") or "")
-    # The August 2023 crop stops at Battle.net Balance, before any game tile.
+    # The August 2023 crop stops at Battle.net Balance. License and characters
+    # stay under that line for the account page; they are not a game tile.
     return f"""<h3 class="acct-sub">Account Overview</h3>
 <section class="acct-alert">
-  <h3 class="acct-alert-title">The email address</h3>
-  <p class="acct-value">{_e(email)}</p>
-  <p class="acct-meta">Email is the Blizzard login.</p>
+  <h3 class="acct-alert-title">The email address {_e(email)} is unverified.</h3>
+  <p class="acct-alert-copy">Verifying your email address adds additional security and lets you recover your account if you ever can't access it.</p>
+  <p class="acct-meta"><a class="acct-resend" href="/account/">Resend Verification Email</a></p>
 </section>
 <section class="acct-redeem">
   <h3 class="acct-block-title">Redeem a Code</h3>
@@ -183,22 +193,13 @@ def _summary(exp, user: str, email: str, characters: list) -> str:
   <h3 class="acct-block-title">Battle.net Balance</h3>
   <p class="acct-meta"><a href="/account/">Payment Methods</a></p>
 </section>
-<div class="acct-cards">
-  <article class="acct-card">
-    <h3>Blizzard account</h3>
-    <p class="acct-value">{_e(email)}</p>
-    <p class="acct-meta">Email is the Blizzard login.</p>
-  </article>
-  <article class="acct-card">
-    <h3>World of Warcraft license</h3>
-    <p class="acct-value">{_e(user)}</p>
-    <p class="acct-meta">Game account name on {realm}.</p>
-  </article>
-  <article class="acct-card">
-    <h3>Characters</h3>
-    {char_block}
-  </article>
-</div>
+<section class="acct-license">
+  <h3 class="acct-block-title">World of Warcraft license</h3>
+  <p class="acct-value">{_e(user)}</p>
+  <p class="acct-meta">Game account name on {realm}.</p>
+  <h3 class="acct-block-title">Characters</h3>
+  {char_block}
+</section>
 <p class="acct-actions"><a href="/account/password">Change Password</a> · <a href="/account/logout">Log Out</a></p>"""
 
 
@@ -233,8 +234,8 @@ def render(
         '<div class="acct-frame">'
         f"{_nav(mode)}"
         '<div class="acct-main">'
-        f'<p class="acct-kicker">{kicker}</p>'
-        f'<h2 class="acct-title">{ERA_TITLE}</h2>'
+        f'<p class="acct-kicker acct-sr">{kicker}</p>'
+        f'<h2 class="acct-title acct-sr">{ERA_TITLE}</h2>'
         f"{_messages(error, notice)}"
         f"{main}"
         "</div></div></section>"

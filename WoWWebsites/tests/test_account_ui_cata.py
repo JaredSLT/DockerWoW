@@ -38,7 +38,7 @@ class CataAccountServicesTests(unittest.TestCase):
         self.assertIn('href="/account/create"', login)
         self.assertIn('class="acct-error"', login)
         self.assertIn("nope &lt;b&gt;", login)
-        self.assertIn("Account Name", login)
+        self.assertIn("Email Address", login)
         self.assertNotIn('type="email"', login)
         self.assertNotIn('name="game_name"', login)
         self.assertNotIn("private server", login.lower())

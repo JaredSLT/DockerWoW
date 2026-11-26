@@ -1,15 +1,17 @@
-/* Legion Battle.net account. Login and creation are the dark gate.
+/* Legion Battle.net account. Login and creation are the planet gate.
    Summary and password are the light management sheet. */
 
 body.era-legion.acct-screen {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: 0;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body.era-legion.acct-screen-login,
 body.era-legion.acct-screen-create {
-  background: radial-gradient(ellipse at 50% 18%, #1a6ea8 0%, #0c3558 34%, #071422 72%);
+  background: #061018 url("/static/img/legion/login-bg.jpg") center top / 100% auto no-repeat;
   color: #d5e6f2;
 }
 
@@ -19,8 +21,8 @@ body.era-legion.acct-screen-password {
   color: #222;
 }
 
-.bnet-gate { flex: 1 1 auto; width: min(880px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 48px; }
-.bnet-mini { color: #9fb4c8; }
+.bnet-gate { flex: 1 1 auto; width: min(980px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 48px; }
+.bnet-mini { color: #9fb4c8; text-align: center; }
 .bnet-mini a { color: #5ec8ff; }
 
 .acct.acct-legion { font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
@@ -32,24 +34,13 @@ body.era-legion.acct-screen-password {
   text-transform: uppercase;
 }
 .acct.acct-legion .acct-title { margin-top: 4px; font-size: 28px; font-weight: 600; }
-.acct.acct-legion .acct-mast { margin-bottom: 16px; }
+.acct.acct-legion .acct-mast { margin-bottom: 8px; }
 
+.blizz-logo { display: block; width: min(280px, 70%); height: auto; margin: 0 auto 12px; }
 .acct-mode-login .acct-brand,
-.acct-mode-create .acct-brand {
-  color: #3ec4ff;
-  font-size: 34px;
-  letter-spacing: 0.14em;
-  text-align: center;
-}
+.acct-mode-create .acct-brand,
 .acct-mode-login .acct-title,
-.acct-mode-create .acct-title {
-  color: #9fb4c8;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-}
-.acct-mode-login .acct-card,
-.acct-mode-create .acct-card { max-width: 360px; margin: 0 auto; }
+.acct-mode-create .acct-title,
 .acct-mode-login .acct-card h3,
 .acct-mode-create .acct-card h3 {
   position: absolute;
@@ -58,27 +49,37 @@ body.era-legion.acct-screen-password {
   overflow: hidden;
   clip: rect(0 0 0 0);
 }
+.acct-mode-login .acct-card,
+.acct-mode-create .acct-card { max-width: 420px; margin: 0 auto; }
+.acct-mode-login .acct-field,
+.acct-mode-create .acct-field {
+  color: transparent;
+  font-size: 0;
+}
+.acct-mode-login .acct-field input,
+.acct-mode-create .acct-field input,
+.acct-mode-login .acct-field select,
+.acct-mode-create .acct-field select,
+.acct-birth,
+.acct-birth legend,
+.acct-check,
+.acct-names {
+  color: #d5e6f2;
+  font-size: 14px;
+}
 
 .acct-mode-summary,
 .acct-mode-password { color: #1c1c1c; }
-.acct-mode-summary .acct-brand,
-.acct-mode-password .acct-brand { color: #8a6a12; font-size: 11px; }
-.acct-mode-summary .acct-title,
-.acct-mode-password .acct-title { color: #141414; }
-.acct-screen-summary .acct-mast,
-.acct-screen-password .acct-mast {
-  margin: -36px -24px 20px;
-  padding: 22px 24px;
-  background: #111;
-  color: #fff;
-}
-.acct-screen-summary .acct-title,
-.acct-screen-password .acct-title,
-.acct-screen-summary .acct-brand,
-.acct-screen-password .acct-brand { color: #fff; }
+.acct-mode-summary .acct-mast,
+.acct-mode-password .acct-mast { display: none; }
+.acct-screen-summary .bnet-gate,
+.acct-screen-password .bnet-gate { width: min(1100px, calc(100% - 24px)); }
 
 .acct.acct-legion a { color: #6e5208; text-decoration: none; }
-.acct-mode-login a, .acct-mode-create a { color: #5ec8ff; }
+.acct.acct-legion.acct-mode-login a,
+.acct.acct-legion.acct-mode-create a { color: #5ec8ff; }
+.acct-mode-login .acct-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.blizz-logo { mix-blend-mode: screen; background: transparent; }
 .acct.acct-legion a:hover { text-decoration: underline; }
 
 .acct.acct-legion .acct-error,
@@ -105,6 +106,7 @@ body.era-legion.acct-screen-password {
   display: block;
   padding: 12px 16px;
   border-left: 2px solid transparent;
+  color: #0b5cab;
   font-weight: 600;
 }
 .acct.acct-legion .acct-nav a.acct-nav-current {
@@ -113,15 +115,59 @@ body.era-legion.acct-screen-password {
   color: #1a1a1c;
 }
 .acct.acct-legion .acct-main { flex: 1 1 auto; min-width: 0; }
-.acct.acct-legion .acct-panel,
-.acct-mode-summary .acct-card,
-.acct-mode-password .acct-card {
-  padding: 20px 22px;
+.acct.acct-legion .acct-panel { padding: 0 0 20px; background: transparent; border: 0; }
+.manage-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 0 0 16px;
+  padding: 18px 18px 12px;
+  background: #111820;
+  color: #fff;
+}
+.manage-word { margin: 0; font-size: 42px; font-weight: 600; line-height: 1; }
+.manage-search { margin-left: auto; }
+.manage-search input { width: 220px; padding: 8px 10px; border: 0; }
+.manage-balance { margin: 0; color: #b7f27a; font-size: 13px; }
+.auth-banner {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  background: #f5a623;
+  color: #1a1a1c;
+  font-weight: 700;
+}
+.auth-banner a { color: #0b5cab; }
+.game-family {
+  margin: 0;
+  padding: 8px 12px;
+  background: #6d6a64;
+  color: #fff;
+  font-weight: 700;
+}
+.acct.acct-legion .acct-game {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 0;
+  padding: 12px;
   background: #fff;
   border: 1px solid #e5e5e5;
+  border-top: 0;
+}
+.acct.acct-legion .acct-active { color: #2d6a22; font-weight: 700; }
+.acct.acct-legion .acct-expired { color: #8a5a12; font-weight: 700; }
+.acct.acct-legion .acct-region, .acct.acct-legion .acct-who { color: #333; font-weight: 600; }
+.acct-side { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.key-btn {
+  display: inline-block;
+  width: max-content;
+  padding: 10px 16px;
+  background: #3d9b2d;
+  color: #fff !important;
+  font-weight: 700;
 }
 .acct.acct-legion .acct-panel h3,
-.acct.acct-legion .acct-sub { margin: 0 0 14px; color: #141414; font-size: 18px; }
+.acct.acct-legion .acct-sub { margin: 18px 0 10px; color: #141414; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
 .acct.acct-legion .acct-lead { margin-bottom: 12px; }
 .acct.acct-legion .acct-facts { margin: 0; }
 .acct.acct-legion .acct-fact {
@@ -132,15 +178,6 @@ body.era-legion.acct-screen-password {
 }
 .acct.acct-legion .acct-fact dt { flex: 0 0 240px; margin: 0; color: #666; font-weight: 600; }
 .acct.acct-legion .acct-fact dd { margin: 0; color: #1a1a1c; font-weight: 600; overflow-wrap: anywhere; }
-.acct.acct-legion .acct-roster, .acct.acct-legion .acct-games { margin-top: 18px; }
-.acct.acct-legion .acct-game {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px;
-  background: #f7f7f7;
-  border: 1px solid #e5e5e5;
-}
-.acct.acct-legion .acct-active { color: #2d6a22; font-weight: 700; }
 .acct.acct-legion .acct-char {
   display: grid;
   grid-template-columns: 1.4fr 0.6fr 1fr;
@@ -159,23 +196,31 @@ body.era-legion.acct-screen-password {
 .acct.acct-legion .acct-chars { margin: 0; padding: 0; list-style: none; }
 .acct.acct-legion .acct-char-name { overflow-wrap: anywhere; }
 .acct.acct-legion .acct-empty, .acct.acct-legion .acct-hint { color: #5e5e5e; font-size: 13px; font-weight: 400; }
-.acct-mode-login .acct-hint, .acct-mode-create .acct-hint { margin: 12px 0; color: #c5d7e6; }
-.acct.acct-legion .acct-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px; }
-
-.acct.acct-legion .acct-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0 0 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.acct-mode-login .acct-hint, .acct-mode-create .acct-hint { margin: 12px 0; color: #c5d7e6; font-size: 12px; text-align: center; }
+.acct.acct-legion .acct-actions { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin-top: 14px; }
+.acct-or { margin: 12px 0; color: #9fb4c8; text-align: center; font-size: 12px; letter-spacing: 0.14em; }
+.acct-legal, .acct-fine, .acct-copy { margin-top: 18px; color: #9fb4c8; font-size: 11px; text-align: center; }
+.acct-copy p { margin: 6px 0; }
+.fb-btn {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 18px;
+  background: #3b5998;
+  color: #fff;
+  border: 0;
+  font: 700 15px/1 "Open Sans", Helvetica, Arial, sans-serif;
+  cursor: pointer;
 }
-.acct-mode-login .acct-field, .acct-mode-create .acct-field { color: #d5e6f2; }
-.acct-mode-summary .acct-field, .acct-mode-password .acct-field { color: #5c584e; }
+.acct-names { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.acct-birth { margin: 0 0 14px; padding: 0; border: 0; }
+.acct-birth legend { margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.acct-check { display: flex; gap: 8px; align-items: center; margin: 8px 0 14px; font-size: 13px; }
 
-.acct.acct-legion input {
+.acct.acct-legion .acct-field { display: flex; flex-direction: column; gap: 6px; margin: 0 0 12px; font-weight: 700; }
+.acct-mode-summary .acct-field, .acct-mode-password .acct-field { color: #5c584e; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+.acct.acct-legion input, .acct.acct-legion select {
   display: block;
   width: 100%;
   max-width: 420px;
@@ -185,7 +230,8 @@ body.era-legion.acct-screen-password {
   letter-spacing: 0;
   text-transform: none;
 }
-.acct-mode-login input, .acct-mode-create input {
+.acct-mode-login input, .acct-mode-create input,
+.acct-mode-login select, .acct-mode-create select {
   max-width: none;
   background: #0b1c2c;
   color: #fff;
@@ -196,20 +242,18 @@ body.era-legion.acct-screen-password {
   color: #1a1a1c;
   border: 1px solid #cfcfcf;
 }
-.acct.acct-legion input:focus { outline: none; border-color: #00aeff; }
+.acct.acct-legion input:focus, .acct.acct-legion select:focus { outline: none; border-color: #00aeff; }
 
-.acct.acct-legion button {
+.acct.acct-legion button[type="submit"] {
   padding: 11px 18px;
   border: 0;
   font: 700 14px/1 "Open Sans", Helvetica, Arial, sans-serif;
   cursor: pointer;
 }
-.acct-mode-login button, .acct-mode-create button {
+.acct-mode-login button[type="submit"], .acct-mode-create button[type="submit"] {
   width: 100%;
   background: #00aeff;
   color: #fff;
-  text-transform: none;
-  letter-spacing: 0;
 }
 .acct-mode-summary button, .acct-mode-password button {
   background: #1c1c1c;
@@ -219,12 +263,9 @@ body.era-legion.acct-screen-password {
   text-transform: uppercase;
 }
 
-.acct-services-link { margin-top: 16px; }
-.acct-screen-summary .acct-services-link a,
-.acct-screen-password .acct-services-link a { color: #0b5cab; }
-
 @media (max-width: 720px) {
-  .acct.acct-legion .acct-layout, .acct.acct-legion .acct-fact { flex-direction: column; }
+  .acct.acct-legion .acct-layout, .acct.acct-legion .acct-fact, .manage-head { flex-direction: column; }
   .acct.acct-legion .acct-nav { flex: 1 1 auto; flex-direction: row; width: 100%; }
   .acct.acct-legion .acct-fact dt { flex-basis: auto; }
+  .acct-names { grid-template-columns: 1fr; }
 }

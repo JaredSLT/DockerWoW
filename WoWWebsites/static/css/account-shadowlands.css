@@ -72,27 +72,21 @@
 .bn-mark {
   margin: 0 0 22px;
   text-align: center;
-  color: #5ec8ff;
-  font: 800 34px/1 "Arial Black", "Arial Narrow", Impact, sans-serif;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+}
+
+.bn-mark img {
+  width: 180px;
+  height: auto;
+  margin: 0 auto;
 }
 
 .bn-mark span {
   display: block;
-}
-
-.bn-mark {
-  font-size: 28px;
-}
-
-.bn-mark::after {
-  content: "Entertainment";
-  display: block;
   margin-top: 4px;
   color: #d7e7f8;
   font: 600 11px/1 "Helvetica Neue", Arial, sans-serif;
-  letter-spacing: .28em;
+  letter-spacing: .42em;
+  text-transform: uppercase;
 }
 
 .acct-shadowlands .acct-panel-title,
@@ -214,12 +208,51 @@
   place-items: center;
   color: #222;
   background: #fff;
-  font: 700 18px/1 Arial, sans-serif;
+  font: 700 20px/1 Arial, sans-serif;
 }
 
 .bn-fb { color: #fff !important; background: #1877f2 !important; }
 .bn-g { color: #444 !important; }
-.bn-apple { color: #111 !important; }
+.bn-apple {
+  background: #111 !important;
+  color: #fff !important;
+}
+.bn-apple::before {
+  content: "";
+  width: 14px;
+  height: 16px;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 18%, 100% 22%, 78% 46%, 86% 100%, 50% 78%, 14% 100%, 22% 46%, 0 22%, 38% 18%);
+}
+
+.acct-pass { position: relative; }
+.bn-eye {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 18px;
+  height: 12px;
+  border: 2px solid #9ec8ee;
+  border-radius: 10px;
+}
+.bn-eye::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 4px;
+  background: #9ec8ee;
+  border-radius: 50%;
+}
+
+.acct-gate .acct-note {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
 
 .acct-shadowlands .acct-error,
 .acct-shadowlands .acct-notice {
@@ -278,12 +311,14 @@
 
 .bn-game {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: 48px minmax(0, 1.5fr) minmax(90px, .7fr) auto;
   gap: 14px;
   align-items: center;
-  padding: 12px 0 16px;
+  padding: 14px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
+.bn-extra { margin-top: 18px; }
+.bn-extra .bn-game { grid-template-columns: 48px minmax(0, 1fr) auto; }
 
 .bn-w {
   width: 42px;
@@ -296,12 +331,20 @@
   font: 800 20px/1 Georgia, serif;
 }
 
-.bn-sub,
+.bn-game .bn-sub,
 .acct-shadowlands .acct-fact-label {
   display: block;
   color: #9eb0c8;
   font-size: 13px;
 }
+
+body.era-shadowlands .acct-shadowlands a { color: #00aeef; }
+body.era-shadowlands .acct-shadowlands a:hover { color: #fff; }
+
+.bn-apple { background: #fff !important; }
+.bn-apple svg { width: 16px; height: 18px; display: block; }
+.bn-apple svg path { fill: #111; }
+.bn-apple::before { content: none; }
 
 .acct-shadowlands .acct-facts { margin: 12px 0; }
 
@@ -332,15 +375,48 @@
 
 body.sl-account-manage .sl-acct-root {
   min-height: 100vh;
-  padding: 28px 4vw 48px;
+  padding: 18px 3vw 48px;
   background:
-    radial-gradient(1200px 500px at 70% -10%, rgba(28, 92, 170, .45), transparent 60%),
-    #07111c;
+    radial-gradient(1100px 420px at 70% -10%, rgba(20, 70, 140, .55), transparent 60%),
+    #07111f;
 }
+
+.acct-manage .acct-panel-title {
+  margin: 8px 0 16px;
+  font-size: 28px;
+  letter-spacing: .04em;
+}
+
+.acct-manage .bn-panel {
+  background: linear-gradient(180deg, #16386a, #102848);
+}
+
+.bn-manage { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bn-manage a {
+  color: #49a6ff;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+.acct-manage .bn-game div,
+.acct-manage .bn-game span { background: transparent; }
 
 body.sl-account-gate {
   background:
-    radial-gradient(900px 520px at 50% 40%, #0d5ea8 0%, #06315f 42%, #021426 100%);
+    radial-gradient(700px 460px at 50% 42%, #0c4f96 0%, #06284f 46%, #02101e 100%);
+}
+
+.acct-gate .bn-card {
+  background: rgba(10, 40, 78, .35);
+}
+
+.acct-shadowlands .acct-switch {
+  text-align: center;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 body.sl-account-gate .sl-acct-root {

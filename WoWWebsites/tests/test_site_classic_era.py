@@ -96,6 +96,23 @@ class ClassicEraSiteTests(unittest.TestCase):
         page = layout(self.exp, title, body)
         self.assertEqual(page.lower().count("<h1"), 1)
         self.assertIn("era-classic-era", page)
+        self.assertIn("ce-is-realm", page)
+        self.assertIn("ce-shot-realm", body)
+        self.assertIn("ce-status-table", body)
+        self.assertIn("ce-col-name", body)
+        self.assertIn('class="is-selected" aria-current="page">World of Warcraft Classic</a>', body)
+        self.assertIn(">World of Warcraft</a>", body)
+        self.assertIn(">Wrath of the Lich King Classic</a>", body)
+        self.assertIn('href="/forums/realm"', body)
+        self.assertIn("Americas &amp; Oceania", body)
+        self.assertLess(
+            body.index(">World of Warcraft</a>"),
+            body.index(">World of Warcraft Classic</a>"),
+        )
+        css = Path(__file__).resolve().parents[1] / "static/css/era-classic-era.css"
+        self.assertIn("realm-sky.png", css.read_text(encoding="utf-8"))
+        sky = Path(__file__).resolve().parents[1] / "static/img/classic-era/realm-sky.png"
+        self.assertTrue(sky.is_file())
 
     def test_realm_filters_do_not_invent_realms(self):
         ctx = self.ctx({"game": ["retail"]})
@@ -117,6 +134,25 @@ class ClassicEraSiteTests(unittest.TestCase):
         self.assertIn("Categories", body)
         self.assertIn('class="is-on"', body)
         self.assertNotIn("border: 3px solid red", body)
+        self.assertIn("ce-shot-forums", body)
+        self.assertIn("ce-classic", body)
+        labels = (
+            "Wrath of the Lich King Classic - General",
+            "WoW Classic – General",
+            "WoW Classic – Classes",
+            "WoW Classic – Professions",
+            "WoW Classic – Player &amp; Guild Search",
+            "Player &amp; Guild Registry 2004-2006",
+        )
+        positions = [body.index(label) for label in labels]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn('href="/forums/quests"', body)
+        self.assertIn('href="#ce-classes"', body)
+        self.assertIn('href="/forums/professions"', body)
+        self.assertIn('href="/forums/guilds"', body)
+        self.assertIn('href="/forums/guildrelations"', body)
+        page = layout(self.exp, title, body)
+        self.assertIn("ce-is-forums", page)
         self.assertNotIn("recreation", body.lower())
         page = layout(self.exp, title, body)
         self.assertIn("ce-main-board", page)

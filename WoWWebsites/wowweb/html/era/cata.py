@@ -174,18 +174,11 @@ def _gear_kind(item: dict) -> tuple[str, str]:
 
 
 def _tabs(active: str) -> str:
-    icons = []
     links = []
-    for (key, href, label), icon in zip(_TABS, _ICONS):
+    for key, href, label in _TABS:
         mark = " on" if key == active else ""
-        icons.append(
-            f'<a class="cata-ico{mark}" href="{esc(href)}" aria-label="{esc(label)}">{icon}</a>'
-        )
-        links.append(f'<a class="cata-tab{mark}" href="{esc(href)}">{esc(label)}</a>')
-    return (
-        f'<div class="cata-icos">{"".join(icons)}</div>'
-        f'<nav class="cata-tabs" aria-label="World of Warcraft">{"".join(links)}</nav>'
-    )
+        links.append(f'<a class="cata-tab {key}{mark}" href="{esc(href)}">{esc(label)}</a>')
+    return f'<nav class="cata-tabs" aria-label="World of Warcraft">{"".join(links)}</nav>'
 
 
 def _service(user: str | None) -> str:
@@ -227,11 +220,14 @@ def _plate(exp, user: str | None, crumb: str) -> str:
     if "forum" in (crumb or "").lower():
         line = "Log in with your Battle.net account to post comments and personalize your site content."
     else:
-        line = "Log in now to enhance and personalize your experience!"
-    return f'<a class="cata-plate" href="/account/login">{esc(line)}</a>'
+        line = '<span class="cata-hot">Log in now</span> to enhance and<br>personalize your experience!'
+    return (
+        f'<a class="cata-plate" href="/account/login">{line}'
+        f'<img class="cata-goblin" src="{_IMG}/goblin.png" alt=""></a>'
+    )
 
 
-def _footer() -> str:
+def _footer(show_play: bool) -> str:
     columns = (
         (
             "Battle.net Home",
@@ -246,10 +242,11 @@ def _footer() -> str:
         (
             "Games",
             (
+                ("/shop", "StarCraft II"),
                 ("/wow/", "World of Warcraft"),
-                ("/wow/info", "Game Guide"),
+                ("/shop", "Diablo III"),
+                ("/shop", "Classic Games"),
                 ("/wow/media/wallpapers", "Game Client Downloads"),
-                ("/story", "Story"),
             ),
         ),
         (
@@ -260,7 +257,7 @@ def _footer() -> str:
                 ("/account/", "Account Summary"),
                 ("/account/password", "Account Security"),
                 ("/shop", "Add a Game"),
-                ("/account/services", "Character Services"),
+                ("/shop", "Redeem Promo Codes"),
             ),
         ),
         (
@@ -277,13 +274,21 @@ def _footer() -> str:
     for heading, links in columns:
         items = "".join(f'<li><a href="{esc(href)}">{esc(label)}</a></li>' for href, label in links)
         blocks.append(f"<div><h4>{esc(heading)}</h4><ul>{items}</ul></div>")
+    play = ""
+    if show_play:
+        play = (
+            f'<a class="cata-foot-play" href="/account/create">'
+            f'<img src="{_IMG}/footer-play.jpg" alt="Play it Free"></a>'
+        )
     return (
-        f'<footer class="cata-foot">{"".join(blocks)}'
+        f'<footer class="cata-foot">{"".join(blocks)}{play}'
         '<p class="cata-copy">©2011 Blizzard Entertainment, Inc. All rights reserved. '
-        '<a href="/support/">Legal</a> · <a href="/support/">Privacy Policy</a> · '
+        '<a href="/support/">Terms of Use</a> '
+        '<a href="/support/">Legal</a> '
+        '<a href="/support/">Privacy Policy</a> '
         '<a href="/support/">Copyright Infringement</a>'
         '<span class="cata-lang">Americas — English (US)</span></p>'
-        '<p class="cata-blizz">Blizzard Entertainment</p></footer>'
+        f'<p class="cata-blizz"><img src="{_IMG}/blizzard-logo.jpg" alt="Blizzard Entertainment"></p></footer>'
     )
 
 
@@ -291,22 +296,28 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     _ = online
     active = _active(crumb or title)
     err = f'<p class="cata-login-err">{esc(login_error)}</p>' if login_error else ""
-    inner = f"""{_service(user)}
-<div class="cata-wrap">
-  <a class="cata-logo" href="/wow/"><span>World of</span><strong>Warcraft</strong><em>Cataclysm</em></a>
-  <header class="cata-head">
-    <div class="cata-navcol">{_tabs(active)}</div>
-    <div class="cata-sidecol">
-      <form class="cata-find" action="/wow/search" method="get">
-        <input type="text" name="q" aria-label="Search characters, items, forums and more" placeholder="Search characters, items, forums and more...">
-        <button type="submit">Search</button>
-      </form>
+    if active == "forums":
+        placeholder = "Search the Armory, forums and more..."
+    else:
+        placeholder = "Search characters, items, forums and more..."
+    inner = f"""<div class="cata-wrap">
+  {_service(user)}
+  <div class="cata-topline">
+    <a class="cata-logo" href="/wow/"><img src="{_IMG}/logo.jpg" alt="World of Warcraft Cataclysm"></a>
+    <form class="cata-find" action="/wow/search" method="get">
+      <input type="text" name="q" aria-label="Search characters, items, forums and more" placeholder="{esc(placeholder)}">
+      <button type="submit" aria-label="Search">Search</button>
+    </form>
+  </div>
+  <div class="cata-panel">
+    <header class="cata-navline">
+      {_tabs(active)}
       {_plate(exp, user, crumb or title)}
-    </div>
-  </header>
-  {err}
-  <main class="cata-stage">{body}</main>
-  {_footer()}
+    </header>
+    {err}
+    <main class="cata-stage">{body}</main>
+  </div>
+  {_footer(active == "home")}
 </div>"""
     css = styles("cata") + [
         "/static/css/forums.css",
@@ -342,62 +353,167 @@ def _article(exp, index: int, title: str, date: str, body: str) -> str:
 </article>"""
 
 
+_IMG = "/static/img/cata"
+
+# Late 2011 community home. These are the photographed stories, not the 2012 news feed.
+_HOME_THUMBS = (
+    ("thumb-dungeons.jpg", "/wow/info", "WoW Dungeons and Raids Panel"),
+    ("thumb-talents.jpg", "/wow/info/classes", "World of Warcraft Class Talent System"),
+    ("thumb-pandaria.jpg", "/story", "World of Warcraft Preview Panel: Mists of Pandaria"),
+    ("thumb-annual.jpg", "/shop", "Sign Up for the World of Warcraft Annual Pass and Get Diablo III Free"),
+)
+_HOME_STORIES = (
+    (
+        "New Warcraft Fan Art",
+        "Zarhym &amp; Nebu",
+        "1 day, 10 hours ago",
+        "15",
+        "story-fanart.jpg",
+        'The <a href="/wow/media/screenshots">World of Warcraft Fan Art Section</a> has been updated with five new pieces of fan artwork. Would you like to share your artistic talents with the community? Submit your fan art today!',
+        "/wow/news/0",
+        "More",
+    ),
+    (
+        "World of Warcraft Annual Pass Update",
+        "Blizzard Entertainment",
+        "1 day, 14 hours ago",
+        "235",
+        "story-annual.jpg",
+        "The World of Warcraft Annual Pass has been expanded to include more countries and is now available in Russia, Switzerland, Brazil, Mexico, Argentina, Chile and more.*",
+        "/shop",
+        "More",
+    ),
+    (
+        "BlizzCon 2011 Store Post-Show Sale Begins November 11",
+        "Blizzard Entertainment",
+        "1 day, 19 hours ago",
+        "43",
+        "story-blizzcon.jpg",
+        "Miss out on picking up that special piece of commemorative BlizzCon loot? Beginning Friday, November 11 (rescheduled from the originally announced date of November 4), we're making select items from the BlizzCon 2011 store available once more to those who joined us for the show in person or via the BlizzCon Virtual Ticket.",
+        "/wow/news",
+        "Read on Blizzcon.com",
+    ),
+    (
+        "Art Gallery Update",
+        "Zarhym &amp; Nebu",
+        "2 days, 10 hours ago",
+        "5",
+        "story-gallery.jpg",
+        'We\'ve updated our <a href="/wow/media/screenshots">Trading Card Game art gallery</a> to feature ten new pieces. Each image is taken directly from the official <a href="/wow/">World of Warcraft Trading Card Game</a>. Be sure to give a shout-out to your favorite pieces in the comments.',
+        "/wow/media/screenshots",
+        "More",
+    ),
+    (
+        "New Wallpaper Available",
+        "Zarhym &amp; Nebu",
+        "2 days, 12 hours ago",
+        "60",
+        "story-wallpaper.jpg",
+        'We\'ve updated our <a href="/wow/media/wallpapers">BlizzCon Media section</a> with the <a href="/wow/media/wallpapers">BlizzCon 2011 Wallpaper</a>! This key art, created by Glenn Rane for BlizzCon 2011, features a trio of Blizzard notables: Thrall, Diablo, and Sarah Kerrigan, in addition to the peering eyes of the pandaren.',
+        "/wow/media/wallpapers",
+        "Read on Blizzcon.com",
+    ),
+    (
+        "Guardian Cub Tradable Pet Now Available",
+        "Blizzard Entertainment",
+        "2 days, 16 hours ago",
+        "431",
+        "story-cub.jpg",
+        'Now available in the <a href="/shop">Pet Store</a>: the new and titanically cute <a href="/shop">Guardian Cub</a> companion. Orphaned by its titan creators, the fledgling Guardian Cub has taken wing to look for a happy home. Adopt one today and it will stay by your side through thick and thin, following your character just about anywhere your adventures take you—even into the skies of Azeroth.',
+        "/shop",
+        "More",
+    ),
+    (
+        "The Blizzard Charity Auction benefitting St. Jude Children's Research Hospital® Continues",
+        "Blizzard Entertainment",
+        "3 days, 11 hours ago",
+        "68",
+        "story-charity.jpg",
+        "The Blizzard Charity Auction benefitting St. Jude Children's Research Hospital continues as this week we introduce a new batch of retired server blades. Take a look at the list of recently opened auctions below and bid generously — net proceeds will be donated to help children battling cancer and other deadly diseases.",
+        "/wow/news",
+        "More",
+    ),
+    (
+        "2011 Pumpkin Contest Winners",
+        "Blizzard Entertainment",
+        "3 days, 16 hours ago",
+        "135",
+        "story-pumpkin.jpg",
+        'The winners of this year\'s pumpkin-carving contest have been chosen — and they\'re monstrously spectacular. We\'d like to thank everyone who participated this year, and we can\'t wait to see your mad scientist skills in action again next time around. Check out all of the creepy, incredible, and creative winning pumpkins <a href="/wow/media/screenshots">here</a>.',
+        "/wow/media/screenshots",
+        "More",
+    ),
+    (
+        "Vote For Your Favorite Costume!",
+        "Blizzard Entertainment",
+        "6 days, 9 hours ago",
+        "742",
+        "story-costume.jpg",
+        'We\'re giving 20 contestants we weren\'t able to recognize at BlizzCon a second chance at sartorial glory, by offering you a chance to vote on your favorites. We\'ve added images of each contestant to a brand-new <a href="/wow/news">Costume Contest Voting Gallery</a>. Each contestant\'s picture is marked with a number. That\'s where you come in; just make note of the number belonging to your favorite costume, then cast your vote in the poll below.',
+        "/wow/news",
+        "Read on Blizzcon.com",
+    ),
+    (
+        "Public Test Realm Patch 4.3 Notes",
+        "Kaivax",
+        "6 days, 18 hours ago",
+        "13567",
+        "story-ptr.jpg",
+        'The time for testing out many of the upcoming patch 4.3 features is soon upon us. In this article you\'ll find frequent updates to the official patch 4.3 notes as development continues. You can find a list of the major features we\'ve discussed thus far on our <a href="/forums/">official forums</a>.',
+        "/wow/info/patches",
+        "More",
+    ),
+    (
+        "Blizzard Art Gallery Update",
+        "Zarhym &amp; Nebu",
+        "6 days, 18 hours ago",
+        "23",
+        "story-wotlk.jpg",
+        'We\'ve added more pieces to our <a href="/wow/media/screenshots">World of Warcraft: Wrath of the Lich King Art gallery</a>. Have a look at assorted pieces of stunning artwork that reveal an all-new look at the wonders of the Warcraft universe.',
+        "/wow/media/screenshots",
+        "More",
+    ),
+)
+
+
 def home_body(exp, news, realm, user) -> str:
-    _ = user
-    realm = realm or {}
-    rows = list(news or [])
-    feature = ""
-    thumbs = ""
-    if rows:
-        title, date, body = rows[0]
-        feature = f"""<a class="cata-hero" href="/wow/news/0">
-  <img src="{esc(_shot(exp, 0))}" alt="">
-  <span><strong>{esc(title)}</strong><em>{esc(_when(date))}</em><b>Learn More</b></span>
-</a>"""
-        bits = []
-        for index, (label, _date, _body) in enumerate(rows[1:5], start=1):
-            bits.append(
-                f'<a class="cata-mini" href="/wow/news/{index}">'
-                f'<img src="{esc(_shot(exp, index))}" alt="">'
-                f"<span>{esc(label)}</span></a>"
-            )
-        thumbs = f'<div class="cata-minis">{"".join(bits)}</div>'
-    else:
-        feature = (
-            f'<a class="cata-hero" href="/wow/info">'
-            f'<img src="{esc(_shot(exp, 0))}" alt="">'
-            f"<span><strong>World of Warcraft: Cataclysm</strong>"
-            f"<em>Patch {esc(exp.last_patch)}</em><b>Learn More</b></span></a>"
+    _ = exp, news, realm, user
+    thumbs = []
+    for image, href, label in _HOME_THUMBS:
+        thumbs.append(
+            f'<a class="cata-mini" href="{esc(href)}">'
+            f'<img src="{_IMG}/{image}" alt="">'
+            f"<span>{label}</span></a>"
         )
-    stories = "".join(_article(exp, i, t, d, b) for i, (t, d, b) in enumerate(rows[:_PAGE]))
-    nxt = '<p class="cata-next"><a href="/wow/news">Next</a></p>' if len(rows) > _PAGE else ""
-    mists = next(((i, t) for i, (t, _d, _b) in enumerate(rows) if "Mists of Pandaria" in t), None)
-    if mists:
-        promo = f'<a class="cata-card" href="/wow/news/{mists[0]}"><strong>Mists of Pandaria</strong><span>{esc(mists[1])}</span></a>'
-    else:
-        promo = '<a class="cata-card" href="/story"><strong>Story</strong><span>Cataclysm</span></a>'
-    name = realm.get("name") or exp.realm_name
-    flag = "Up" if realm.get("up") else "Down"
-    pop = realm.get("population")
-    pop_line = f"<span>{esc(pop)}</span>" if pop not in (None, "") else ""
-    kind = realm.get("type") or ""
-    kind_line = f"<span>{esc(kind)}</span>" if kind else ""
+    stories = []
+    for title, author, when, comments, image, body, href, more in _HOME_STORIES:
+        stories.append(
+            f'<article class="cata-story">'
+            f'<h3><a href="{esc(href)}">{title}</a></h3>'
+            f'<p class="cata-by">by <span class="cata-author">{author}</span> '
+            f'<span class="cata-when">{when}</span> '
+            f'<span class="cata-comments">{comments}</span></p>'
+            f'<a class="cata-thumb" href="{esc(href)}"><img src="{_IMG}/{image}" alt=""></a>'
+            f"<p>{body}</p>"
+            f'<p class="cata-more"><a href="{esc(href)}">{more} ›</a></p>'
+            f"</article>"
+        )
     return f"""<div class="cata-home">
   <div class="cata-home-main">
-    {feature}
-    {thumbs}
-    <div class="cata-news">{stories}</div>
-    {nxt}
+    <a class="cata-hero" href="/shop">
+      <img src="{_IMG}/hero-annual.jpg" alt="Sign up for the World of Warcraft Annual Pass and get Diablo III free">
+      <span class="cata-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </a>
+    <div class="cata-minis">{"".join(thumbs)}</div>
+    <div class="cata-news">{"".join(stories)}</div>
+    <p class="cata-next"><a href="/wow/news">Next</a></p>
   </div>
   <aside class="cata-rail">
-    <a class="cata-card cata-play" href="/account/create"><strong>Play it Free</strong><em>Create an Account</em></a>
-    {promo}
-    <a class="cata-card cata-realm" href="/wow/realmstatus">
-      <strong>Realm Status</strong>
-      <span class="{esc(flag.lower())}">{esc(name)} is {esc(flag)}</span>
-      {kind_line}{pop_line}
-    </a>
-    <a class="cata-card" href="/wow/media/screenshots"><strong>Screenshot of the Day</strong><span>All Screenshots ›</span></a>
+    <a class="cata-play" href="/account/create"><img src="{_IMG}/play-free.jpg" alt="Play it Free"></a>
+    <div class="cata-mop-block">
+      <a class="cata-mop" href="/story">Mists of Pandaria</a>
+      <a class="cata-mop-art" href="/story"><img src="{_IMG}/mop.jpg" alt="Mists of Pandaria"></a>
+    </div>
   </aside>
 </div>"""
 
@@ -546,6 +662,75 @@ def _recent(conn, exp, limit: int = 8) -> list[tuple]:
     ).fetchall()
 
 
+_FORUM_SECTIONS = (
+    (
+        "Support",
+        (
+            ("/support/", "Customer Support", "Blizzard Support Agent moderated forum to discuss and inquire about in-game and account related issues."),
+            ("/wow/realmstatus", "Service Status [Read Only]", "Collection of important messages regarding the status of services, such as issues relating to realms."),
+            ("/support/", "Technical Support", "For problems installing or patching World of Warcraft, connecting to the realms or crashing during game play."),
+            ("/support/", "Mac Technical Support", "For problems installing or patching World of Warcraft, connecting to the realms or crashing while using a Macintosh computer."),
+            ("/forums/bugs", "Bug Report", "Found a bug in the game? Help us squash it by reporting it here!"),
+            ("/forums/general", "PTR Discussion", "Discuss changes from the latest World of Warcraft Public Test Realms."),
+            ("/forums/bugs", "PTR Bug Report", "Submit bugs from the latest World of Warcraft Public Test Realms."),
+        ),
+    ),
+    (
+        "Community",
+        (
+            ("/forums/general", "General Discussion", "Discuss World of Warcraft."),
+            ("/forums/general", "Oceanic General Discussion", "To provide a friendly and focused environment for Oceanic players to discuss all aspects of World of Warcraft with one another."),
+            ("/forums/guilds", "Guild Recruitment", "Searching for a guild, or do you want to advertise your guild? Come on in!"),
+            ("/forums/guilds", "Oceanic Guild Recruitment", "Searching for an Oceanic guild, or do you want to advertise your Oceanic guild? Come on in!"),
+            ("/story", "Story Forum", "We invite you to discuss the Warcraft Universe and storylines of Azeroth here."),
+            ("/forums/guilds", "Raid and Guild Leadership", "Discuss raid and guild management, guild recruiting practices, and more."),
+            ("/forums/general", "World's End Tavern", "Pull up a chair, drink a mug of ale, meet new friends, tell stories, and role-play in this forum."),
+        ),
+    ),
+    (
+        "Gameplay and Guides",
+        (
+            ("/wow/info/basics", "New Player Help and Guides", "New to the World of Warcraft? Ask questions from experienced players and learn more about the adventures that await you!"),
+            ("/wow/info", "Quests", "Discussion forum for the many World of Warcraft Quests."),
+            ("/forums/professions", "Professions", "Discussion forum for the many World of Warcraft Professions."),
+            ("/forums/dungeons", "Dungeons and Raids", "Discuss the instance dungeons in World of Warcraft."),
+            ("/forums/guilds", "Achievements and Guild Advancement", "Discussion forum for World of Warcraft Achievements and Guild."),
+            ("/forums/ui", "UI and Macro", "Work with other players to create your own special custom interfaces and macros."),
+        ),
+    ),
+    (
+        "PvP",
+        (
+            ("/forums/pvp", "Arenas", "Discuss all aspects of World of Warcraft Arenas with your fellow players."),
+            ("/forums/pvp", "Battlegrounds", "Discuss all aspects of Battlegrounds with your fellow players."),
+        ),
+    ),
+    (
+        "Class Roles",
+        (
+            ("/wow/info/classes", "Damage Dealing", "The slash of the sword, a flick of the wand. Show your weapons and discuss the strategy of dealing damage."),
+            ("/wow/info/classes", "Healing", "To aid your companions is to see success. Kneel and meditate on the art of healing."),
+            ("/wow/info/classes", "Tanking", "A wall unwavering, a leader unshaken. Gather and confer on the craft of tanking."),
+        ),
+    ),
+    (
+        "Website Feedback",
+        (
+            ("/forums/general", "Website Features", "Discuss the new community site features and potential improvements."),
+            ("/forums/bugs", "Website Bug Reports", "Report any World of Warcraft Community website bugs here."),
+        ),
+    ),
+)
+_CLASS_ORDER = (
+    "deathknight", "druid", "hunter", "mage", "paladin",
+    "priest", "rogue", "shaman", "warlock", "warrior",
+)
+_REALM_NAMES = (
+    "Aegwynn", "Aerie Peak", "Agamaggan", "Aggramar",
+    "Akama", "Alexstrasza", "Alleria", "Altar of Storms",
+)
+
+
 def forum_index_body(ctx: dict) -> str:
     from ... import forums
 
@@ -556,46 +741,41 @@ def forum_index_body(ctx: dict) -> str:
     finally:
         conn.close()
     boards = dict(forums.boards_for(exp))
-    used = set()
     sections = []
-    for heading, slugs in _FORUM_GROUPS:
-        cards = []
-        for slug in slugs:
-            if slug not in boards:
-                continue
-            used.add(slug)
-            label = forums.board_title(exp, slug) or boards[slug]
-            cards.append(
-                f'<a class="cata-board" href="/forums/{esc(slug)}"><strong>{esc(label)}</strong>'
-                f'<span>{esc(_BOARD_BLURB.get(slug, ""))}</span></a>'
+    for heading, cards in _FORUM_SECTIONS:
+        bits = []
+        for href, label, blurb in cards:
+            bits.append(
+                f'<a class="cata-board" href="{esc(href)}"><strong>{esc(label)}</strong>'
+                f"<span>{esc(blurb)}</span></a>"
             )
-        if cards:
-            sections.append(
-                f'<section><h2 class="cata-cat">{esc(heading)}</h2>'
-                f'<div class="cata-boards">{"".join(cards)}</div></section>'
-            )
+        sections.append(
+            f'<section><h2 class="cata-cat">{esc(heading)}</h2>'
+            f'<div class="cata-boards">{"".join(bits)}</div></section>'
+        )
     classes = []
-    for slug, title in forums.boards_for(exp):
-        if slug in _CLASS_SLUGS:
-            used.add(slug)
-            classes.append(f'<a href="/forums/{esc(slug)}">{esc(title)}</a>')
+    for slug in _CLASS_ORDER:
+        title = boards.get(slug)
+        if not title:
+            continue
+        classes.append(f'<a href="/forums/{esc(slug)}">{esc(title)}</a>')
     if classes:
         sections.append(
-            f'<section><h2 class="cata-cat">Classes</h2><div class="cata-class-pills">{"".join(classes)}</div></section>'
+            '<section><h2 class="cata-cat">Classes</h2>'
+            f'<div class="cata-class-pills">{"".join(classes)}</div></section>'
         )
-    extra = []
-    for slug, title in forums.boards_for(exp):
-        if slug in used:
-            continue
-        extra.append(
-            f'<a class="cata-board" href="/forums/{esc(slug)}"><strong>{esc(title)}</strong>'
-            f'<span>{esc(_BOARD_BLURB.get(slug, "Discuss this topic on the realm."))}</span></a>'
-        )
-    if extra:
-        sections.append(
-            '<section><h2 class="cata-cat">More</h2>'
-            f'<div class="cata-boards">{"".join(extra)}</div></section>'
-        )
+    realms = []
+    for name in _REALM_NAMES:
+        realms.append(f'<a href="/forums/realm">{esc(name)}</a>')
+    realm_block = (
+        '<section class="cata-realms"><h2 class="cata-cat">Realms</h2>'
+        '<form class="cata-realm-find" action="/wow/search" method="get">'
+        '<input type="text" name="q" aria-label="Search realms" placeholder="">'
+        "</form>"
+        f'<div class="cata-realm-grid">{"".join(realms)}</div>'
+        '<p class="cata-realm-foot"><span>(230 hidden forums)</span> '
+        '<a href="/forums/realm">All Realms ›</a></p></section>'
+    )
     blizz = []
     for row in recent:
         if "blizzard" not in str(row[3]).lower():
@@ -607,19 +787,21 @@ def forum_index_body(ctx: dict) -> str:
     latest = ""
     if blizz:
         latest = (
-            '<section class="cata-latest"><h2>Latest Blizzard Posts</h2>'
+            '<section class="cata-latest"><h2>Latest Blizzard Posts <a href="/forums/general">View all</a></h2>'
             f'<div class="cata-blizz">{"".join(blizz[:3])}</div></section>'
         )
     topics = "".join(
-        f'<li><a href="/forums/{esc(row[1])}/{int(row[0])}">{esc(row[2])}</a></li>'
+        f'<li><a href="/forums/{esc(row[1])}/{int(row[0])}">{esc(row[2])}</a>'
+        f'<span>{esc(boards.get(row[1], row[1]))}</span></li>'
         for row in recent[:8]
     )
     return f"""<div class="cata-forum">
   <p class="cata-crumbs"><a href="/wow/">World of Warcraft</a> › <strong>Forums</strong></p>
   {latest}
   <div class="cata-forum-grid">
-    <div>{"".join(sections)}</div>
-    <aside><h2 class="cata-cat">Popular Topics</h2><ul class="cata-topics">{topics}</ul></aside>
+    <div>{"".join(sections)}{realm_block}</div>
+    <aside><h2 class="cata-cat">Popular Topics</h2><ul class="cata-topics">{topics}</ul>
+      <p><a href="/forums/general">Forums Code of Conduct</a></p></aside>
   </div>
 </div>"""
 
@@ -801,15 +983,18 @@ def item_body(exp, item: dict) -> str:
     img = f'<img src="{esc(icon)}" alt="">' if icon else ""
     bits = []
     if hand:
-        bits.append(f"<p>{esc(hand)}</p>")
+        bits.append(f'<p class="cata-hand">{esc(hand)}</p>')
     if kind:
         bits.append(f'<p class="cata-kind">{esc(kind)}</p>')
+    bits.append("<p>Damage <span>—</span></p>")
+    bits.append("<p>Speed <span>—</span></p>")
+    bits.append("<p>Durability <span>—</span></p>")
     level = item.get("ItemLevel")
     req = item.get("RequiredLevel")
-    if level not in (None, ""):
-        bits.append(f"<p>Item Level {esc(level)}</p>")
     if req not in (None, ""):
         bits.append(f"<p>Requires Level {esc(req)}</p>")
+    if level not in (None, ""):
+        bits.append(f"<p>Item Level {esc(level)}</p>")
     sell = item.get("SellPrice")
     buy = item.get("BuyPrice")
     if sell not in (None, ""):
@@ -833,7 +1018,7 @@ def item_body(exp, item: dict) -> str:
   </div>
   <p class="cata-item-tabs"><span class="on">Cost and Facts</span> <a href="/wow/info/professions/enchanting">Disenchants Into</a></p>
   <table class="cata-facts">
-    <thead><tr><th>Sell Price</th><th>Buy Price</th><th>Faction</th><th>Attributes</th></tr></thead>
+    <thead><tr><th>Sell Price</th><th>Buy Back Price</th><th>Faction</th><th>Attributes</th></tr></thead>
     <tbody><tr>
       <td>{_coins(sell) if sell not in (None, "") else "—"}</td>
       <td>{_coins(buy) if buy not in (None, "") else "—"}</td>
@@ -946,8 +1131,75 @@ def search_body(ctx: dict) -> str:
 </div>"""
 
 
+def _account_full(path: str, ctx: dict) -> str | None:
+    from ... import accounts
+    from ...account_ui.cata import render as account_render
+
+    user = ctx.get("user") or ""
+    if path == "/account/password" and not user:
+        return None
+    if path == "/account/create":
+        mode = "create"
+    elif path == "/account/password":
+        mode = "password"
+    elif path == "/account/login":
+        mode = "login"
+    else:
+        mode = "summary" if user else "login"
+    characters: list = []
+    cfg = ctx.get("labcfg")
+    if user and cfg is not None:
+        try:
+            characters = accounts.account_summary(cfg, ctx["exp"], user).get("characters") or []
+        except Exception:
+            characters = []
+    inner = account_render(
+        ctx["exp"],
+        user=user,
+        error="",
+        notice="",
+        mode=mode,
+        email="",
+        characters=characters,
+        login_kind="account",
+        separate_game_name=False,
+    )
+    bar = ""
+    if mode != "login":
+        who = (
+            f'<a href="/account/logout">Log Out</a>'
+            if user
+            else '<a href="/account/login">Log in</a> or <a href="/account/create">Create an Account</a>'
+        )
+        bar = f"""<header class="bnet-bar">
+  <a class="bnet-brand" href="/account/">Battle.net</a>
+  <form class="bnet-find" action="/wow/search" method="get">
+    <input type="text" name="q" aria-label="Search Battle.net" placeholder="Search Battle.net">
+    <button type="submit">Search</button>
+  </form>
+  <nav class="bnet-links">{who}
+    <a href="/account/">Account</a>
+    <a href="/support/">Support</a>
+    <a class="bnet-explore" href="/wow/">Explore</a>
+  </nav>
+</header>"""
+    titles = {
+        "login": "Log In",
+        "create": "Account Creation",
+        "summary": "Account Home",
+        "password": "Change Password",
+    }
+    return document(
+        f"{titles.get(mode, 'Account')} — Battle.net",
+        styles("cata"),
+        f"cata acct-bnet mode-{mode}",
+        bar + inner,
+    )
+
+
 def full(path: str, ctx: dict) -> str | None:
-    _ = path, ctx
+    if path in ("/account", "/account/login", "/account/create", "/account/password"):
+        return _account_full(path, ctx)
     return None
 
 

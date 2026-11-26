@@ -17,9 +17,9 @@ _STORIES = (
         "title": "Happy Anniversary! World of Warcraft Celebrates 9 Years",
         "by": "Blizzard Entertainment",
         "when": "11/22/2013",
-        "ago": "1 day ago",
-        "comments": "603",
-        "thumb": "thumb-crest.jpg",
+        "ago": "6 hours, 53 minutes ago",
+        "comments": "103",
+        "thumb": "news-0.jpg",
         "lede": "It's been nine years since World of Warcraft opened its gates—nine years since fledgling heroes from all walks of life spoke to their first quest giver and began their journey through Azeroth, unaware of where those first steps would ultimately take them.",
         "more": "Patch 5.4 is the live game. Siege of Orgrimmar, flexible raids, and the Timeless Isle are the road this ninth year is still walking.",
     },
@@ -27,10 +27,10 @@ _STORIES = (
         "title": "New Mount and Make-A-Wish® Charity Pet Now Available",
         "by": "Blizzard Entertainment",
         "when": "11/22/2013",
-        "ago": "1 day, 4 hours ago",
-        "comments": "147",
-        "thumb": "promo-charity.jpg",
-        "lede": "Brighten up Azeroth's skies with the new Enchanted Fey Dragon mount, and help grant wishes with the Alliance Brew Pup and the Horde Brew Pup. A portion of each purchase goes to Make-A-Wish.",
+        "ago": "1 day, 1 hour ago",
+        "comments": "747",
+        "thumb": "news-1.jpg",
+        "lede": "Brighten up Azeroth's skies with the new Enchanted Fey Dragon mount, and help grant wishes with the Alterac Brew Pup pet—50% of the Pup's $10 purchase price goes to Make-A-Wish.",
         "more": "Five dollars from each Brew Pup or Charity Bundle sold will benefit Make-A-Wish. The charity event ends 12/31/13 at 11:59 p.m. PST.",
     },
     {
@@ -39,8 +39,8 @@ _STORIES = (
         "when": "11/22/2013",
         "ago": "1 day, 4 hours ago",
         "comments": "134",
-        "thumb": "/static/img/hero-mop.jpg",
-        "lede": "Morgan Webb sits down with Lead Encounter Designer Ion Hazzikostas, Senior Art Director Chris Robinson, and Game Director Tom Chilton to talk about what was shown at BlizzCon 2013, including a first look at the new female Forsaken model.",
+        "thumb": "news-2.jpg",
+        "lede": "Morgan Webb sits down with Lead Encounter Designer Ion Hazzikostas, Senior Art Director Chris Robinson, and Game Director Tom Chilton to talk about the Warlords of Draenor reveal at BlizzCon 2013, and an exclusive first look at the new female Forsaken model.",
         "more": "The conversation is a BlizzCon 2013 source interview. Mists of Pandaria remains the live game at patch 5.4.",
     },
     {
@@ -49,7 +49,7 @@ _STORIES = (
         "when": "11/21/2013",
         "ago": "1 day, 6 hours ago",
         "comments": "2,456",
-        "thumb": "thumb-gate.jpg",
+        "thumb": "news-3.jpg",
         "lede": "Here you'll find a list of hotfixes that address various issues related to the recently released World of Warcraft Patch 5.4, Siege of Orgrimmar.",
         "more": "Hotfixes land between builds. Check back for realm restarts tied to Siege of Orgrimmar and the rest of patch 5.4.",
     },
@@ -59,37 +59,37 @@ _STORIES = (
         "when": "11/20/2013",
         "ago": "2 days, 7 hours ago",
         "comments": "1,851",
-        "thumb": "mop-bg.jpg",
-        "lede": "As previously announced, we've been working toward connecting realms to increase the number of players on low-population realms, and since then have completed several connections.",
-        "more": "Connected realms share a larger player pool while each realm keeps its own name. Further connections will be posted as they are scheduled.",
+        "thumb": "news-4.jpg",
+        "lede": "As previously announced, we've been working toward connecting realms to increase the number of players on low-population realms, and since then have completed several connections. As a part of our ongoing communication, we wanted to provide you with an update that contains a list of completed realm connections, currently planned connections, and any additional future plans in one convenient location.",
+        "more": "Connected realms share a larger player pool while each realm keeps its own name.",
     },
     {
         "title": "Blizzard Entertainment Student Art Contest",
         "by": "Blizzard Entertainment",
         "when": "11/19/2013",
-        "ago": "3 days ago",
-        "comments": "35",
-        "thumb": "thumb-tower.jpg",
-        "lede": "Students, get ready to show off your talents: the Student Art Contest is back.",
-        "more": "The contest is open to enrolled students. Winning pieces join the community gallery beside the other Warcraft art updates.",
+        "ago": "3 days, 23 hours ago",
+        "comments": "37",
+        "thumb": "news-5.jpg",
+        "lede": "Students, get ready to show off your talents: the Student Art Contest is back!",
+        "more": "The contest is open to enrolled students. Winning pieces join the community gallery.",
     },
     {
         "title": "New World of Warcraft novel War Crimes Out Next Year",
         "by": "Blizzard Entertainment",
         "when": "11/18/2013",
         "ago": "4 days ago",
-        "comments": "11",
-        "thumb": "thumb-gate.jpg",
-        "lede": "The brutal siege of Orgrimmar will be over, but Garrosh Hellscream, the most infamous orc on Azeroth, has yet to face justice. Now in chains, his tyrannical leadership of the Horde has been ended by his many enemies, and he must answer for his crimes.",
+        "comments": "118",
+        "thumb": "news-6.jpg",
+        "lede": "The brutal siege of Orgrimmar may be over, but Garrosh Hellscream, the most infamous orc on Azeroth, has yet to face justice. Now in chains, his tyrannical leadership of the Horde has been ended by his many enemies, and he must answer for his crimes. You will bear witness, along with the renowned leaders from across Azeroth, to his long awaited trial in the next novel by Christie Golden.",
         "more": "Christie Golden's War Crimes follows that trial. The book is scheduled for the coming year.",
     },
     {
         "title": "Major Payne's Pet Menagerie: Infinite Whelpling",
         "by": "Crithto",
-        "when": "11/19/2013",
-        "ago": "11/19/2013",
+        "when": "11/15/2013",
+        "ago": "11/15/2013",
         "comments": "73",
-        "thumb": "thumb-beast.jpg",
+        "thumb": "news-7.jpg",
         "lede": "Where do you suppose you could find the very essence of corrupted time and death in the form of a tiny little dragon?",
         "more": "Major Payne's Pet Menagerie looks at the Infinite Whelpling and where collectors have been finding one.",
     },
@@ -98,34 +98,63 @@ _STORIES = (
         "by": "Blizzard Entertainment",
         "when": "11/15/2013",
         "ago": "11/15/2013",
-        "comments": "66",
-        "thumb": "play-free.jpg",
-        "lede": "Another BlizzCon's come and gone, but there's still a chance to snag some cool commemorative Warcraft, StarCraft, and Diablo gear.",
-        "more": "From November 15 through November 17, anyone could purchase select items from the BlizzCon 2013 store directly through the online store.",
+        "comments": "65",
+        "thumb": "news-8.jpg",
+        "lede": "Another BlizzCon's come and gone, but there's still a chance to snag some cool commemorative Warcraft, StarCraft, and Diablo merchandise from the show. From now through November 17, anyone can purchase select items from the BlizzCon 2013 Store directly through the Online Blizzard Store.",
+        "more": "The BlizzCon 2013 online sale ran November 15 through November 17.",
+        "more_label": "Read on Blizzcon.com",
     },
     {
         "title": "Blizzard Comic Contest Winner",
-        "by": "Nethaera",
+        "by": "Nebu",
         "when": "11/15/2013",
         "ago": "11/15/2013",
         "comments": "14",
-        "thumb": "/static/img/hero-mop.jpg",
-        "lede": "And the comic contest winner for October, 2013, is… his Winner (fans).",
+        "thumb": "news-9.jpg",
+        "lede": "And the comic contest winner for October, 2013, is … Iris Werner (Taru).",
         "more": "The October comic contest closes with the winning strip posted for the community.",
     },
     {
         "title": "Warcraft Art Updates",
-        "by": "Nethaera",
+        "by": "Nebu",
         "when": "11/15/2013",
         "ago": "11/15/2013",
         "comments": "3",
-        "thumb": "side-starter.jpg",
-        "lede": "We've updated our art gallery to feature ten new pieces. We've also added new fan art and Blizzard art.",
+        "thumb": "news-10.jpg",
+        "lede": "We've updated our art gallery to feature ten new pieces. We've also added new fan art and Blizzard Art.",
         "more": "The gallery update mixes community pieces with new Blizzard artwork from the year.",
     },
 )
 
-_FEATURED = (0, 1, 2, 5)
+_FEATURED = (
+    (0, "feat-1.jpg"),
+    (1, "feat-2.jpg"),
+    (2, "feat-3.jpg"),
+    (5, "feat-4.jpg"),
+)
+
+# Rows visible in the 610×347 realm-status frame. It ends on Alexstrasza.
+_REALM_ROWS = (
+    ("Aegwynn", "(PvP)", "High", "German"),
+    ("Aerie Peak", "(PvE)", "Medium", "English"),
+    ("Agamaggan", "(PvP)", "Low", "English"),
+    ("Aggra (Português)", "(PvP)", "Medium", "English"),
+    ("Aggramar", "(PvE)", "Medium", "English"),
+    ("Ahn'Qiraj", "(PvP)", "Low", "English"),
+    ("Al'Akir", "(PvP)", "Medium", "English"),
+    ("Alexstrasza", "(PvE)", "Medium", "German"),
+)
+
+_TRANSFER_REALMS = (
+    "SEN'JIN (PVE)",
+    "EARTHEN RING (RP)",
+    "SISTERS OF ELUNE (RP)",
+    "THUNDERHORN (PVE)",
+    "GHOSTLANDS (PVE)",
+    "GILNEAS (PVE)",
+    "MANNOROTH (PVP)",
+    "DRAK'THARON (PVP)",
+)
 
 
 def _src(name: str) -> str:
@@ -138,39 +167,26 @@ def _css() -> list[str]:
     return styles("mop") + ["/static/css/forums.css", "/static/css/armory.css"]
 
 
-def _welcome(user: str | None) -> str:
+def _service_bar(user: str | None, *, hit: bool = False) -> str:
     if user:
-        return (
+        welcome = (
             f'<span class="mop-welcome">Welcome, <a href="/account/">{esc(user)}</a>'
             f' · <a href="/account/logout">Log Out</a></span>'
         )
-    return (
-        '<span class="mop-welcome"><a href="/account/login">Log In</a>'
-        ' or <a href="/account/create">Create an Account</a></span>'
-    )
-
-
-def _service_bar(user: str | None) -> str:
-    return f"""<div class="mop-service">
+    else:
+        welcome = (
+            '<span class="mop-welcome"><a href="/account/login">Log In</a>'
+            ' or <a href="/account/create">Create an Account</a></span>'
+        )
+    mode = " mop-service-hit" if hit and not user else ""
+    return f"""<div class="mop-service{mode}">
   <a class="mop-atom" href="/wow/">Battle.net</a>
-  {_welcome(user)}
+  {welcome}
   <a href="/shop">Shop</a>
   <a href="/account/">Account</a>
   <a href="/support/">Support</a>
   <a class="mop-explore" href="/wow/">Explore</a>
 </div>"""
-
-
-def _greet(user: str | None) -> str:
-    if user:
-        return (
-            f'<a class="mop-greet" href="/account/"><span><strong>Welcome, {esc(user)}</strong>'
-            "Account, characters, and character services are one click away.</span></a>"
-        )
-    return (
-        '<a class="mop-greet" href="/account/login"><span><strong>Log in now</strong>'
-        "to enhance and personalize your experience!</span></a>"
-    )
 
 
 def _drop(rows: tuple[tuple[str, str], ...]) -> str:
@@ -184,7 +200,10 @@ def _tabs(active: str) -> str:
         return f'<a class="mop-tab{here}"{current} href="{href}">{label}</a>'
 
     def slot(key: str, href: str, label: str, rows: tuple[tuple[str, str], ...]) -> str:
-        return f'<div class="mop-slot">{link(key, href, label)}<div class="mop-drop">{_drop(rows)}</div></div>'
+        return (
+            f'<div class="mop-slot">{link(key, href, label)}'
+            f'<div class="mop-drop">{_drop(rows)}</div></div>'
+        )
 
     guide = slot(
         "guide",
@@ -231,14 +250,30 @@ def _tabs(active: str) -> str:
             ("/forums/guilds", "Guild Recruitment"),
         ),
     )
-    return f"""<nav class="mop-tabs" aria-label="World of Warcraft">
-  {link("home", "/wow/", "Home")}
-  {guide}
-  {community}
-  {media}
-  {forums}
-  {link("shop", "/shop", "Shop")}
-</nav>"""
+    return f"""<div class="mop-tabs">
+  <img src="{_IMG}/nav-tabs.jpg" alt="">
+  <div class="mop-tabslots">
+    {link("home", "/wow/", "Home")}
+    {guide}
+    {community}
+    {media}
+    {forums}
+    {link("shop", "/shop", "Shop")}
+  </div>
+</div>"""
+
+
+def _greet(user: str | None) -> str:
+    if user:
+        return (
+            f'<a class="mop-greet mop-greet-in" href="/account/"><span><strong>Welcome, {esc(user)}</strong>'
+            "Account, characters, and character services are one click away.</span></a>"
+        )
+    return (
+        f'<a class="mop-greet" href="/account/login">'
+        f'<img src="{_IMG}/greet-banner.jpg" alt="Log in now to enhance and personalize your experience!">'
+        "</a>"
+    )
 
 
 def _footer() -> str:
@@ -257,9 +292,9 @@ def _footer() -> str:
         (
             "Games",
             (
+                ("/shop", "StarCraft® II"),
                 ("/wow/", "World of Warcraft®"),
                 ("/shop", "Diablo® III"),
-                ("/shop", "StarCraft® II"),
                 ("/shop", "Hearthstone™"),
                 ("/wow/", "Classic Games"),
                 ("/wow/media/wallpapers", "Game Client Downloads"),
@@ -293,11 +328,17 @@ def _footer() -> str:
     return f"""<div class="mop-footwrap"><footer class="mop-foot">
   <div class="mop-foot-cols">
     {''.join(blocks)}
-    <a class="mop-playfree" href="/account/create"><img src="{_IMG}/play-free.jpg" alt=""><span>Play it Free</span></a>
+    <a class="mop-playfree" href="/account/create"><img src="{_IMG}/play-free.jpg" alt="Play it Free"></a>
   </div>
-  <p class="mop-legal"><a href="/support/">Terms of Use</a> · <a href="/support/">Legal</a> · <a href="/support/">Privacy Policy</a> · <a href="/support/">Copyright Infringement</a></p>
-  <p class="mop-copy">© 2013 Blizzard Entertainment, Inc. All rights reserved.</p>
-  <p class="mop-badges"><span class="mop-blizzard">Blizzard Entertainment</span><span class="mop-teen"><b>T</b><small>Teen</small></span></p>
+  <p class="mop-legal"><span>©2013 Blizzard Entertainment, Inc. All rights reserved.</span>
+    <a href="/support/">Terms of Use</a> <a href="/support/">Legal</a>
+    <a href="/support/">Privacy Policy</a> <a href="/support/">Copyright Infringement</a>
+    <span class="mop-region">Americas – English (US)</span></p>
+  <p class="mop-badges">
+    <img src="{_IMG}/badge-blizzard.jpg" alt="Blizzard Entertainment">
+    <img src="{_IMG}/badge-truste.jpg" alt="TRUSTe Certified Privacy">
+    <img src="{_IMG}/badge-esrb.jpg" alt="ESRB Teen">
+  </p>
 </footer></div>"""
 
 
@@ -335,43 +376,43 @@ def _crumb(body: str, crumb: str, title: str) -> str:
     )
 
 
-def _logo() -> str:
-    return """<a class="mop-logo" href="/wow/">
-  <span class="mop-world">World of</span>
-  <span class="mop-wm">Warcraft</span>
-  <span class="mop-era">Mists of Pandaria</span>
-</a>"""
+def _sky(user: str | None) -> str:
+    hit = " mop-sky-in" if user else ""
+    return f"""<div class="mop-sky{hit}">
+  <img class="mop-sky-art" src="{_IMG}/header-sky.jpg" alt="">
+  <a class="mop-logo-hit" href="/wow/" aria-label="World of Warcraft: Mists of Pandaria"></a>
+  {_service_bar(user, hit=True)}
+  <form class="mop-search" action="/wow/search" method="get">
+    <input type="text" name="q" aria-label="Search characters, items, forums and more" placeholder="Search characters, items, forums and more...">
+    <button type="submit" aria-label="Search"></button>
+  </form>
+</div>"""
 
 
 def _community(exp, title: str, body: str, user, crumb: str) -> str:
     _ = exp
     panel = "mop-panel mop-profile" if 'class="sheet' in body else "mop-panel"
     return f"""<div class="mop-site">
-  <header class="mop-top">
-    {_logo()}
-    <div class="mop-tools">
-      {_service_bar(user)}
-      <form class="mop-search" action="/wow/search" method="get">
-        <input type="text" name="q" aria-label="Search characters, items, forums and more" placeholder="Search characters, items, forums and more...">
-        <button type="submit" aria-label="Search"></button>
-      </form>
+  {_sky(user)}
+  <img class="mop-wing mop-wing-l" src="{_IMG}/wing-l.jpg" alt="">
+  <img class="mop-wing mop-wing-r" src="{_IMG}/wing-r.jpg" alt="">
+  <div class="mop-frame">
+    <div class="mop-navline">
+      {_tabs(_tab_key(body, crumb, title))}
+      {_greet(user)}
     </div>
-  </header>
-  <div class="mop-navline">
-    {_tabs(_tab_key(body, crumb, title))}
-    {_greet(user)}
-  </div>
-  <div class="{panel}">
-    {_crumb(body, crumb, title)}
-    {body}
+    <div class="{panel}">
+      {_crumb(body, crumb, title)}
+      {body}
+    </div>
   </div>
   {_footer()}
 </div>"""
 
 
-def _portal_bar(user: str | None) -> str:
-    return f"""<div class="mop-portal-top">
-  <a class="mop-portal-logo" href="/wow/"><span class="mop-atom-mark" aria-hidden="true"></span>Battle.net</a>
+def _acct_top(user) -> str:
+    return f"""<div class="mop-acct-top">
+  <a class="mop-portal-logo" href="/wow/"><img src="{_IMG}/bnet-logo.png" alt="Battle.net"></a>
   <form class="mop-portal-search" action="/wow/search" method="get">
     <input type="text" name="q" aria-label="Search Battle.net" placeholder="Search Battle.net">
     <button type="submit" aria-label="Search"></button>
@@ -398,9 +439,13 @@ def _account_bar(active: str) -> str:
 </header>"""
 
 
-def _services_frame(exp, body: str) -> str:
+def _services_frame(exp, body: str, user=None) -> str:
     realm = esc(getattr(exp, "realm_name", "") or "Realm")
+    closed = "".join(
+        f'<li><span aria-hidden="true">+</span> {esc(name)}</li>' for name in _TRANSFER_REALMS
+    )
     return f"""<div class="mop-acct-site">
+  {_acct_top(user)}
   {_account_bar("games")}
   <div class="mop-svc">
     <div class="mop-svc-head">
@@ -427,7 +472,8 @@ def _services_frame(exp, body: str) -> str:
       </aside>
       <div class="mop-svc-board">
         <ul class="mop-realms">
-          <li class="mop-realm-open"><span aria-hidden="true">−</span> {realm} (PvE)</li>
+          {closed}
+          <li class="mop-realm-open"><span aria-hidden="true">−</span> {realm} (PVE)</li>
         </ul>
         <div class="mop-svc-chars">{body}</div>
       </div>
@@ -439,22 +485,39 @@ def _services_frame(exp, body: str) -> str:
 def _account_frame(mode: str, user, body: str) -> str:
     if mode == "login":
         return f"""<div class="mop-portal">
-  {_portal_bar(user)}
+  <div class="mop-portal-top">
+    <a class="mop-portal-logo" href="/wow/"><img src="{_IMG}/bnet-logo.png" alt="Battle.net"></a>
+    <form class="mop-portal-search" action="/wow/search" method="get">
+      <input type="text" name="q" aria-label="Search Battle.net" placeholder="Search Battle.net">
+      <button type="submit" aria-label="Search"></button>
+    </form>
+    {_service_bar(user)}
+  </div>
   <div class="mop-portal-stage">
-    <img class="mop-portal-left" src="{_IMG}/tile-liberty.jpg" alt="">
-    <img class="mop-portal-right" src="{_IMG}/shop-hero.jpg" alt="">
-    <p class="mop-portal-tag">Join millions of players<br>Epic gaming experiences</p>
+    <img class="mop-portal-left" src="{_IMG}/login-marine.jpg" alt="">
+    <img class="mop-portal-right" src="{_IMG}/login-diablo.jpg" alt="">
+    <p class="mop-portal-tag">Join millions of players<br>EPIC gaming experiences</p>
     <a class="mop-portal-join" href="/account/create">Sign Up Now!</a>
+    <p class="mop-portal-visit mop-portal-visit-l"><a href="/shop">Visit StarCraft II™</a></p>
+    <p class="mop-portal-visit mop-portal-visit-r"><a href="/shop">Visit Diablo III™</a></p>
     <div class="mop-modal">{body}</div>
   </div>
 </div>"""
     if mode == "create":
         return f"""<div class="mop-portal mop-portal-form">
-  {_portal_bar(user)}
+  <div class="mop-portal-top mop-create-top">
+    <a class="mop-portal-logo" href="/wow/"><img src="{_IMG}/bnet-logo.png" alt="Battle.net"></a>
+    <form class="mop-portal-search" action="/wow/search" method="get">
+      <input type="text" name="q" aria-label="Search Battle.net" placeholder="Search Battle.net">
+      <button type="submit" aria-label="Search"></button>
+    </form>
+    {_service_bar(user)}
+  </div>
   <div class="mop-sheet">{body}</div>
 </div>"""
     active = "settings" if mode == "password" else "summary"
     return f"""<div class="mop-acct-site">
+  {_acct_top(user)}
   {_account_bar(active)}
   <div class="mop-sheet">{body}</div>
 </div>"""
@@ -478,7 +541,7 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     _ = online, login_error
     gate = _gate(body or "")
     if gate == "services":
-        inner = _services_frame(exp, body)
+        inner = _services_frame(exp, body, user)
         klass = "era-mop gen2 mop acct-gate gate-services"
     elif gate:
         inner = _account_frame(gate, user, body)
@@ -496,54 +559,43 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     )
 
 
-def _article_block(index: int, story: dict, *, featured: bool = False) -> str:
+def _article_block(index: int, story: dict) -> str:
     href = f"/wow/news/{index}"
     src = esc(_src(story["thumb"]))
     title = esc(story["title"])
-    if featured:
-        return (
-            f'<a class="mop-feature" href="{href}"><img src="{src}" alt="">'
-            f"<span>{title}</span></a>"
-        )
-    comments = ""
-    if story.get("comments"):
-        comments = f'<span class="mop-comments">{esc(story["comments"])}</span>'
+    label = esc(story.get("more_label") or "More")
     return f"""<article class="mop-post">
-  <a href="{href}"><img src="{src}" alt=""></a>
-  <div>
-    <h2><a href="{href}">{title}</a></h2>
-    <p class="mop-by">by {esc(story["by"])} <time datetime="{esc(story["when"])}">{esc(story["ago"])}</time> {comments}</p>
-    <p>{esc(story["lede"])} <a class="mop-more" href="{href}">More ›</a></p>
+  <h2><a href="{href}">{title}</a></h2>
+  <p class="mop-by">by <span class="mop-author">{esc(story["by"])}</span> <time datetime="{esc(story["when"])}">{esc(story["ago"])}</time> <span class="mop-comments">{esc(story["comments"])}</span></p>
+  <div class="mop-post-body">
+    <a href="{href}"><img src="{src}" alt=""></a>
+    <p>{esc(story["lede"])} <a class="mop-more" href="{href}">{label} ›</a></p>
   </div>
 </article>"""
 
 
 def home_body(exp, news, realm, user) -> str:
     _ = exp, news, realm, user
-    featured = "".join(_article_block(i, _STORIES[i], featured=True) for i in _FEATURED)
+    featured = "".join(
+        f'<a class="mop-feature" href="/wow/news/{i}"><img src="{_IMG}/{art}" alt="">'
+        f'<span>{esc(_STORIES[i]["title"])}</span></a>'
+        for i, art in _FEATURED
+    )
     posts = "".join(_article_block(i, story) for i, story in enumerate(_STORIES))
     return f"""<div class="mop-home">
   <div class="mop-primary">
     <a class="mop-promo" href="/wow/news/1">
-      <img src="{_IMG}/promo-charity.jpg" alt="">
-      <span class="mop-promo-copy">
-        <span class="mop-promo-kicker">Support Make-A-Wish</span>
-        <strong>Exclusive Charity Bundle</strong>
-        <span>$5 from each Brew Pup or Charity Bundle sold will benefit Make-A-Wish.</span>
-        <span class="mop-promo-more">Learn More</span>
-      </span>
+      <img src="{_IMG}/promo-charity.jpg" alt="Support Make-A-Wish. Exclusive Charity Bundle. Learn More.">
     </a>
     <div class="mop-features">{featured}</div>
+    <img class="mop-divider" src="{_IMG}/divider.jpg" alt="">
     {posts}
     <p class="mop-pager"><a class="mop-next" href="/wow/news">Next</a></p>
   </div>
   <aside class="mop-side">
-    <div class="mop-side-box">
-      <img src="{_IMG}/side-starter.jpg" alt="">
-      <strong>World of Warcraft</strong>
-      <span>Starter Edition</span>
-      <a class="mop-play" href="/account/create">Play Free Now</a>
-    </div>
+    <a class="mop-side-box" href="/account/create">
+      <img src="{_IMG}/side-starter.jpg" alt="World of Warcraft Starter Edition. Play Free Now.">
+    </a>
   </aside>
 </div>"""
 
@@ -584,25 +636,51 @@ def _type_label(realm: dict, unread: bool) -> str:
     return f"({mapped})"
 
 
+def _realm_row(name: str, kind: str, pop: str, locale: str, *, state: str, state_class: str, queue: str) -> str:
+    pop_class = pop.lower() if pop.lower() in {"high", "medium", "low"} else "none"
+    type_class = " mop-pvp" if "PvP" in kind else ""
+    arrow = "mop-arrow-up" if state == "Up" else "mop-arrow-down"
+    return (
+        "<tr>"
+        f'<td class="mop-status {state_class}"><span class="{arrow}" aria-hidden="true"></span><span class="mop-clip">{esc(state)}</span></td>'
+        f"<td>{esc(name)}</td>"
+        f'<td class="{type_class.strip()}">{esc(kind)}</td>'
+        f'<td class="mop-pop mop-pop-{esc(pop_class)}">{esc(pop)}</td>'
+        f"<td>{esc(locale)}</td>"
+        f"<td>{esc(queue)}</td>"
+        "</tr>"
+    )
+
+
 def realm_body(exp, realm: dict, dev: bool) -> str:
     unread = bool(realm.get("error")) and not realm.get("type") and not realm.get("population")
     up = bool(realm.get("up"))
     state = "Up" if up else "Down"
     state_class = "mop-up" if up else "mop-down"
     if unread:
-        pop, pop_class = "—", "none"
-        queue = "—"
+        pop, queue = "—", "—"
+        kind = "—"
     else:
-        pop, pop_class = _pop_label(realm.get("population"))
+        pop, _pop_class = _pop_label(realm.get("population"))
         queue = "0"
-    name = esc(realm.get("name") or getattr(exp, "realm_name", ""))
+        kind = _type_label(realm, False)
+    name = realm.get("name") or getattr(exp, "realm_name", "")
+    rows = [
+        _realm_row(row_name, row_kind, row_pop, row_locale, state="Up", state_class="mop-up", queue="")
+        for row_name, row_kind, row_pop, row_locale in _REALM_ROWS
+    ]
+    if name not in {row[0] for row in _REALM_ROWS}:
+        rows.append(_realm_row(name, kind, pop, "English", state=state, state_class=state_class, queue=queue))
     note = ""
     if dev and realm.get("error"):
         note = f'<p class="mop-warn">{esc(realm.get("error"))}</p>'
-    return f"""<div class="mop-realms-page">
+    return f"""<div class="mop-realms">
   <div class="mop-realms-head">
-    <h1>Realm Status</h1>
-    <p>This page lists World of Warcraft realms and the status of each. A realm is either Up or Down. Messages about realm status and scheduled maintenance are posted in the <a href="/forums/realm">Service Status forum</a>. If a realm is down, it is brought back online as quickly as possible.</p>
+    <div>
+      <h1>Realm Status</h1>
+      <p>This page lists all available World of Warcraft realms as well as the status of each. A realm can be listed as either Up or Down. Messages related to realm status and scheduled maintenance will be posted in the <a href="/forums/realm">Service Status forum</a>. Let us apologize in advance if your Realm is listed as down. Chances are we are working diligently to bring it back online as quickly as possible.</p>
+    </div>
+    <img src="{_IMG}/realm-dragon.jpg" alt="">
   </div>
   {note}
   <div class="mop-realm-tools">
@@ -614,14 +692,7 @@ def realm_body(exp, realm: dict, dev: bool) -> str:
       <tr><th>Status</th><th>Realm Name</th><th>Type</th><th>Population</th><th>Locale</th><th>Queue</th></tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="mop-status {state_class}">{esc(state)}</td>
-        <td>{name}</td>
-        <td>{esc(_type_label(realm, unread))}</td>
-        <td class="mop-pop mop-pop-{esc(pop_class)}">{esc(pop)}</td>
-        <td>English</td>
-        <td>{esc(queue)}</td>
-      </tr>
+      {''.join(rows)}
     </tbody>
   </table>
 </div>"""
@@ -651,7 +722,7 @@ def _news_article(index: int) -> str:
     return (
         '<article class="mop-news mop-story">'
         f"<h1>{esc(story['title'])}</h1>"
-        f'<p class="mop-by">by {esc(story["by"])} <time>{esc(story["when"])}</time></p>'
+        f'<p class="mop-by">by <span class="mop-author">{esc(story["by"])}</span> <time>{esc(story["when"])}</time></p>'
         f'<img src="{esc(_src(story["thumb"]))}" alt="">'
         f"<p>{esc(story['lede'])}</p>"
         f"<p>{esc(story['more'])}</p>"
@@ -663,25 +734,20 @@ def _news_article(index: int) -> str:
 def _shop_document(exp, dev: bool) -> str:
     tiles = (
         ("tile-wow.jpg", "World of Warcraft®", "/wow/"),
-        ("", "Subscription", "/account/create"),
+        ("tile-sub.jpg", "Subscription", "/account/create"),
         ("tile-liberty.jpg", "StarCraft® II: Wings of Liberty®", "/shop"),
         ("tile-swarm.jpg", "StarCraft® II: Heart of the Swarm®", "/shop"),
     )
-    cards = []
-    for image, label, href in tiles:
-        if image:
-            art = f'<img src="{_IMG}/{image}" alt="">'
-        else:
-            art = '<span class="shop-medal" aria-hidden="true">W</span>'
-        cards.append(
-            f'<a class="shop-tile" href="{esc(href)}">{art}<span>{esc(label)}</span></a>'
-        )
+    cards = "".join(
+        f'<a class="shop-tile" href="{esc(href)}"><img src="{_IMG}/{image}" alt=""><span>{esc(label)}</span></a>'
+        for image, label, href in tiles
+    )
     games = (
-        ("World of Warcraft", "29"),
-        ("Diablo III", "1"),
-        ("StarCraft II", "5"),
-        ("Hearthstone", "1"),
-        ("Battle.net", "1"),
+        ("World of Warcraft", "29", "shop-w"),
+        ("Diablo III", "1", "shop-d"),
+        ("StarCraft II", "5", "shop-s"),
+        ("Hearthstone", "1", "shop-h"),
+        ("Battle.net", "1", "shop-b"),
     )
     kinds = (
         ("Games", "6"),
@@ -693,7 +759,8 @@ def _shop_document(exp, dev: bool) -> str:
         ("Battle.net Balance", ""),
     )
     game_links = "".join(
-        f'<li><a href="/shop">{esc(name)} <span>({esc(count)})</span></a></li>' for name, count in games
+        f'<li><a href="/shop"><i class="{klass}" aria-hidden="true"></i>{esc(name)} <span>({esc(count)})</span></a></li>'
+        for name, count, klass in games
     )
     kind_links = "".join(
         f'<li><a href="/shop">{esc(name)}{(" <span>(" + esc(count) + ")</span>") if count else ""}</a></li>'
@@ -701,7 +768,7 @@ def _shop_document(exp, dev: bool) -> str:
     )
     inner = f"""<div class="shop-site">
   <header class="shop-top">
-    <a class="shop-logo" href="/shop"><span class="mop-atom-mark" aria-hidden="true"></span>Battle.net Shop <small>Beta</small></a>
+    <a class="shop-logo" href="/shop"><img src="{_IMG}/bnet-logo.png" alt="">Battle.net Shop <small>Beta</small></a>
     {_service_bar(None)}
   </header>
   <div class="shop-wrap">
@@ -715,10 +782,9 @@ def _shop_document(exp, dev: bool) -> str:
       </aside>
       <div class="shop-main">
         <div class="shop-hero">
-          <img src="{_IMG}/shop-hero.jpg" alt="">
-          <p><span>Diablo</span> Evil is in its Prime</p>
+          <img src="{_IMG}/shop-hero.jpg" alt="Diablo. Evil is in its Prime.">
         </div>
-        <div class="shop-tiles">{''.join(cards)}</div>
+        <div class="shop-tiles">{cards}</div>
       </div>
     </div>
   </div>

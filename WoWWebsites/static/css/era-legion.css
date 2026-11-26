@@ -1,4 +1,4 @@
-/* Legion community site, July 2016 masthead. Shop rules live under body.shop-bnet. */
+/* Legion community site. July 2016 masthead, 2017 profile, Battle.net shop. */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -7,7 +7,7 @@ body.era-legion {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #120e0b;
+  background: #100c09;
   color: #e6d7c3;
   font: 15px/1.45 "Open Sans", "Segoe UI", Helvetica, Arial, sans-serif;
 }
@@ -15,22 +15,25 @@ body.era-legion {
 body.era-legion .lg-stage { flex: 1 1 auto; }
 body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 12px; text-align: center; }
 
-.lg-wrap, .lg-fit { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
-.lg-fit { padding: 28px 0 56px; }
+.lg-wrap { width: min(1180px, calc(100% - 28px)); margin: 0 auto; }
+.lg-fit { width: min(1180px, calc(100% - 28px)); margin: 0 auto; padding: 28px 0 56px; }
 .lg-fit:has(.lg-home),
-.lg-fit:has(.lg-forums) { width: 100%; max-width: none; padding: 0 0 48px; }
+.lg-fit:has(.lg-news),
+.lg-fit:has(.lg-classes),
+.lg-fit:has(.lg-story),
+.lg-fit:has(.lg-talents),
+.lg-fit:has(.lg-profile),
+.lg-fit:has(.lg-forums),
+.lg-fit:has(.lg-board) { width: 100%; max-width: none; padding: 0 0 40px; }
 
-.lg-head { position: relative; z-index: 5; }
+.lg-head { position: relative; z-index: 6; }
 
-.lg-blizz { background: #070707; }
-.lg-blizz .lg-wrap { display: flex; align-items: center; min-height: 36px; gap: 8px; }
-.lg-mark {
-  width: 22px;
-  height: 22px;
-  margin-right: 8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #9adfff, #1480c8 55%, #0a3c66);
-}
+.lg-blizz { display: none; background: #050505; }
+body.page-home .lg-blizz,
+body.page-news .lg-blizz { display: block; }
+.lg-blizz .lg-wrap { display: flex; align-items: center; min-height: 34px; gap: 4px; }
+.lg-mark { display: flex; margin-right: 8px; }
+.lg-mark img { display: block; width: 22px; height: 22px; }
 .lg-blizz a {
   color: #fff;
   margin-right: 16px;
@@ -41,34 +44,31 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
   text-transform: uppercase;
 }
 .lg-blizz-right { margin-left: auto; }
+.lg-caret::after {
+  content: "";
+  display: inline-block;
+  margin-left: 5px;
+  border: 4px solid transparent;
+  border-top-color: #fff;
+  vertical-align: middle;
+}
 
-.lg-sub { background: linear-gradient(#2c1d11, #140e0a); border-bottom: 1px solid #6b5428; }
-.lg-sub .lg-wrap { display: flex; align-items: stretch; min-height: 74px; }
-.lg-logo {
+.lg-sub { background: #140e0a; border-bottom: 1px solid #3a2a14; }
+.lg-bar { display: flex; align-items: center; min-height: 72px; gap: 8px; }
+.lg-logo { display: block; flex: 0 0 auto; line-height: 0; }
+.lg-logo img { display: block; height: 78px; width: auto; }
+.lg-bar-rest {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 12px;
-  line-height: 1;
-  text-decoration: none;
-}
-.lg-logo span {
-  color: #f0d78c;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.lg-logo strong {
-  color: #f8e7a0;
-  font-family: Palatino, "Palatino Linotype", "Times New Roman", serif;
-  font-size: 28px;
-  font-weight: 700;
-  text-shadow: 0 2px 0 #5a3b08;
+  flex: 1 1 auto;
+  align-items: stretch;
+  align-self: center;
+  min-height: 58px;
+  background: linear-gradient(#3c2918, #24160e);
 }
 .lg-nav { display: flex; flex: 1 1 auto; align-items: center; }
 .lg-nav > a, .lg-drop > a {
   color: #e8c56a;
-  padding: 0 12px;
+  padding: 0 14px;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -90,7 +90,7 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
   top: 100%;
   left: 0;
   z-index: 30;
-  min-width: 220px;
+  min-width: 240px;
   padding: 8px 0;
   background: #140e09;
   border: 1px solid #5c4318;
@@ -110,7 +110,7 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
 .lg-login {
   display: flex;
   align-items: center;
-  padding: 0 14px;
+  padding: 0 16px;
   color: #f3e6c8;
   font-size: 13px;
   font-weight: 800;
@@ -122,7 +122,7 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
   display: flex;
   align-items: center;
   padding: 0 18px;
-  background: #9a3414;
+  background: #9a3412;
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -133,7 +133,7 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
 
 .lg-search { position: static; display: flex; align-items: center; }
 .lg-search-btn {
-  width: 42px;
+  width: 46px;
   height: 100%;
   background: transparent;
   color: #e8c56a;
@@ -168,216 +168,268 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
   right: 0;
   top: 100%;
   z-index: 40;
-  padding: 22px 0 28px;
-  background: #100c08;
+  padding: 18px 0 26px;
+  background: rgba(16, 11, 7, 0.96);
   border-top: 1px solid #5c4318;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.45);
 }
 .lg-search.open .lg-search-panel { display: block; }
-.lg-q, .lg-q-cols { width: min(1180px, calc(100% - 32px)); margin-right: auto; margin-left: auto; }
+.lg-q, .lg-q-cols { width: min(1100px, calc(100% - 48px)); margin-right: auto; margin-left: auto; }
+.lg-q { position: relative; }
+.lg-q::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #c4a15a;
+  border-radius: 50%;
+}
 .lg-q input, .lg-forum-search input, .lg-board-head input {
   width: 100%;
-  padding: 10px 12px;
-  background: #1b140c;
+  padding: 10px 12px 10px 36px;
+  background: #1a120c;
   color: #fff;
   border: 1px solid #6b5428;
 }
-.lg-q-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 16px; }
-.lg-q-col h2 { margin: 0 0 8px; color: #fff; font-size: 14px; font-weight: 700; }
-.lg-q-col a { display: block; margin: 6px 0; color: #e8c56a; font-size: 14px; text-decoration: none; }
+.lg-q-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 18px; }
+.lg-q-col h2 { margin: 0 0 8px; color: #fff; font-size: 15px; font-weight: 700; }
+.lg-q-col a { display: block; margin: 7px 0; color: #e6b84a; font-size: 14px; text-decoration: none; }
+.lg-q-col a:hover { text-decoration: underline; }
 
 .lg-foot { padding: 18px 0 28px; border-top: 1px solid #3a2c1c; color: #b9a48a; font-size: 13px; }
 .lg-foot a { margin-right: 14px; color: #e8c56a; text-decoration: none; }
 
+/* Home pulls the painting up under the WoW bar, under the black Blizzard bar. */
+body.page-home .lg-sub,
+body.page-news .lg-sub,
+body.page-guide .lg-sub,
+body.page-story .lg-sub,
+body.page-talents .lg-sub,
+body.page-profile .lg-sub { background: transparent; border-bottom: 0; }
+body.page-home .lg-stage,
+body.page-guide .lg-stage,
+body.page-story .lg-stage,
+body.page-talents .lg-stage,
+body.page-profile .lg-stage { margin-top: -74px; }
+body.page-news .lg-stage { margin-top: 0; }
+body.page-home .lg-blizz,
+body.page-news .lg-blizz { position: relative; z-index: 7; }
+
 .lg-hero {
   display: flex;
-  align-items: center;
-  min-height: 480px;
-  background:
-    linear-gradient(90deg, rgba(10, 6, 14, 0.78), rgba(10, 6, 14, 0.12) 68%),
-    url("/static/img/hero-legion.jpg") center 22% / cover no-repeat;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 420px;
+  padding: 88px 0 28px;
+  background: #120818 url("/static/img/legion/hero.jpg") center top / 100% auto no-repeat;
 }
+.lg-hero .lg-wrap { width: min(1180px, calc(100% - 48px)); margin-left: max(24px, calc((100% - 1180px) / 2)); }
+.lg-hero-copy { max-width: 560px; padding-top: 8px; text-align: left; }
 .lg-hero h1 {
   margin: 0 0 12px;
   color: #fff;
-  font-size: 52px;
-  font-weight: 800;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 0;
   line-height: 1.05;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
+  text-align: left;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
 }
-.lg-hero p { max-width: 560px; color: #f4f0ea; font-size: 18px; }
+.lg-hero p { max-width: 520px; margin: 0 0 16px; color: #f4f0ea; font-size: 16px; }
 .lg-ctas { display: flex; gap: 12px; }
 .lg-btn {
   display: inline-block;
-  padding: 10px 16px;
+  padding: 8px 14px;
   color: #f4ead4;
   border: 2px solid #c4a15a;
+  background: rgba(20, 10, 6, 0.35);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-decoration: none;
   text-transform: uppercase;
 }
-.lg-btn-solid { background: #9a3414; color: #fff; border-color: #9a3414; }
-.lg-latest { padding: 22px 0 8px; }
-.lg-latest-head { display: flex; align-items: baseline; gap: 16px; }
+.lg-btn-solid { background: #b64516; color: #fff; border-color: #b64516; }
+.lg-latest { padding: 8px 0 28px; background: #120c0a; }
+.lg-latest-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 10px; }
 .lg-latest h2 {
   margin: 0;
   color: #f0c14a;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
+.lg-latest-head a { color: #d7c4a2; font-size: 13px; }
 .lg-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .lg-card, .lg-feature, .lg-rail {
   display: block;
-  background: #1a120c;
-  color: inherit;
-  text-decoration: none;
-}
-.lg-card img, .lg-feature img, .lg-rail img { display: block; width: 100%; object-fit: cover; }
-.lg-card img { height: 130px; }
-.lg-feature img { height: 280px; }
-.lg-rail img { height: 120px; }
-.lg-card span, .lg-feature span, .lg-rail span { display: block; padding: 10px 12px 14px; }
-.lg-card time, .lg-feature time, .lg-rail time, .lg-article time {
-  display: block;
-  margin-bottom: 6px;
-  color: #b9a48a;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-}
-.lg-card strong, .lg-feature strong, .lg-rail strong { color: #f0c14a; }
-.lg-rail { margin-bottom: 12px; }
-.lg-news-top { display: grid; grid-template-columns: 1.5fr 0.8fr; gap: 12px; }
-.lg-more { padding: 0; list-style: none; }
-.lg-more li { padding: 8px 0; border-bottom: 1px solid #3a2c1c; }
-
-.lg-fit h1, .lg-fit h2, .lg-fit h3 { color: #fff; }
-.lg-fit p, .lg-fit li { color: #e6d7c3; }
-.lg-fit a { color: #f0c14a; }
-.lg-fit table { width: 100%; border-collapse: collapse; }
-.lg-fit th, .lg-fit td { padding: 8px; border-bottom: 1px solid #3a2c1c; text-align: left; }
-.lg-fit img { max-width: 100%; }
-.lg-fit form.acct label, .lg-board form.acct label { display: block; margin: 0 0 10px; }
-.lg-fit form.acct input, .lg-fit form.acct textarea, .lg-board form.acct input, .lg-board form.acct textarea {
-  display: block;
-  width: 100%;
-  max-width: 520px;
-  margin-top: 4px;
-  padding: 8px;
-  background: #1b140c;
-  color: #f3e6d0;
-  border: 1px solid #6b5428;
-}
-.lg-fit form.acct button, .lg-board form.acct button {
-  padding: 8px 14px;
-  background: #9a3414;
-  color: #fff;
-  border: 0;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.lg-classes h1, .lg-tal-head h1 { margin: 0; color: #fff; font-size: 48px; font-weight: 600; text-align: center; }
-.lg-lede { max-width: 720px; margin: 12px auto 24px; color: #ddd; text-align: center; }
-.lg-class-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.lg-class {
-  display: grid;
-  grid-template-columns: 168px 1fr;
-  min-height: 168px;
-  background: #1a120c;
+  background: #1c130c;
   color: inherit;
   text-decoration: none;
   border: 1px solid #3a2a18;
 }
-.lg-class-art { display: flex; align-items: center; justify-content: center; background: #24180f; }
-.lg-class-art img { width: 84px; height: 84px; }
-.lg-class-copy { padding: 14px 16px; }
-.lg-class strong { display: block; color: #f0c14a; font-size: 22px; }
-.lg-class em, .lg-specs { display: block; color: #cbb892; font-style: normal; }
-.lg-class-copy span:last-child { display: block; margin-top: 8px; color: #e6d7c3; }
-
-.lg-story-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-height: 300px;
-  margin: -28px -16px 0;
-  padding: 80px 16px 28px;
-  text-align: center;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.72)),
-    url("/static/img/hero-legion.jpg") center 30% / cover no-repeat;
+.lg-card img, .lg-feature img, .lg-rail img { display: block; width: 100%; object-fit: cover; }
+.lg-card img { height: 128px; }
+.lg-feature img { width: 100%; height: auto; max-height: 360px; object-fit: cover; }
+.lg-rail img { height: 132px; }
+.lg-card span, .lg-feature span, .lg-rail span { display: block; padding: 10px 12px 14px; }
+.lg-card time, .lg-feature time, .lg-rail time, .lg-article time {
+  display: block;
+  margin-bottom: 4px;
+  color: #b9a48a;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
-.lg-story-hero h1 { margin: 0; color: #fff; font-size: 48px; }
-.lg-story-hero p { margin: 4px 0 0; color: #f4ead4; }
-.lg-story-grid { display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 28px; margin-top: 28px; }
-.lg-illidari { padding: 22px; background: #f3ead7; color: #2a2118; text-align: center; }
-.lg-illidari h2, .lg-illidari p, .lg-illidari li, .lg-illidari strong { color: #2a2118; }
-.lg-card-name { font-size: 22px; }
-.lg-illidari ul { padding: 0; list-style: none; }
-.lg-illidari li { display: inline-block; width: 30%; }
-.lg-illidari li span { display: block; color: #6d6254; font-size: 12px; }
-.lg-story-more { margin-top: 28px; }
+.lg-card strong, .lg-feature strong, .lg-rail strong { color: #f0c14a; font-weight: 700; }
+.lg-live { margin-top: 22px; }
+.lg-live h2 { margin: 0 0 8px; color: #f0c14a; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+.lg-more { margin: 0; padding: 0; list-style: none; }
+.lg-more li { padding: 8px 0; border-bottom: 1px solid #3a2c1c; }
+.lg-more a { color: #f0c14a; }
 
-.lg-tal-head {
-  margin: -28px -16px 0;
-  padding: 36px 16px 18px;
+body.page-news { background: #6a4524; }
+.lg-news {
+  padding: 28px 0 48px;
   background:
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.55)),
-    url("/static/img/hero-legion.jpg") center 40% / cover no-repeat;
+    radial-gradient(circle at 70% 0%, rgba(180, 110, 40, 0.28), transparent 42%),
+    linear-gradient(#8a5a2c, #5c3a1c 70%);
+}
+.lg-news-top { display: grid; grid-template-columns: 1.7fr 0.9fr; gap: 14px; }
+.lg-feature strong { font-size: 22px; line-height: 1.25; }
+.lg-rail { margin-bottom: 12px; }
+.lg-next { display: flex; gap: 12px; align-items: center; margin: 14px 0 0; color: #f0c14a; }
+.lg-next img { width: 120px; height: 48px; object-fit: cover; }
+
+.lg-fit h1, .lg-classes h1, .lg-tal-head h1 { color: #fff; }
+.lg-classes {
+  padding: 132px 0 40px;
+  background: #120e0b url("/static/img/legion/classes-bg.jpg") center top / 100% auto no-repeat;
+}
+.lg-classes h1, .lg-tal-head h1 { margin: 0; font-size: 48px; font-weight: 600; text-align: center; }
+.lg-lede { max-width: 760px; margin: 12px auto 28px; color: #f3eadc; text-align: center; }
+.lg-class-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: min(1100px, calc(100% - 28px)); margin: 0 auto; }
+.lg-class {
+  display: grid;
+  grid-template-columns: 168px 1fr;
+  min-height: 168px;
+  background: #24180f;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #4a3824;
+}
+.lg-class-art { display: block; min-height: 168px; background: #1a100c; overflow: hidden; }
+.lg-class-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lg-class-copy { padding: 14px 16px 16px; }
+.lg-class strong { display: block; color: #f0c14a; font-size: 26px; }
+.lg-class em { display: block; margin: 2px 0 8px; color: #e6d7c3; font-style: normal; }
+.lg-class-copy span:last-child { display: block; color: #e6d7c3; font-size: 14px; }
+.lg-specs {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.lg-story {
+  padding: 80px 0 40px;
+  background: #0c0a08 url("/static/img/legion/story-bg.jpg") center top / 100% auto no-repeat;
+}
+.lg-story-hero { padding: 70px 16px 20px; text-align: center; }
+.lg-story-hero h1 { margin: 0; color: #fff; font-size: 48px; font-weight: 600; text-shadow: 0 2px 12px #000; }
+.lg-story-hero p { margin: 4px 0 0; color: #f4ead4; }
+.lg-story-grid { display: grid; grid-template-columns: 1.4fr 0.7fr; gap: 28px; width: min(1000px, calc(100% - 28px)); margin: 10px auto 0; }
+.lg-story-copy p { color: #f3eadc; text-shadow: 0 1px 2px #000; }
+.lg-illidari { padding: 22px 16px; background: #f4ecd9; color: #2a2118; text-align: center; }
+.lg-illidari img { display: block; width: 150px; margin: -36px auto 8px; }
+.lg-illidari h2, .lg-illidari p, .lg-illidari li, .lg-illidari strong { color: #2a2118; }
+.lg-card-name { margin: 0; font-size: 22px; }
+.lg-quote { font-style: italic; }
+.lg-illidari ul { margin: 8px 0 0; padding: 0; list-style: none; }
+.lg-illidari li { display: inline-block; width: 30%; vertical-align: top; }
+.lg-illidari li span { display: block; color: #6d6254; font-size: 12px; }
+.lg-story-more { width: min(1000px, calc(100% - 28px)); margin: 28px auto 0; padding: 8px 0 20px; }
+
+.lg-talents { padding-bottom: 40px; background: radial-gradient(circle at 50% 20%, #163246, #0c1a22 55%); }
+.lg-tal-head {
+  padding: 86px 16px 8px;
+  background: #1a120c url("/static/img/legion/talents-bg.jpg") center top / 100% auto no-repeat;
 }
 .lg-tal-head p { margin: 4px 0 0; color: #fff; text-align: center; }
-.lg-classrow { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; margin: 0 -16px 18px; padding: 12px; background: #140e0a; }
-.lg-classlink { width: 78px; color: #e8c56a; font-size: 11px; text-align: center; text-decoration: none; }
+.lg-classrow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  margin: 0;
+  padding: 10px 8px 12px;
+  background: rgba(10, 8, 6, 0.72);
+}
+.lg-classlink { width: 78px; color: #f0e2c0; font-size: 11px; text-align: center; text-decoration: none; }
 .lg-classlink img { display: block; width: 36px; height: 36px; margin: 0 auto 4px; }
 .lg-classlink.is-current { box-shadow: inset 0 -3px 0 #f0c14a; }
-.lg-talents h2 { margin: 18px 0 4px; text-align: center; }
-.lg-note, .lg-tal-actions { text-align: center; }
+.lg-talents h2 { margin: 18px 0 4px; color: #fff; text-align: center; }
+.lg-note, .lg-tal-actions { text-align: center; color: #d5c7b2; }
 .lg-tal-actions button, .lg-board .lg-new {
   margin: 0 6px;
-  padding: 8px 16px;
+  padding: 8px 18px;
   background: transparent;
   color: #f0c14a;
-  border: 1px solid #f0c14a;
+  border: 1px solid #c4a15a;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.lg-new { display: inline-block; background: #9a3414 !important; color: #fff !important; border-color: #9a3414 !important; text-decoration: none; }
-#lg-share-url { display: block; width: min(520px, 100%); margin: 8px auto 12px; padding: 8px; background: #1b140c; color: #f3e6d0; border: 1px solid #6b5428; }
-.lg-specs-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.lg-new { display: inline-block; background: #c45512 !important; color: #fff !important; border-color: #c45512 !important; text-decoration: none; }
+.lg-new::before { content: "+ "; }
+#lg-share-url { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.lg-specs-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: min(980px, calc(100% - 28px)); margin: 12px auto; }
 .lg-spec, .lg-pick {
-  background: #14100c;
+  background: #12100e;
   color: #eee;
-  border: 1px solid #3a2a18;
+  border: 1px solid #5c4318;
   text-align: left;
   cursor: pointer;
 }
 .lg-spec { padding: 12px; }
-.lg-spec.is-on, .lg-pick.is-on { border-color: #f0c14a; background: #2a2010; }
-.lg-spec strong { display: block; color: #f0c14a; }
-.lg-tier { display: flex; gap: 12px; align-items: flex-start; margin: 10px 0; }
+.lg-spec.is-on, .lg-pick.is-on { border-color: #f0c14a; background: #2a2010; box-shadow: inset 0 0 0 1px #f0c14a; }
+.lg-spec strong { display: block; color: #fff; }
+.lg-tier { display: flex; gap: 12px; align-items: flex-start; width: min(980px, calc(100% - 28px)); margin: 10px auto; }
 .lg-level { width: 36px; color: #f0c14a; font-weight: 800; }
 .lg-choices { display: flex; flex: 1; flex-wrap: wrap; gap: 8px; }
-.lg-pick { display: flex; align-items: center; gap: 8px; padding: 6px 8px; }
+.lg-pick { display: flex; align-items: center; gap: 8px; min-width: 220px; padding: 6px 8px; }
 .lg-pick img { width: 32px; height: 32px; }
 
-.lg-forums { background: #140f0c; }
+/* Forums host (October 2016 category index) and the board chrome. */
+body.forums-host { background: #1a120c; color: #e6d7c3; }
+.fh-bar { background: rgba(8, 20, 16, 0.55); }
+.fh-bar .lg-wrap { display: flex; align-items: center; min-height: 48px; }
+.fh-logo { margin-right: 14px; color: #7fd4ff; font-weight: 800; letter-spacing: 0.06em; text-decoration: none; }
+.fh-bar a { margin-right: 16px; color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
+.fh-right { margin-left: auto; }
+.fh-foot { padding: 28px 16px 40px; color: #9a8b78; font-size: 12px; text-align: center; }
+.fh-foot a { color: #c4b39a; margin: 0 8px; text-decoration: none; }
+.lg-forums { background: #16110d; }
 .lg-fbanner {
   display: flex;
   align-items: flex-end;
-  min-height: 200px;
-  padding: 24px;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.68)),
-    url("/static/img/hero-legion.jpg") center 35% / cover no-repeat;
+  min-height: 210px;
+  padding: 36px 8% 28px;
+  background: #0c2414 url("/static/img/legion/forum-banner.jpg") center top / 100% auto no-repeat;
 }
-.lg-fbanner h1 { margin: 0 auto; width: min(1180px, calc(100% - 32px)); color: #fff; font-size: 32px; }
-.lg-forum-search, .lg-fsec { width: min(1180px, calc(100% - 32px)); margin: 16px auto; }
-.lg-fsec h2 { color: #cbb892; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+.lg-fbanner .lg-logo, .lg-fbanner h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.lg-fbanner-copy { width: min(1100px, 100%); margin: 0 auto; }
+.lg-fbanner h1 { margin: 8px 0 0; color: #fff; font-size: 28px; font-weight: 600; line-height: 1.25; }
+.lg-fbar { display: flex; gap: 16px; align-items: center; width: min(1100px, calc(100% - 28px)); margin: 0 auto; padding: 14px 0; }
+.lg-fbar h2 { margin: 0; color: #cbb892; font-size: 13px; letter-spacing: 0.14em; }
+.lg-forum-search { margin-left: auto; width: min(280px, 46%); }
+.lg-forum-search input { padding-left: 12px; }
+.lg-fsec { width: min(1100px, calc(100% - 28px)); margin: 8px auto 18px; }
+.lg-fsec h2 { margin: 0 0 8px; color: #cbb892; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
 .lg-fcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .lg-fcard {
   display: flex;
@@ -389,69 +441,164 @@ body.era-legion .dev-foot { margin: 0; padding: 8px; color: #8a7a66; font-size: 
   text-decoration: none;
   border: 1px solid #3d3122;
 }
-.lg-fcard img, .lg-ficon { width: 36px; height: 36px; flex: none; }
+.lg-fcard img, .lg-ficon { width: 36px; height: 36px; flex: none; object-fit: cover; }
 .lg-ficon { background: #3a2c18; }
-.lg-fcard strong { display: block; color: #f0c14a; }
+.lg-fcard strong { display: block; color: #fff; }
 .lg-fcard em { color: #b9a48a; font-size: 13px; font-style: normal; }
-.lg-crumb { color: #b9a48a; }
-.lg-crumb a { color: #8ec8ff; }
+.lg-all {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #1a140e;
+  color: #f0c14a;
+  border: 1px solid #f0c14a;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.lg-crumb { color: #cbb892; }
+.lg-crumb a { color: #8ec8ff; text-decoration: none; }
+.lg-board {
+  width: min(1100px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 18px 0 40px;
+  background: transparent;
+}
+body.forums-host .lg-board, .lg-board {
+  background:
+    linear-gradient(rgba(8, 14, 8, 0.55), rgba(8, 14, 8, 0.72)),
+    #10160f url("/static/img/legion/board-fog.jpg") center top / 100% auto no-repeat;
+}
 .lg-board-head { display: flex; gap: 12px; align-items: center; }
-.lg-board-head h1 { flex: 1; margin: 0; }
+.lg-board-head h1 { flex: 1; margin: 0; color: #fff; font-size: 32px; }
 .lg-board-head form { flex: 0 1 240px; }
 .lg-topics, .lg-pager { padding: 0; list-style: none; }
-.lg-topics li { display: grid; grid-template-columns: 1fr 64px 140px 72px; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid #3a2c1c; }
-.lg-author { color: #8ec8ff; }
-.lg-pager a { margin-right: 8px; }
+.lg-topics { margin: 12px 0 0; }
+.lg-topics li, .lg-topic-head {
+  display: grid;
+  grid-template-columns: 1fr 72px 140px 80px;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.lg-topic-head { color: #9a8b78; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+.lg-author { color: #4aa3ff; }
+.lg-pager a { margin-right: 8px; color: #f0c14a; }
 .lg-empty { color: #b9a48a; }
+.lg-board form.acct { margin-top: 16px; }
+.lg-board form.acct label { display: block; margin: 0 0 10px; }
+.lg-board form.acct input, .lg-board form.acct textarea {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 4px;
+  padding: 8px;
+  background: #1b140c;
+  color: #f3e6d0;
+  border: 1px solid #6b5428;
+}
+.lg-board form.acct button {
+  padding: 8px 14px;
+  background: #9a3414;
+  color: #fff;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
 
-.lg-ident { display: flex; gap: 16px; align-items: center; }
-.lg-crest img { width: 72px; height: 72px; }
-.lg-ident h1 { margin: 0; color: #e86ad4; font-size: 36px; }
-.lg-points span { color: #f0c14a; font-weight: 800; }
-.lg-tabs { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 12px 0 18px; padding-bottom: 8px; border-bottom: 1px solid #5c4318; }
-.lg-tabs a, .lg-subtabs a {
+.lg-profile {
+  min-height: 720px;
+  padding: 96px 0 48px;
+  background: #140e0c url("/static/img/legion/profile-hall.jpg") center top / 100% auto no-repeat;
+}
+.lg-ident { display: flex; gap: 14px; align-items: center; width: min(1100px, calc(100% - 28px)); margin: 0 auto; }
+.lg-crest img { width: 72px; height: 72px; object-fit: contain; }
+.lg-ident h1 { margin: 0; color: #e86ad4; font-size: 32px; }
+.lg-rank { margin: 0; color: #f0e2c0; font-size: 13px; }
+.lg-points { margin: 2px 0; color: #f3eadc; }
+.lg-points span, .lg-ilvl { color: #f0c14a; font-weight: 800; }
+.lg-subline { margin: 0; color: #f3eadc; }
+.lg-subline a { color: #f0c14a; }
+.lg-tabs { display: flex; flex-wrap: wrap; gap: 4px 18px; width: min(1100px, calc(100% - 28px)); margin: 12px auto; padding-bottom: 8px; border-bottom: 1px solid rgba(232, 197, 106, 0.35); }
+.lg-tabs a, .lg-subtabs a, .lg-cats a {
   color: #e8c56a;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
 }
-.lg-tabs a.is-on, .lg-subtabs a.is-on { color: #fff; box-shadow: inset 0 -3px 0 #f0c14a; }
-.lg-doll { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.lg-doll ul, .lg-weapons, .lg-cats { padding: 0; list-style: none; }
-.lg-slot { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
+.lg-tabs a.is-on, .lg-subtabs a.is-on, .lg-cats a.is-on {
+  color: #1a120c;
+  background: #f0c14a;
+  padding: 4px 8px;
+}
+.lg-doll { display: grid; grid-template-columns: 1fr 280px 1fr; gap: 12px; align-items: center; width: min(1100px, calc(100% - 28px)); margin: 8px auto; }
+.lg-doll ul, .lg-weapons, .lg-cats { padding: 0; list-style: none; margin: 0; }
+.lg-model { min-height: 0; text-align: center; }
+.lg-model img { max-width: 280px; height: auto; opacity: 1; }
+.lg-slot { display: flex; gap: 8px; align-items: center; margin: 5px 0; color: #d7c4ff; }
 .lg-slot img, .lg-socket { width: 36px; height: 36px; }
-.lg-socket { display: inline-block; background: #2a2118; }
-.lg-slot a { color: #d7c4ff; text-decoration: none; }
-.lg-slot-name { color: #8a7a66; font-size: 11px; }
+.lg-socket { display: inline-block; background: #2a2118; border: 1px solid #5c4318; vertical-align: middle; }
+.lg-socket img { display: block; width: 36px; height: 36px; object-fit: cover; }
+.lg-slot a, .lg-slot strong { color: #d7c4ff; font-weight: 600; text-decoration: none; }
+.lg-slot-name, .lg-il { color: #cbb892; font-size: 12px; }
 .lg-slot-empty { color: #8a7a66; }
-.lg-weapons { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
-.lg-cats { display: flex; flex-wrap: wrap; gap: 10px 14px; }
-.lg-cats li { color: #e8c56a; }
+.lg-weapons { display: flex; justify-content: center; gap: 28px; width: min(1100px, calc(100% - 28px)); margin: 8px auto 0; }
+.lg-ach, .lg-collect, .lg-plain { width: min(1100px, calc(100% - 28px)); margin: 0 auto; }
+.lg-cats { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 8px 0 16px; }
+.lg-ach-row, .lg-pet {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.lg-ach-row strong, .lg-pet strong { color: #f0c14a; }
+.lg-ach-row.is-link strong { color: #4aa4ff; }
+.lg-ach-row em, .lg-pet em { display: block; color: #cbb892; font-style: normal; font-size: 13px; }
+.lg-pts { color: #f0c14a; text-align: right; }
+.lg-pts time { display: block; color: #b9a48a; font-size: 12px; }
+.lg-pet-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.lg-pet-slots { grid-template-columns: repeat(3, minmax(140px, 240px)); justify-content: start; }
+.lg-pet-card { padding: 10px; background: #1a140f; border: 1px solid #3a2a18; text-align: center; color: #7ec8ff; }
+.lg-pet-art { height: 110px; margin-bottom: 6px; background: #24180f center / contain no-repeat; }
+.lg-pet-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lg-pet-card em { display: block; margin-top: 2px; color: #f0c14a; font-size: 11px; font-style: normal; letter-spacing: 0.04em; text-transform: uppercase; }
+.lg-reward { margin: 8px auto; padding: 4px 10px; width: max-content; background: #111; color: #f3eadc; font-size: 12px; }
+
+.lg-page { width: min(800px, calc(100% - 28px)); margin: 28px auto; }
+.lg-page h1, .lg-article h1 { color: #fff; }
+.lg-article { width: min(800px, calc(100% - 28px)); margin: 28px auto; }
+.lg-article a { color: #f0c14a; }
 
 body.shop-bnet {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 0%, #1a6eae, #0a3358 46%, #07182a);
+  background:
+    radial-gradient(circle at 50% 0%, #1d74b8, #0c3d6e 42%, #07182c 78%);
   color: #fff;
   font: 15px/1.45 "Open Sans", Helvetica, Arial, sans-serif;
 }
-.bn-bar { background: rgba(6, 32, 64, 0.92); }
-.bn-wrap, .bn-shop, .bn-product { width: min(1000px, calc(100% - 32px)); margin: 0 auto; }
+.bn-bar { background: rgba(8, 40, 78, 0.88); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.bn-wrap, .bn-shop, .bn-product { width: min(1040px, calc(100% - 28px)); margin: 0 auto; }
 .bn-wrap { display: flex; align-items: center; min-height: 54px; }
-.bn-logo { margin-right: 18px; color: #7fd4ff; font-weight: 800; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
-.bn-bar a { margin-right: 14px; color: #fff; font-size: 13px; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; }
+.bn-logo { margin-right: 18px; color: #7fd4ff; font-weight: 800; letter-spacing: 0.12em; text-decoration: none; }
+.bn-bar a { margin-right: 16px; color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; }
 .bn-bar a.is-on { box-shadow: inset 0 -3px 0 #fff; }
 .bn-right { margin-left: auto; }
-.bn-banner { margin: 28px 0; text-align: center; }
-.bn-banner strong, .bn-card .bn-price span { color: #7dff9a; }
+.bn-banner { margin: 28px 0 8px; text-align: center; font-size: 18px; }
+.bn-banner strong, .bn-price span { color: #7dff9a; }
 .bn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.bn-card { padding: 36px 18px 22px; background: rgba(8, 28, 48, 0.45); text-align: center; }
-.bn-card h1, .bn-product h1 { color: #fff; }
+.bn-card { padding: 18px 18px 22px; background: rgba(8, 28, 52, 0.35); text-align: center; }
+.bn-card img { display: block; height: 150px; margin: -28px auto 8px; object-fit: contain; }
+.bn-card { background: rgba(6, 24, 48, 0.28); border: 1px solid rgba(255, 255, 255, 0.06); }
+.bn-card h1, .bn-product h1 { margin: 8px 0; color: #fff; font-size: 22px; font-weight: 600; }
 .bn-price { font-size: 28px; }
 .bn-card s { margin-left: 8px; color: #9bb; font-size: 16px; }
 .bn-card button, .bn-product button {
+  min-width: 180px;
   padding: 10px 28px;
   background: #1484e6;
   color: #fff;
@@ -459,16 +606,25 @@ body.shop-bnet {
   font-weight: 700;
   cursor: pointer;
 }
-.bn-note, .bn-more, .bn-mini { text-align: center; }
-.bn-product { padding: 32px 0 48px; }
+.bn-card p { color: #d5e4f2; font-size: 14px; }
+.bn-note, .bn-more, .bn-help, .bn-mini { text-align: center; }
+.bn-help a, .bn-more a, .bn-product a { color: #9fd4ff; }
+.bn-product {
+  position: relative;
+  padding: 28px 0 48px;
+  background: url("/static/img/legion/battletag-hero.jpg") right center / contain no-repeat;
+}
 .bn-product .lg-crumb a { color: #9fd4ff; }
+.bn-kicker { letter-spacing: 0.12em; color: #9bb; }
+.bn-product ul { max-width: 520px; padding-left: 18px; }
 body.shop-bnet .dev-foot { color: #c5d4e4; text-align: center; }
 
 @media (max-width: 900px) {
-  .lg-cards, .lg-fcards, .lg-q-cols, .lg-specs-row, .lg-class-grid, .lg-news-top, .lg-story-grid, .lg-doll, .bn-grid {
+  .lg-cards, .lg-fcards, .lg-q-cols, .lg-specs-row, .lg-class-grid, .lg-news-top, .lg-story-grid, .lg-doll, .bn-grid, .lg-pet-grid {
     grid-template-columns: 1fr;
   }
-  .lg-hero h1 { font-size: 34px; }
+  .lg-hero h1 { font-size: 32px; }
   .lg-nav > a, .lg-drop > a { padding: 0 6px; font-size: 11px; }
-  .lg-topics li { grid-template-columns: 1fr; }
+  .lg-topics li, .lg-topic-head { grid-template-columns: 1fr; }
+  .lg-logo img { height: 48px; }
 }

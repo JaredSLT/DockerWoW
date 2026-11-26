@@ -77,6 +77,9 @@ class WotlkClassicSiteTests(unittest.TestCase):
         self.assertIn("Tuskarr Shoreglider", body)
         self.assertIn("30 Days of Game Time", body)
         self.assertIn("Nothing here is charged", body)
+        self.assertIn("/static/img/wotlk-classic/shop-compare.png", body)
+        self.assertIn("/static/img/wotlk-classic/shop-heroic.jpg", body)
+        self.assertIn("/static/img/wotlk-classic/shop-epic.jpg", body)
         self.assertNotIn("<form", body.lower())
         self.assertNotIn("Subscribe", body)
 
@@ -93,6 +96,29 @@ class WotlkClassicSiteTests(unittest.TestCase):
         self.assertEqual(retail_title, "Realm Status")
         self.assertIn('class="wc-tab is-on" aria-current="page">World of Warcraft</a>', retail)
         self.assertNotIn(">Wrath Classic<", retail)
+        for name in (
+            "Aegwynn",
+            "Aerie Peak",
+            "Agamaggan",
+            "Aggramar",
+            "Akama",
+            "Alexstrasza",
+            "Alleria",
+            "Altar of Storms",
+            "Alterac Mountains",
+            "Aman&#x27;Thul",
+            "Andorhal",
+        ):
+            self.assertIn(name, retail)
+        self.assertIn("New Players", retail)
+        self.assertIn("AEDT", retail)
+        self.assertIn(">Oceanic<", retail)
+        self.assertIn("/static/img/wotlk-classic/realm-retail.png", retail)
+        filtered_title, filtered = take("/wow/realmstatus", _ctx(qs={"game": ["retail"], "q": ["Aegwynn"]}))
+        self.assertEqual(filtered_title, "Realm Status")
+        self.assertIn("Aegwynn", filtered)
+        self.assertNotIn("realm-retail.png", filtered)
+        self.assertNotIn("Aerie Peak", filtered)
 
     def test_pages_without_a_reference_still_work(self):
         with tempfile.TemporaryDirectory() as tmp:

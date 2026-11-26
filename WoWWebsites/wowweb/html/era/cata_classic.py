@@ -36,12 +36,14 @@ _SUBS = (
     (
         "sub-cataclysm.jpg",
         "Cataclysm Classic key art",
+        "cc-w cc-w-cata",
         "WORLD OF WARCRAFT CLASSIC CATACLYSM",
         "World of Warcraft®: Subscription",
     ),
     (
         "sub-offer.jpg",
         "Classic special subscription art",
+        "cc-w",
         "WORLD OF WARCRAFT CLASSIC",
         "World of Warcraft®: Special Subscription Offer",
     ),
@@ -62,12 +64,12 @@ _HOUSE = (
 
 def _family() -> str:
     subs = []
-    for filename, alt, kicker, title in _SUBS:
+    for filename, alt, mark, kicker, title in _SUBS:
         subs.append(
             '<article class="cc-card cc-sub">'
             f'<img src="{_IMG}/{filename}" alt="{esc(alt)}">'
             '<div class="cc-card-body">'
-            f'<p class="cc-kicker"><span class="cc-w" aria-hidden="true">W</span> {esc(kicker)}</p>'
+            f'<p class="cc-kicker"><span class="{mark}" aria-hidden="true">W</span> {esc(kicker)}</p>'
             f"<h3>{esc(title)}</h3>"
             f'<p class="cc-gold">{esc(_BLURB)}</p>'
             '<p class="cc-cat"><a href="/shop">Subscriptions</a></p>'
@@ -89,6 +91,15 @@ def _family() -> str:
             f'<p class="cc-price">{esc(price)}</p>'
             "</div></article>"
         )
+    # The photographed row under the three mounts is cut off. Only the art is shown.
+    nxt = (
+        '<article class="cc-card cc-mount cc-wide">'
+        '<div class="cc-shot">'
+        '<span class="cc-new">NEW</span>'
+        f'<img src="{_IMG}/mount-next.jpg" alt="">'
+        "</div></article>"
+        '<article class="cc-card cc-rest" aria-hidden="true"></article>'
+    )
     return (
         '<div class="cc-family">'
         '<section class="cc-section">'
@@ -97,10 +108,15 @@ def _family() -> str:
         f'<div class="cc-grid cc-grid-2">{"".join(subs)}</div>'
         "</section>"
         '<hr class="cc-rule">'
-        '<section class="cc-section">'
+        '<section class="cc-section cc-mounts">'
         '<div class="cc-copy"><h2>Mounts</h2>'
         "<p>Saddle up, because your mount will travel as fast as your riding skill will take you.</p></div>"
         f'<div class="cc-grid cc-grid-3">{"".join(mounts)}</div>'
+        "</section>"
+        '<hr class="cc-rule">'
+        '<section class="cc-section cc-next">'
+        "<div></div>"
+        f'<div class="cc-grid cc-grid-next">{nxt}</div>'
         "</section>"
         "</div>"
     )

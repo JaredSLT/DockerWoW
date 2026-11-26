@@ -38,13 +38,70 @@ body.era-df-account:has(.acct-mode-password) { background: #071e36; }
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
+.df-site-home .df-foot { display: none; }
+
 .df-site-home .df-bar {
   position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 1.333%;
+  left: 1%;
+  width: 97.94%;
+  height: 6%;
   margin: 0;
+  transform: none;
+  padding: 0;
+  gap: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: stretch;
+  z-index: 6;
 }
+
+.df-site-home .df-blizz { flex: 0 0 11%; }
+.df-site-home .df-wmark {
+  flex: 0 0 5%;
+  background: transparent;
+  box-shadow: none;
+  color: transparent;
+}
+.df-site-home .df-links {
+  flex: 0 0 44%;
+  display: flex;
+  gap: 0;
+}
+.df-site-home .df-links .df-drop:nth-child(1) { flex: 1.25; }
+.df-site-home .df-links .df-drop:nth-child(2) { flex: 1.35; }
+.df-site-home .df-links .df-drop:nth-child(3) { flex: 0.75; }
+.df-site-home .df-links .df-drop:nth-child(4) { flex: 1.45; }
+.df-site-home .df-links .df-drop:nth-child(5) { flex: 0.9; }
+.df-site-home .df-search { flex: 0 0 5%; margin-left: auto; }
+.df-site-home .df-account { flex: 0 0 10%; }
+.df-site-home .df-try,
+.df-site-home .df-sub {
+  flex: 0 0 8.5%;
+  background: transparent;
+  color: transparent;
+  border-radius: 8px;
+  text-align: center;
+}
+.df-site-home .df-bar > a,
+.df-site-home .df-drop,
+.df-site-home .df-drop > a {
+  height: 100%;
+  color: transparent;
+  background: transparent;
+}
+.df-site-home .df-drop > a { width: 100%; justify-content: center; }
+.df-site-home .df-drop > a::after { color: transparent; }
+.df-site-home .df-menu,
+.df-site-home .df-menu a,
+.df-site-home .df-who {
+  color: #f4f1ea;
+  font-size: 14px;
+  height: auto;
+}
+.df-site-home .df-menu a::after { content: none; }
 
 .df-blizz {
   color: #3db5ff;
@@ -145,12 +202,63 @@ body.era-df-account:has(.acct-mode-password) { background: #071e36; }
 .df-foot a { color: #d9d0c4; text-decoration: none; }
 
 .df-home {
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.28) 46%, rgba(0, 0, 0, 0.15) 100%),
-    url("/static/img/dragonflight/hero.jpg") center 20% / cover no-repeat;
-  min-height: 100vh;
-  color: #f7f4ef;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1600 / 1200;
+  background: url("/static/img/dragonflight/home-bg.png") 0 0 / 100% 100% no-repeat;
+  color: transparent;
+  min-height: 0;
 }
+
+.df-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.df-hit {
+  position: absolute;
+  color: transparent;
+  text-decoration: none;
+  overflow: hidden;
+  z-index: 2;
+}
+.df-hit:focus { outline: 2px solid #f0c14a; outline-offset: 1px; }
+
+.df-home .df-card-date,
+.df-home .df-card-title {
+  position: static;
+  color: transparent;
+  text-shadow: none;
+}
+
+.df-photo .df-tab,
+.df-photo .df-tab-on {
+  background: transparent;
+  color: transparent;
+  padding: 0;
+  border: 0;
+  font-size: 0;
+}
+
+.df-hit-explore { left: 1.2%; top: 41.6%; width: 13%; height: 2.6%; }
+.df-hit-buy { left: 1.2%; top: 47.1%; width: 14.2%; height: 4.3%; }
+.df-hit-learn { left: 16.8%; top: 47.1%; width: 11.2%; height: 4.4%; }
+.df-hit-all { left: 15.5%; top: 64.8%; width: 8%; height: 2.2%; }
+.df-hit-card { top: 68.5%; height: 21%; width: 23.3%; }
+.df-hit-card-1 { left: 1.2%; }
+.df-hit-card-2 { left: 25.8%; }
+.df-hit-card-3 { left: 50.5%; }
+.df-hit-card-4 { left: 75.3%; }
+.df-hit-reject { left: 72%; top: 94.8%; width: 8%; height: 3.6%; }
+.df-hit-accept { left: 80.8%; top: 94.8%; width: 9.2%; height: 3.6%; }
 .df-hero {
   min-height: 68vh;
   display: flex;
@@ -531,6 +639,79 @@ body.era-df-account:has(.acct-mode-password) { background: #071e36; }
 .df-mount p { margin: 0 12px 8px; color: #9aa3b2; font-size: 13px; }
 .df-price { color: #e8eaef !important; font-size: 15px !important; padding-bottom: 8px; }
 .df-shop-note { text-align: center; color: #8b93a1; font-size: 13px; padding-bottom: 28px; }
+
+.df-photo { position: relative; background: #07080c; }
+.df-fstage,
+.df-rstage,
+.df-sstage { display: block; width: 100%; height: auto; }
+
+.df-f-wow { left: 7%; top: 0; width: 8%; height: 1.5%; }
+.df-f-about { left: 70%; top: 0; width: 6%; height: 1.5%; }
+.df-f-shop { left: 76%; top: 0; width: 5%; height: 1.5%; }
+.df-f-account { left: 81%; top: 0; width: 7%; height: 1.5%; }
+.df-f-dl { left: 88%; top: 0; width: 11%; height: 1.6%; }
+.df-f-embers { left: 28%; top: 24.5%; width: 18%; height: 1.6%; }
+.df-f-dk { left: 28%; top: 39.5%; width: 6%; height: 1.2%; }
+.df-f-evoker { left: 44%; top: 39.5%; width: 5%; height: 1.2%; }
+
+.df-rs.df-photo {
+  padding: 0;
+  min-height: 0;
+  background: #05070f;
+}
+
+body.era-dragonflight a.df-hit,
+body.era-dragonflight .df-hit,
+body.era-dragonflight .df-sr,
+body.era-dragonflight .df-sr a {
+  color: transparent;
+}
+.df-hit-help { right: 2%; top: 2%; width: 7%; height: 10%; }
+.df-hit-tab1 { left: 1.5%; top: 37%; width: 18%; height: 7%; }
+.df-hit-tab2 { left: 20%; top: 37%; width: 22%; height: 7%; }
+.df-hit-tab3 { left: 42%; top: 37%; width: 28%; height: 7%; }
+.df-hit-forum { left: 28%; top: 22%; width: 16%; height: 6%; }
+.df-rs.df-photo .df-hit-buy { left: 42%; top: 90%; width: 16%; height: 8%; }
+.df-photo > a.df-hit { font-size: 0; line-height: 0; }
+.df-hit-find {
+  left: 78%;
+  top: 37.5%;
+  width: 18%;
+  height: 6%;
+  overflow: visible;
+}
+.df-photo .df-hit-find,
+.df-photo .df-s-find {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+.df-photo .df-hit-find input,
+.df-photo .df-s-find input,
+.df-photo .df-shopsearch input {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 14px;
+  padding: 0 8px;
+}
+.df-hit-find input::placeholder,
+.df-s-find input::placeholder { color: transparent; }
+
+.df-s-wow { left: 7%; top: 1%; width: 12%; height: 6%; }
+.df-s-find { left: 62%; top: 1.2%; width: 20%; height: 5.5%; overflow: visible; }
+.df-s-balance { left: 83%; top: 1%; width: 13%; height: 6%; }
+
+body.era-df-forums,
+body.era-df-realms,
+body.era-df-shop { margin: 0; }
 
 @media (max-width: 980px) {
   .df-cards, .df-mounts { grid-template-columns: repeat(2, minmax(0, 1fr)); }

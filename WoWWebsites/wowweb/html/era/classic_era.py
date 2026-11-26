@@ -26,19 +26,21 @@ _CLASS_SLUGS = (
     "evoker",
 )
 
-# Labels from the 2023 WoW Classic category card, pointed at live boards.
-_CLASSIC_LINKS = (
-    ("general", "WoW Classic – General", "shield"),
-    ("professions", "WoW Classic – Professions", "anvil"),
-    ("guilds", "WoW Classic – Player & Guild Search", "swirl"),
-    ("guildrelations", "Player & Guild Registry 2004–2006", "swirl"),
-    ("pvp", "PvP Discussion", "swords"),
-    ("quests", "Quest Discussion", "shield"),
+# English labels for the May 2023 WoW Classic category card.
+# Wrath has no board of its own on this realm, so that row opens Quests.
+_CLASSIC_LINES = (
+    (("quests", "Wrath of the Lich King Classic - General", "helm"),),
+    (
+        ("general", "WoW Classic – General", "shield"),
+        ("classes", "WoW Classic – Classes", "hammers"),
+    ),
+    (("professions", "WoW Classic – Professions", "anvil"),),
+    (("guilds", "WoW Classic – Player & Guild Search", "swirl"),),
+    (("guildrelations", "Player & Guild Registry 2004-2006", "swirl"),),
 )
 _COMMUNITY_LINKS = (
     ("suggestions", "General", "helm"),
     ("rp", "Fan Creations and Events", "frame"),
-    ("ui", "UI & Macros", "frame"),
 )
 _SUPPORT_LINKS = (
     ("realm", "Service Status", "help"),
@@ -56,6 +58,7 @@ def _svg(name: str) -> str:
         "helm": '<path d="M6 11.5c0-3.6 2.2-6.5 6-7.5 3.8 1 6 3.9 6 7.5V16H6zM4.2 8.2l2.2 2.6M19.8 8.2l-2.2 2.6M8 16h8v2.2H8z"/>',
         "shield": '<path d="M12 2.4l7 2.6v6.2c0 4.6-2.8 7.8-7 10.2-4.2-2.4-7-5.6-7-10.2V5z"/>',
         "swords": '<path d="M5 4l8 8-1.6 1.6L3.4 5.6zM19 4l-8 8 1.6 1.6 8-8zM8.2 15.2l-2.4 4.2 1.6.8 2.2-4.2zM15.8 15.2l2.4 4.2-1.6.8-2.2-4.2z"/>',
+        "hammers": '<path d="M3.2 7.4 8.6 4.2l1.5 2.4-5.4 3.2zM14 3.6l6.2 3.4-1.4 2.4-6.2-3.4zM8.4 8.2l6.2 10.4-2.2 1.2L6.2 9.4zM15.6 8.2l-6.2 10.4 2.2 1.2 6.2-10.4z"/>',
         "anvil": '<path d="M4 14h16v2.2H4zM6 11.2h12V14H6zM8.2 8h7.6l1.2 3.2H7z"/>',
         "swirl": '<path d="M12 4a6 6 0 0 1 4.2 10.2A6 6 0 1 1 7.2 7.2 3.2 3.2 0 1 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"/>',
         "help": '<path d="M12 4a8 8 0 1 0 .01 16.01A8 8 0 0 0 12 4zm0 12.2a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1.6-4.6c-.4.3-.8.6-.8 1.2h-1.6c0-1.4.6-2 1.4-2.5.6-.4.8-.6.8-1.1 0-.6-.5-1-1.2-1s-1.2.4-1.2 1.1H9.4C9.4 8 10.5 7 12.2 7c1.6 0 2.8 1 2.8 2.4 0 1-.6 1.6-1.4 2.2z"/>',
@@ -150,6 +153,11 @@ def _shown_title(title: str) -> tuple[str, str]:
 def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_js="") -> str:
     _ = crumb, online, login_error
     shown, kind = _shown_title(title or "")
+    body_class = "era-classic-era"
+    if body and "ce-shot-realm" in body:
+        body_class += " ce-is-realm"
+    elif body and "ce-shot-forums" in body:
+        body_class += " ce-is-forums"
     inner = (
         '<div class="ce-site">'
         f"{_nav(title or '', user)}"
@@ -161,7 +169,7 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     return document(
         f"{shown} — World of Warcraft",
         styles(exp.id) if exp is not None else styles("classic-era"),
-        "era-classic-era",
+        body_class,
         inner,
         dev_note_text=dev_note(exp, dev),
         extra_js=extra_js,
@@ -276,6 +284,7 @@ def _realm_body(ctx: dict) -> str:
     else:
         row = '<tr class="ce-empty"><td colspan="6">No realms match these filters.</td></tr>'
     return (
+        '<div class="ce-shot ce-shot-realm">'
         '<p class="ce-lead">This page lists all available World of Warcraft realms and has information '
         "on whether or not a realm is up or down. You can find more information about realm status and "
         'scheduled maintenances in the <a href="/forums/realm">Service Status Forum</a>. If your realm '
@@ -292,13 +301,14 @@ def _realm_body(ctx: dict) -> str:
         f'<input name="q" value="{esc(query)}" placeholder="Realm Name" aria-label="Realm Name">'
         f'<button type="submit" aria-label="Search">{_svg("search")}</button>'
         "</span></label></form>"
-        '<table class="ce-realms">'
+        '<hr class="ce-rule">'
+        '<table class="ce-realms ce-status-table">'
         "<thead><tr>"
         "<th>Status</th>"
-        '<th>Realm Name <span class="ce-caret" aria-hidden="true"></span></th>'
+        '<th class="ce-col-name">Realm Name <span class="ce-caret" aria-hidden="true"></span></th>'
         "<th>Type</th><th>Population</th><th>Timezone</th><th>Locale</th>"
         "</tr></thead>"
-        f"<tbody>{row}</tbody></table>"
+        f"<tbody>{row}</tbody></table></div>"
     )
 
 
@@ -309,14 +319,33 @@ def _blink(href: str, label: str, icon: str) -> str:
     )
 
 
-def _card(icon: str, title: str, desc: str, links: str, extra: str = "") -> str:
+def _card(icon: str, title: str, desc: str, links: str, extra: str = "", klass: str = "") -> str:
     ident = f' id="{extra}"' if extra else ""
+    class_attr = "ce-card" + (f" {klass}" if klass else "")
     return (
-        f'<article class="ce-card"{ident}>'
+        f'<article class="{class_attr}"{ident}>'
         f'<div class="ce-card-h">{_svg(icon)}<h2>{esc(title)}</h2></div>'
         f'<p class="ce-desc">{esc(desc)}</p>'
         f'<div class="ce-links">{links}</div></article>'
     )
+
+
+def _classic_block(by_slug: dict[str, str], used: set[str]) -> str:
+    lines = []
+    for line in _CLASSIC_LINES:
+        bits = []
+        for slug, label, icon in line:
+            if slug == "classes":
+                if any(name in by_slug for name in _CLASS_SLUGS):
+                    bits.append(_blink("#ce-classes", label, icon))
+                continue
+            if slug not in by_slug or slug in used:
+                continue
+            used.add(slug)
+            bits.append(_blink(f"/forums/{slug}", label, icon))
+        if bits:
+            lines.append(f'<div class="ce-line">{"".join(bits)}</div>')
+    return "".join(lines)
 
 
 def _linked(by_slug: dict[str, str], spec: tuple, used: set[str]) -> str:
@@ -430,9 +459,7 @@ def _forum_body(ctx: dict) -> str:
         )
     used: set[str] = set()
     community = _linked(by_slug, _COMMUNITY_LINKS, used)
-    classic = _linked(by_slug, _CLASSIC_LINKS, used)
-    if any(slug in by_slug for slug in _CLASS_SLUGS):
-        classic += _blink("#ce-classes", "WoW Classic – Classes", "swords")
+    classic = _classic_block(by_slug, used)
     support = _linked(by_slug, _SUPPORT_LINKS, used)
     class_links = []
     for slug, title in boards:
@@ -463,6 +490,7 @@ def _forum_body(ctx: dict) -> str:
             "WoW Classic",
             "Everything about World of Warcraft Classic belongs in these forums.",
             classic,
+            klass="ce-classic",
         ),
         _card(
             "help",
@@ -481,7 +509,11 @@ def _forum_body(ctx: dict) -> str:
     ]
     if leftover:
         cards.append(_card("shield", "Other", "The rest of the boards on this realm.", "".join(leftover)))
-    return bar + f'<div class="ce-grid">{"".join(cards)}</div>'
+    return (
+        '<div class="ce-shot ce-shot-forums">'
+        + bar
+        + f'<div class="ce-grid">{"".join(cards)}</div></div>'
+    )
 
 
 def _services_guest() -> str:

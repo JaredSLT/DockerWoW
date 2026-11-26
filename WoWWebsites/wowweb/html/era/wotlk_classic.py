@@ -31,6 +31,21 @@ _SHOP = (
 _REGIONS = ("Americas & Oceania", "Europe", "Korea", "Taiwan", "China")
 _LOCALES = ("All", "United States", "Oceania", "Europe", "Korea")
 
+# Rows visible on the November 2022 realm-status shot (retail tab selected).
+_RETAIL = (
+    ("Aegwynn", "Normal", "New Players", "CST", "United States"),
+    ("Aerie Peak", "Normal", "Medium", "PST", "United States"),
+    ("Agamaggan", "Normal", "High", "CST", "United States"),
+    ("Aggramar", "Normal", "Full", "CST", "United States"),
+    ("Akama", "Normal", "High", "PST", "United States"),
+    ("Alexstrasza", "Normal", "Low", "CST", "United States"),
+    ("Alleria", "Normal", "High", "CST", "United States"),
+    ("Altar of Storms", "Normal", "Low", "EST", "United States"),
+    ("Alterac Mountains", "Normal", "Full", "EST", "United States"),
+    ("Aman'Thul", "Normal", "High", "AEDT", "Oceanic"),
+    ("Andorhal", "Normal", "High", "EST", "United States"),
+)
+
 
 def _q(qs: dict | None, key: str, default: str = "") -> str:
     if not qs:
@@ -48,7 +63,7 @@ def _kind(body: str) -> str:
         return "home"
     if 'class="wc-shop"' in body:
         return "shop"
-    if 'class="wc-realms"' in body:
+    if 'class="wc-realms' in body:
         return "realms"
     return "page"
 
@@ -132,6 +147,8 @@ def _footer(exp) -> str:
     year = esc(getattr(exp, "year", "") or "2022")
     return f"""<footer class="wc-foot">
   <nav aria-label="Footer">
+    <a href="/wow/">Home</a>
+    <a href="/shop">Shop</a>
     <a href="/support/">Support</a>
     <a href="/wow/realmstatus">Realm Status</a>
     <a href="/forums/">Forums</a>
@@ -191,11 +208,8 @@ def home_body(exp, news, realm, user) -> str:
             "</section>"
         )
     return f"""<div class="wc-home">
-  <img class="wc-hero-bg" src="{_IMG}/hero.jpg" alt="">
+  <img class="wc-hero-bg" src="{_IMG}/hero.jpg" width="1400" height="724" alt="">
   <div class="wc-hero-copy">
-    <p class="wc-wow">WORLD<br>OF<br>WARCRAFT</p>
-    <p class="wc-wrath"><span>WRATH</span> <em>of the</em> <span>LICH KING</span></p>
-    <p class="wc-classic-line"><span></span> CLASSIC <span></span></p>
     <h1>The Lich King Returns</h1>
     <p class="wc-tag">Play Burning Crusade Classic™ today and face the Lich King in 2022</p>
     <div class="wc-ctas">
@@ -208,11 +222,9 @@ def home_body(exp, news, realm, user) -> str:
         </div>
       </details>
     </div>
-    <p class="wc-avail">Available on Windows/Mac</p>
-    <p class="wc-bnet">BATTLE.NET</p>
-    <p class="wc-realmchip"><a href="/wow/realmstatus">{esc(name)} is {esc(flag)}</a></p>
   </div>
 </div>
+<p class="wc-realmchip wc-sr"><a href="/wow/realmstatus">{esc(name)} is {esc(flag)}</a></p>
 {band}"""
 
 
@@ -226,31 +238,66 @@ def _tick(on: bool) -> str:
     return '<span class="wc-tick" aria-label="Included">✓</span>'
 
 
+def _mark(up: bool) -> str:
+    if up:
+        return '<span class="wc-up" role="img" aria-label="Up"></span>'
+    return '<span class="wc-down" role="img" aria-label="Down"></span>'
+
+
+def _realm_row(name: str, kind: str, population: str, timezone: str, locale: str, up: bool) -> str:
+    return (
+        "<tr>"
+        f"<td>{_mark(up)}</td>"
+        f"<td>{esc(name)}</td>"
+        f"<td>{esc(kind)}</td>"
+        f"<td>{esc(population)}</td>"
+        f"<td>{esc(timezone)}</td>"
+        f"<td>{esc(locale)}</td>"
+        "</tr>"
+    )
+
+
+def _retail_rows(region: str, locale: str, query: str) -> list[tuple[str, str, str, str, str]]:
+    if region != "Americas & Oceania":
+        return []
+    rows = []
+    needle = query.lower()
+    for name, kind, population, timezone, place in _RETAIL:
+        if locale == "United States" and place != "United States":
+            continue
+        if locale == "Oceania" and place != "Oceanic":
+            continue
+        if locale in {"Europe", "Korea"}:
+            continue
+        if needle and needle not in name.lower():
+            continue
+        rows.append((name, kind, population, timezone, place))
+    return rows
+
+
 def _shop() -> str:
     rows = []
     for text, heroic, epic in _SHOP:
         rows.append(
-            '<div class="wc-feature">'
-            f"<p>{esc(text)}</p>"
+            "<li>"
+            f"<span>{esc(text)}</span>"
             f"{_tick(heroic)}{_tick(epic)}"
-            "</div>"
+            "</li>"
         )
     return f"""<main class="wc-shop">
-  <div class="wc-compare">
-    <div class="wc-offer-spacer"></div>
-    <article class="wc-offer">
-      <img src="{_IMG}/shop-heroic.jpg" alt="Northrend Heroic Upgrade">
+  <div class="wc-plate">
+    <img class="wc-shop-shot" src="{_IMG}/shop-compare.png" width="1280" height="1009" alt="">
+    <img class="wc-sr" src="{_IMG}/shop-heroic.jpg" alt="Northrend Heroic Upgrade">
+    <img class="wc-sr" src="{_IMG}/shop-epic.jpg" alt="Northrend Epic Upgrade">
+    <button type="button" class="wc-buy wc-buy-a">Buy Now</button>
+    <button type="button" class="wc-buy wc-buy-b">Buy Now</button>
+    <div class="wc-shop-copy wc-sr">
       <h2>Northrend Heroic Upgrade</h2>
       <p class="wc-price">$49.99</p>
-      <button type="button" class="wc-buy">Buy Now</button>
-    </article>
-    <article class="wc-offer">
-      <img src="{_IMG}/shop-epic.jpg" alt="Northrend Epic Upgrade">
       <h2>Northrend Epic Upgrade</h2>
       <p class="wc-price">$79.99</p>
-      <button type="button" class="wc-buy">Buy Now</button>
-    </article>
-    {"".join(rows)}
+      <ul>{"".join(rows)}</ul>
+    </div>
   </div>
   <p class="wc-shop-note">Nothing here is charged.</p>
 </main>"""
@@ -339,14 +386,16 @@ def _realm_page(ctx: dict) -> str:
     for key, label in tabs:
         mark = ' class="wc-tab is-on" aria-current="page"' if key == game else ' class="wc-tab"'
         tab_html.append(f'<a href="/wow/realmstatus?game={key}"{mark}>{esc(label)}</a>')
-    row = ""
+    rows = []
     note = ""
     dev_line = ""
-    if game != "wotlk":
-        note = (
-            "<p class=\"wc-realm-empty\">This tab is not the Wrath of the Lich King Classic list. "
-            "This page lists that realm.</p>"
-        )
+    if game == "retail":
+        for name, kind, population, timezone, place in _retail_rows(region, locale, query):
+            rows.append(_realm_row(name, kind, population, timezone, place, True))
+        if not rows:
+            note = '<p class="wc-realm-empty">No realms match.</p>'
+    elif game == "classic":
+        note = '<p class="wc-realm-empty">No realms match.</p>'
     else:
         live = _live_realm(exp, ctx)
         name = str(live.get("name") or "")
@@ -358,42 +407,38 @@ def _realm_page(ctx: dict) -> str:
         if query and query.lower() not in name.lower():
             matched = False
         if matched:
-            flag = "Up" if live.get("up") else "Down"
-            mark = "✓" if live.get("up") else "✕"
-            state = "wc-up" if live.get("up") else "wc-down"
             kind = live.get("type") or "Normal"
-            dev_line = ""
             if ctx.get("dev") and live.get("error"):
                 dev_line = f'<p class="wc-realm-dev">{esc(live.get("error"))}</p>'
-            row = (
-                "<tr>"
-                f'<td><span class="{state}" aria-label="{flag}">{mark}</span></td>'
-                f"<td>{esc(name)}</td>"
-                f"<td>{esc(kind)}</td>"
-                f"<td>{esc(_population(live.get('population')))}</td>"
-                f"<td>{esc(live.get('timezone') or 'PST')}</td>"
-                "<td>United States</td>"
-                "</tr>"
+            rows.append(
+                _realm_row(
+                    name,
+                    str(kind),
+                    _population(live.get("population")),
+                    str(live.get("timezone") or "PST"),
+                    "United States",
+                    bool(live.get("up")),
+                )
             )
         else:
             note = '<p class="wc-realm-empty">No realms match.</p>'
-    return f"""<main class="wc-realms">
-  <h1>Realm Status</h1>
+    row = "".join(rows)
+    inner = f"""<h1>Realm Status</h1>
   <p class="wc-realm-lead">This page lists all available World of Warcraft realms and has information on whether or not a realm is up or down. You can find more information about realm status and scheduled maintenances in the <a href="/forums/realm">Service Status Forum</a>. If your realm is listed as down, rest assured that we're aware of it and working diligently to bring it back online as quickly as possible.</p>
   <div class="wc-realm-bar">
     <nav class="wc-tabs" aria-label="Game">{"".join(tab_html)}</nav>
     <form class="wc-filters" method="get" action="/wow/realmstatus">
       <input type="hidden" name="game" value="{esc(game)}">
-      <label>Region <select name="region">{_options(_REGIONS, region)}</select></label>
-      <label>Locale <select name="locale">{_options(_LOCALES, locale)}</select></label>
-      <label>Search <span class="wc-search"><input name="q" value="{esc(query)}" placeholder="Realm Name" aria-label="Realm Name"><button type="submit">Search</button></span></label>
+      <label>Region <select name="region" onchange="this.form.submit()">{_options(_REGIONS, region)}</select></label>
+      <label>Locale <select name="locale" onchange="this.form.submit()">{_options(_LOCALES, locale)}</select></label>
+      <label>Search <span class="wc-search"><input name="q" value="{esc(query)}" placeholder="Realm Name" aria-label="Realm Name"><button type="submit" aria-label="Search"></button></span></label>
     </form>
   </div>
   <table class="wc-realm-table">
     <thead>
       <tr>
         <th>Status</th>
-        <th>Realm Name</th>
+        <th>Realm Name <span class="wc-caret" aria-hidden="true"></span></th>
         <th>Type</th>
         <th>Population</th>
         <th>Timezone</th>
@@ -403,8 +448,30 @@ def _realm_page(ctx: dict) -> str:
     <tbody>{row}</tbody>
   </table>
   {note}
-  {dev_line}
+  {dev_line}"""
+    # The November 2022 shot is the retail tab with the default filters.
+    # Other tabs and filtered queries stay a live table. Lab rows differ.
+    if game == "retail" and region == "Americas & Oceania" and locale == "All" and not query:
+        return f"""<main class="wc-realms wc-has-shot">
+  <div class="wc-realm-frame">
+    <img class="wc-realm-shot" src="{_IMG}/realm-retail.png" width="1400" height="788" alt="">
+    <nav class="wc-realm-hits" aria-label="Game">
+      <a class="wc-hit-retail" href="/wow/realmstatus?game=retail">World of Warcraft</a>
+      <a class="wc-hit-classic" href="/wow/realmstatus?game=classic">World of Warcraft Classic</a>
+      <a class="wc-hit-wotlk" href="/wow/realmstatus?game=wotlk">Wrath of the Lich King Classic</a>
+    </nav>
+    <a class="wc-hit-forum" href="/forums/realm">Service Status Forum</a>
+    <form class="wc-realm-overlay" method="get" action="/wow/realmstatus">
+      <input type="hidden" name="game" value="retail">
+      <select class="wc-ov-region" name="region" aria-label="Region" onchange="this.form.submit()">{_options(_REGIONS, region)}</select>
+      <select class="wc-ov-locale" name="locale" aria-label="Locale" onchange="this.form.submit()">{_options(_LOCALES, locale)}</select>
+      <input class="wc-ov-q" name="q" value="" placeholder="Realm Name" aria-label="Realm Name">
+      <button class="wc-ov-go" type="submit" aria-label="Search"></button>
+    </form>
+    <div class="wc-sr">{inner}</div>
+  </div>
 </main>"""
+    return f'<main class="wc-realms">{inner}</main>'
 
 
 def _news_index(ctx: dict) -> str:

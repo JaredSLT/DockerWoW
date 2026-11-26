@@ -6,6 +6,10 @@ import html
 
 ERA_TITLE = "Account Security"
 
+_LOGO = """<svg class="bnet-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+  <path fill="#148eff" d="M20 3c6.6 0 12 3.6 14.2 8.2-3.6.6-6.6.2-9.2-1.6.8 5.2.4 9.4-2.4 13.2-3.6-1.6-6-5.4-6.2-9.6.2-2.2 2.6-4.6 5.6-5.6-4.6 1-8.4 4.6-8.4 10.2C13.6 26.2 19 32 26 32c2.8 0 5.4-.8 7.4-2.4-1.8 4.6-6.4 7.8-11.8 7.8C13.2 37.4 6 30.2 6 21.4 6 11.6 12.4 3 20 3z"/>
+</svg>"""
+
 
 def _e(value) -> str:
     return html.escape("" if value is None else str(value), quote=True)
@@ -41,8 +45,9 @@ def _top(user: str, email: str) -> str:
     who = _e(user) if user else "Account"
     mail = f'<span class="bnet-mail">{_e(email)}</span>' if email else ""
     return f"""<header class="bnet-top">
-  <a class="bnet-logo" href="/account/">Battle.net</a>
+  <a class="bnet-logo" href="/account/">{_LOGO} Battle.net</a>
   <nav class="bnet-tools">
+    <a href="/support/">Download Battle.net</a>
     <a href="/support/">Support</a>
     <span class="bnet-user">{mail} {who}</span>
     <a href="/account/logout">Log Out</a>
@@ -55,9 +60,12 @@ def _nav(active: str) -> str:
         ("overview", "/account/", "Account Overview"),
         ("details", "/account/", "Account Details"),
         ("games", "/account/", "Games & Subscriptions"),
+        ("parental", "/support/", "Parental Controls"),
         ("security", "/account/password", "Security"),
         ("privacy", "/support/", "Privacy & Communication"),
+        ("connections", "/support/", "Connections"),
         ("payment", "/support/", "Payment Methods"),
+        ("history", "/support/", "Transaction History"),
     )
     links = []
     for key, href, label in items:
@@ -67,6 +75,7 @@ def _nav(active: str) -> str:
             cls += " acct-nav-on"
             current = ' aria-current="page"'
         links.append(f'<a class="{cls}" href="{href}"{current}>{label}</a>')
+    links.append('<a class="acct-nav-link" href="/support/">Download Battle.net</a>')
     return '<nav class="acct-nav" aria-label="Account">' + "".join(links) + "</nav>"
 
 
@@ -81,30 +90,49 @@ def _shell(active: str, main: str, user: str = "", email: str = "") -> str:
     )
 
 
+def _social() -> str:
+    buttons = (
+        ("Google", "#fff", "#222", "G"),
+        ("Facebook", "#1877f2", "#fff", "f"),
+        ("Apple", "#111", "#fff", "A"),
+        ("Discord", "#5865f2", "#fff", "D"),
+        ("Xbox", "#107c10", "#fff", "X"),
+        ("PlayStation", "#003791", "#fff", "P"),
+        ("Nintendo", "#e60012", "#fff", "N"),
+        ("Battle.net", "#fff", "#148eff", "B"),
+    )
+    bits = []
+    for name, bg, fg, mark in buttons:
+        glyph = mark or ""
+        bits.append(
+            f'<button type="button" aria-label="{_e(name)}" style="background:{bg};color:{fg}">'
+            f"{glyph}</button>"
+        )
+    return "".join(bits)
+
+
 def _login() -> str:
-    buttons = ("Google", "Facebook", "Apple", "Discord", "Xbox", "PlayStation", "Nintendo", "Battle.net")
-    social = "".join(f'<button type="button">{_e(name)}</button>' for name in buttons)
     return f"""<div class="bnet-gate" data-era-bare="1">
-  <a class="bnet-logo" href="/wow/">Battle.net</a>
+  <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
   <h1>Log in or sign up</h1>
   <form class="acct-form" method="post" action="/account/login">
-    <label class="acct-field">Email or Phone
-      <input class="acct-input" name="identity" type="text" required autocomplete="username">
+    <label class="acct-field"><span class="mn-sr">Email or Phone</span>
+      <input class="acct-input" name="identity" type="text" required autocomplete="username" placeholder="Email or Phone">
     </label>
     <p class="acct-links"><a href="/account/login">Forgot email?</a></p>
     <button class="acct-btn" type="submit">Continue</button>
   </form>
   <p class="acct-fine">By continuing, you acknowledge our <a href="/support/">Privacy Policy</a>.</p>
   <p class="bnet-or"><span>OR</span></p>
-  <div class="bnet-social" aria-hidden="true">{social}</div>
-  <p class="acct-hint">There is no emailed password reset. Sign in and change the password here.</p>
+  <div class="bnet-social">{_social()}</div>
+  <p class="acct-hint mn-sr">There is no emailed password reset. Sign in and change the password here.</p>
   <p class="acct-links"><a href="/account/create">Create Account</a></p>
 </div>"""
 
 
 def _login_password(identity: str) -> str:
     return f"""<div class="bnet-gate" data-era-bare="1">
-  <a class="bnet-logo" href="/wow/">Battle.net</a>
+  <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
   <h1>Log in or sign up</h1>
   <form class="acct-form" method="post" action="/account/login">
     <input type="hidden" name="identity" value="{_e(identity)}">
@@ -120,45 +148,66 @@ def _login_password(identity: str) -> str:
 
 def _create(separate_game_name: bool) -> str:
     game = ""
+    game_radio = ""
     if separate_game_name:
-        game = """<fieldset class="bnet-step">
-  <legend>Create Your BattleTag</legend>
+        game_radio = '<input class="bnet-step-radio" type="radio" name="mn_step" id="mn-step-tag">'
+        game = """<section class="bnet-pane pane-tag">
+  <p class="bnet-kicker">Battle.net Account Creation</p>
+  <h1>Create Your BattleTag</h1>
   <p>This name is the World of Warcraft game account. It is not an email address.</p>
   <label class="acct-field">BattleTag
     <input class="acct-input" name="game_name" required maxlength="16" autocomplete="username">
   </label>
-</fieldset>"""
-    main = f"""<div class="bnet-create">
-  <a class="bnet-logo" href="/wow/">Battle.net</a>
-  <p class="bnet-kicker">Battle.net Account Creation</p>
+  <button class="acct-btn" type="submit">Continue</button>
+  <p class="acct-links"><label for="mn-step-pass">Go back</label></p>
+</section>"""
+    submit = "" if separate_game_name else '<button class="acct-btn" type="submit">Continue</button>'
+    return f"""<div class="bnet-create" data-era-bare="1">
+  <h2 class="acct-title">{ERA_TITLE}</h2>
   <form class="acct-form" method="post" action="/account/create">
-    <fieldset class="bnet-step">
-      <legend>What's Your Name?</legend>
-      <p>Your real name may be used later to verify your identity when contacting Battle.net. By default, your name will not be publicly visible.</p>
-      <label class="acct-field">First Name <input class="acct-input" name="first_name" autocomplete="given-name"></label>
-      <label class="acct-field">Last Name <input class="acct-input" name="last_name" autocomplete="family-name"></label>
-    </fieldset>
-    <fieldset class="bnet-step">
-      <legend>Identify Your Account</legend>
+    <input class="bnet-step-radio" type="radio" name="mn_step" id="mn-step-name" checked>
+    <input class="bnet-step-radio" type="radio" name="mn_step" id="mn-step-id">
+    <input class="bnet-step-radio" type="radio" name="mn_step" id="mn-step-terms">
+    <input class="bnet-step-radio" type="radio" name="mn_step" id="mn-step-pass">
+    {game_radio}
+    <section class="bnet-pane pane-name">
+      <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
+      <p class="bnet-kicker">Battle.net Account Creation</p>
+      <h1>What's Your Name?</h1>
+      <p>Your real name may be used later to verify your identity when contacting Battle.net. By default, your name will not be publicly visible. <a href="/support/">Learn More</a></p>
+      <label class="acct-field"><span class="mn-sr">First Name</span><input class="acct-input" name="first_name" autocomplete="given-name" placeholder="First Name"></label>
+      <label class="acct-field"><span class="mn-sr">Last Name</span><input class="acct-input" name="last_name" autocomplete="family-name" placeholder="Last Name"></label>
+      <label class="acct-btn" for="mn-step-id">Continue</label>
+      <p class="acct-links"><a href="/account/login">Go back</a></p>
+      <p class="bnet-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i></p>
+    </section>
+    <section class="bnet-pane pane-id">
+      <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
+      <h1>Identify Your Account</h1>
       <label class="acct-field">Email
         <input class="acct-input" name="identity" type="email" required autocomplete="username">
       </label>
-    </fieldset>
-    <fieldset class="bnet-step">
-      <legend>Review Terms</legend>
+      <label class="acct-btn" for="mn-step-terms">Continue</label>
+      <p class="acct-links"><label for="mn-step-name">Go back</label></p>
+    </section>
+    <section class="bnet-pane pane-terms">
+      <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
+      <h1>Review Terms</h1>
       <label class="acct-check"><input type="checkbox" name="terms" required> I agree to the terms of use.</label>
-    </fieldset>
-    <fieldset class="bnet-step">
-      <legend>Set Your Password</legend>
+      <label class="acct-btn" for="mn-step-pass">Continue</label>
+      <p class="acct-links"><label for="mn-step-id">Go back</label></p>
+    </section>
+    <section class="bnet-pane pane-pass">
+      <a class="bnet-logo" href="/wow/">{_LOGO} Battle.net</a>
+      <h1>Set Your Password</h1>
       <label class="acct-field">Password <input class="acct-input" type="password" name="password" required autocomplete="new-password"></label>
       <label class="acct-field">Confirm password <input class="acct-input" type="password" name="confirm" required autocomplete="new-password"></label>
-    </fieldset>
+      {submit}
+      <p class="acct-links">{'<label for="mn-step-tag">Continue</label>' if separate_game_name else ''}<label for="mn-step-terms">Go back</label></p>
+    </section>
     {game}
-    <button class="acct-btn" type="submit">Create Account</button>
   </form>
-  <p class="acct-links"><a href="/account/login">Go back</a></p>
 </div>"""
-    return _shell("overview", main)
 
 
 def _password() -> str:
@@ -178,12 +227,18 @@ def _summary(user: str, email: str, characters: list) -> str:
     main = f"""<div class="bnet-games">
   <h1>Games &amp; Subscriptions</h1>
   <section class="acct-license">
-    <h3 class="acct-license-title">Games</h3>
-    <p class="acct-game">World of Warcraft</p>
+    <h2 class="acct-license-title">Games</h2>
+    <article class="bnet-row">
+      <span class="bnet-wowmark" aria-hidden="true">W</span>
+      <div>
+        <p class="acct-game">World of Warcraft® (<strong class="acct-game-name">{_e(user)}</strong>)</p>
+        <p>Americas &amp; Oceania</p>
+      </div>
+      <div class="bnet-cell"><b class="acct-status">Active</b><small>Status</small></div>
+      <div class="bnet-cell"><a href="/account/services">Manage</a></div>
+    </article>
     <p class="acct-k">Email</p>
     <p class="acct-email">{_e(email)}</p>
-    <p class="acct-game">Game account <strong class="acct-game-name">{_e(user)}</strong></p>
-    <p class="acct-status">Active</p>
     {_chars(characters)}
   </section>
   <p class="acct-actions"><a href="/account/password">Change Password</a> · <a href="/account/logout">Log Out</a></p>

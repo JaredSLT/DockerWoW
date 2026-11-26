@@ -94,7 +94,7 @@ def _a(href: str, text: str) -> str:
 
 
 def _nav() -> str:
-    blocks = ['<div class="a-mark" aria-hidden="true"></div>']
+    blocks = ['<img class="a-crest" src="/static/img/alpha/nav-crest.png" alt="">']
     for heading, links in _NAV:
         rows = []
         for href, label in links:
@@ -155,15 +155,14 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
     inner = f"""<div class="a-site">
 <header class="a-mast">
   <a class="a-logo" href="/wow/">
-    <img src="/static/img/alpha/logo.png" alt="World of Warcraft">
-    <em class="a-beta">Beta Web Site</em>
+    <img src="/static/img/alpha/beta-logo.png" alt="World of Warcraft Beta Web Site">
   </a>
   <p class="a-country"><a href="/wow/">Choose a country:</a><br><a href="/wow/">USA</a> <span>Korea</span></p>
 </header>
 <div class="a-frame">
   <nav class="a-nav" aria-label="Beta Web Site">{_nav()}</nav>
   <div class="a-sheet">
-    <img class="a-corner" src="/static/img/alpha/corner.png" alt="">
+    <img class="a-corner" src="/static/img/alpha/beta-corner.png" alt="">
     <div class="a-upper">{_sidebar(user, login_error, online)}</div>
     <div class="a-content">{body}</div>
   </div>
@@ -234,29 +233,40 @@ def home_body(exp, news, realm, user) -> str:
 
 
 def _ynav(active: str) -> str:
-    parts = []
-    for key, href, label in _YNAV:
+    def link(key: str, href: str, label: str) -> str:
         mark = ' class="on"' if key == active else ""
-        parts.append(f'<a href="{esc(href)}"{mark}>{esc(label)}</a>')
-        if key != "faq":
-            parts.append("<span>|</span>")
+        return f'<a href="{esc(href)}"{mark}>{esc(label)}</a>'
+
+    left = (
+        link("updates", "/announce", "updates")
+        + '<span class="y-pipe">|</span>'
+        + link("features", "/announce/features", "features")
+        + '<span class="y-pipe">|</span>'
+        + link("screenshots", "/announce/screenshots", "screenshots")
+    )
+    right = (
+        link("wallpapers", "/announce/wallpapers", "wallpapers")
+        + '<span class="y-pipe">|</span>'
+        + link("movies", "/announce/movies", "movies")
+        + '<span class="y-pipe">|</span>'
+        + link("faq", "/announce/faq", "f.a.q")
+    )
+    brann = ' class="y-brann on"' if active == "brann" else ' class="y-brann"'
     order = "|".join(label for _key, _href, label in _YNAV)
-    return f'<nav class="y-nav" data-nav="{esc(order)}" aria-label="Announcement">{"".join(parts)}</nav>'
+    return (
+        f'<nav class="y-nav" data-nav="{esc(order)}" aria-label="Announcement">'
+        f'<span class="y-links y-left">{left}</span>'
+        f'<a href="/announce/brann"{brann}>Journey of Brann</a>'
+        f'<span class="y-links y-right">{right}</span>'
+        "</nav>"
+    )
 
 
 def _yintro() -> str:
     return """<section class="y-intro">
-  <p><span class="drop">F</span>our years have passed since the aftermath of Warcraft III: Reign of Chaos, and a great tension smolders throughout the ravaged world of Azeroth. As the battle-worn races begin to rebuild their shattered kingdoms, new threats, both ancient and ominous, arise to plague the world once again.</p>
-  <p><span class="drop">R</span>ich in legend and filled with adventure, the World of Warcraft awaits! For the first time, players experience the lands of Azeroth from a new, in-depth perspective. As heroes, they explore familiar battlefields, discover new lands and take on epic quests and challenges in Blizzard's massively multiplayer, on-line, role-playing game.</p>
+  <p><img class="drop" src="/static/img/alpha/drop-f.png" alt="">our years have passed since the aftermath of Warcraft III: Reign of Chaos, and a great tension smolders throughout the ravaged world of Azeroth. As the battle-worn races begin to rebuild their shattered kingdoms, new threats, both ancient and ominous, arise to plague the world once again.</p>
+  <p><img class="drop" src="/static/img/alpha/drop-r.png" alt="">ich in legend and filled with adventure, the World of Warcraft awaits! For the first time, players experience the lands of Azeroth from a new, in-depth perspective. As heroes, they explore familiar battlefields, discover new lands and take on epic quests and challenges in Blizzard's massively multiplayer, on-line, role-playing game.</p>
   <p class="y-welcome"><a href="/wow/">Welcome to the World of Warcraft.</a></p>
-  <p class="y-badge"><a href="/announce/privacy"><strong>ESRB</strong> Privacy Certified<small>click to privacy statement</small></a></p>
-</section>"""
-
-
-def _ybook() -> str:
-    return """<section class="y-book" id="brann">
-  <img src="/static/img/alpha/book.png" alt="">
-  <a href="/wow/"><img class="y-blizz" src="/static/img/alpha/blizz.png" alt="Blizzard Entertainment"></a>
 </section>"""
 
 
@@ -411,16 +421,18 @@ _PANELS = {
 
 def announce_document(exp, dev: bool, panel: str = "updates") -> str:
     title, builder = _PANELS[panel]
+    # Updates sit on the dark forest. The features shot is a bordered panel.
+    panel_class = "y-panel y-updates" if panel == "updates" else "y-panel"
     inner = f"""<div class="y-site">
-<header class="y-head">
-  <a class="y-logo" href="/announce"><img src="/static/img/alpha/logo.png" alt="World of Warcraft"></a>
-  {_ynav(panel)}
-</header>
+<a class="y-logo" href="/announce" aria-label="World of Warcraft"></a>
+{_ynav(panel)}
 <div class="y-cols">
   {_yintro()}
-  {_ybook()}
-  <section class="y-panel" id="{esc(panel)}">{builder()}</section>
+  <div class="y-mid"></div>
+  <section class="{panel_class}" id="{esc(panel)}">{builder()}</section>
 </div>
+<a class="y-esrb" href="/announce/privacy">ESRB Privacy Certified</a>
+<a class="y-blizz" href="/wow/">Blizzard Entertainment</a>
 </div>"""
     return document(
         title,
@@ -433,7 +445,9 @@ def announce_document(exp, dev: bool, panel: str = "updates") -> str:
 
 def _stamp(ts) -> str:
     try:
-        return time.strftime("%a %b %d %H:%M:%S", time.localtime(int(ts)))
+        when = time.localtime(int(ts))
+        # Battle.net printed ctime: Tue Sep  8 15:14:27, day space-padded.
+        return time.strftime("%a %b ", when) + f"{when.tm_mday:2d}" + time.strftime(" %H:%M:%S", when)
     except (TypeError, ValueError, OSError):
         return ""
 
@@ -491,8 +505,11 @@ def _bnet_forum(ctx: dict) -> str:
         ("/announce", "Warcraft II"),
         ("/wow/", "World of Warcraft"),
     )
-    # Two wrapped lines, the way the September 2001 board stacked its green links.
-    link_html = " ".join(f"[{_a(href, label)}]" for href, label in top)
+    # Three centered lines, the way the September 2001 board stacked its green links.
+    bands = (top[:3], top[3:7], top[7:])
+    link_html = "<br>".join(
+        " ".join(f"[{_a(href, label)}]" for href, label in band) for band in bands
+    )
     side = (
         ("/announce", "News"),
         ("/announce/forums", "Forums"),
@@ -507,7 +524,7 @@ def _bnet_forum(ctx: dict) -> str:
   <div class="b-main">
     <p class="b-toplinks">{link_html}</p>
     <p class="b-actions"><a class="b-btn" href="/wow/search">Search Forum</a> <a class="b-btn" href="/forums/general">Post Message</a></p>
-    <p class="b-mod">This forum is Moderated by Blizzard | {_a("/support/", "Read The Forum Rules")}</p>
+    <p class="b-mod">This forum is Moderated by Blizzard <a href="/support/">[Read The Forum Rules]</a></p>
     <p class="b-rules">Posts must be related to General Discussion about World of Warcraft. While the development team (Team 2) may not have time to respond to posts, they will be reading them. Before posting read the {_a("/support/", "Forum Rules")}.</p>
     <p class="b-topic">Topic: {_a("/forums/general", "General Discussion")}</p>
     {pager}

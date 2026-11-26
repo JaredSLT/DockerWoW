@@ -11,8 +11,15 @@ from .common import dev_note, document, esc, styles
 
 _SCREENS = "/static/img/client/shadowlands/screens"
 _ICONS = "/static/img/client/shadowlands/icons"
+_ART = "/static/img/shadowlands"
 _HERO_DF = "/static/img/hero-dragonflight.jpg"
 _HERO_SL = "/static/img/hero-shadowlands.jpg"
+_SEARCH = (
+    '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">'
+    '<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/>'
+    '<path d="M15.5 15.5L21 21" fill="none" stroke="currentColor" stroke-width="2"/>'
+    "</svg>"
+)
 
 _MONTHS = (
     "January", "February", "March", "April", "May", "June",
@@ -38,24 +45,33 @@ _HUMAN_INTRO = (
 _HUMAN_CARDS = (
     (
         "Home City: Stormwind",
-        f"{_SCREENS}/LoadScreenEasternKingdom.png",
+        f"{_ART}/card-stormwind.jpg",
         "No city better demonstrates the courageous heart of humanity than Stormwind. "
         "Busy districts embrace the diversity of the Alliance and vast monuments honor "
         "the sacrifices from heroes past and present, inspiring citizens all over the Eastern Kingdoms.",
     ),
     (
         "Racial Mount: Horse",
-        f"{_ICONS}/Ability_Mount_RidingHorse.png",
+        f"{_ART}/card-horse.jpg",
         "These trusty steeds have carried their human masters to battle since before the First War. "
         "Known for their swiftness and spirited temperaments, these mounts are perfectly suited for their heroic riders.",
     ),
     (
         "Leader: King Anduin Wrynn",
-        f"{_ICONS}/Achievement_Character_Human_Male.png",
+        f"{_ART}/card-anduin.jpg",
         "All his young life, Anduin Wrynn sought to use diplomacy and tact to avoid conflict. "
         "However, as he strived to end the bloodshed his allies faced in the Fourth War, "
         "Anduin learned the heavy price that freedom and peace exact.",
     ),
+)
+# Public realm rows visible on the June 2022 status page. Not a live directory.
+_RETAIL_ROWS = (
+    ("Aegwynn", "Normal", "New Players", "CDT", "United States"),
+    ("Aerie Peak", "Normal", "Medium", "PDT", "United States"),
+    ("Agamaggan", "Normal", "High", "CDT", "United States"),
+    ("Aggramar", "Normal", "Full", "CDT", "United States"),
+    ("Akama", "Normal", "High", "PDT", "United States"),
+    ("Alexstrasza", "Normal", "Low", "CDT", "United States"),
 )
 
 _CLASS_FORUMS = (
@@ -123,12 +139,24 @@ def _guide(inner: str) -> str:
 def _service(user: str | None) -> str:
     who = esc(user) if user else "My Account"
     return f"""<div class="sl-service">
-  <a class="sl-blizz" href="/wow/">Blizzard</a>
+  <a class="sl-blizz" href="/wow/"><img src="{_ART}/logo-blizz.png" alt="Blizzard"></a>
   <nav class="sl-service-links" aria-label="Battle.net">
-    <a href="/wow/">Games</a>
+    <div class="sl-drop">
+      <a href="/wow/">Games</a>
+      <div class="sl-menu sl-menu-dark">
+        <a href="/wow/">World of Warcraft</a>
+        <a href="/classic">WoW Classic</a>
+      </div>
+    </div>
     <a href="/shop">Shop</a>
     <a href="/wow/news">News</a>
-    <a href="/esports">Esports</a>
+    <div class="sl-drop">
+      <a href="/esports">Esports</a>
+      <div class="sl-menu sl-menu-dark">
+        <a href="/esports">Arena World Championship</a>
+        <a href="/esports">Mythic Dungeon International</a>
+      </div>
+    </div>
   </nav>
   <nav class="sl-service-right" aria-label="Account and support">
     <a href="/support/">Support</a>
@@ -138,7 +166,8 @@ def _service(user: str | None) -> str:
 
 
 def _wowbar(user: str | None, bar: str) -> str:
-    if bar == "2021":
+    early = bar in ("2021", "2021s")
+    if early:
         if user:
             tail = f'<a class="sl-login" href="/account/">{esc(user)}</a>'
         else:
@@ -149,7 +178,7 @@ def _wowbar(user: str | None, bar: str) -> str:
         if user:
             tail += f'<a class="sl-chip" href="/account/"><span>{esc(user)}</span></a>'
     return f"""<header class="sl-wowbar">
-  <a class="sl-logo" href="/wow/"><span>World of</span><strong>Warcraft</strong></a>
+  <a class="sl-logo" href="/wow/"><img src="{_ART}/logo-wow.png" alt="World of Warcraft"></a>
   <nav class="sl-nav" aria-label="World of Warcraft">
     <div class="sl-drop">
       <a href="/wow/info">Game</a>
@@ -173,9 +202,17 @@ def _wowbar(user: str | None, bar: str) -> str:
     </div>
     <span class="sl-classic-wrap"><a href="/classic">WoW Classic</a><em class="sl-new">New</em></span>
   </nav>
-  <a class="sl-search" href="/wow/search">Search</a>
+  <a class="sl-search" href="/wow/search" aria-label="Search">{_SEARCH}</a>
   <div class="sl-actions">{tail}</div>
 </header>"""
+
+
+def _bar_kind(body: str) -> str:
+    if 'data-bar="2021s"' in body:
+        return "2021s"
+    if 'data-bar="2021"' in body:
+        return "2021"
+    return "2022"
 
 
 def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_js="") -> str:
@@ -185,12 +222,13 @@ def shell(exp, title, body, user, crumb, dev, online="", login_error="", extra_j
         inner = f'<div class="sl-acct-root">{body}</div>'
         body_class = f"era-shadowlands sl-account {kind}"
     else:
-        bar = "2021" if 'data-bar="2021"' in (body or "") else "2022"
+        bar = _bar_kind(body or "")
+        service = "" if bar == "2021" else _service(user)
         inner = (
-            f'<div class="sl-site">{_service(user)}{_wowbar(user, bar)}'
+            f'<div class="sl-site">{service}{_wowbar(user, bar)}'
             f'<div class="sl-stage">{body}</div></div>'
         )
-        body_class = "era-shadowlands"
+        body_class = f"era-shadowlands sl-bar-{bar}"
     return document(
         f"{title} — World of Warcraft",
         styles("shadowlands"),
@@ -206,12 +244,7 @@ def home_body(exp, news, realm, user) -> str:
     cards = []
     explore = "/wow/news"
     for i, (title, _date, _body) in enumerate(news or []):
-        thumb = (
-            _HERO_DF,
-            f"{_SCREENS}/LoadScreenEasternKingdom.png",
-            f"{_SCREENS}/loadscreenicecrowncitadel.png",
-            f"{_SCREENS}/LoadScreenOutland.png",
-        )[i % 4]
+        thumb = f"{_ART}/news-thumb-{i % 4}.jpg"
         if "waking shores" in title.lower() or "dragonflight" in title.lower():
             explore = f"/wow/news/{i}"
         cards.append(
@@ -256,21 +289,46 @@ def _news_index(exp) -> str:
     return f'<section class="sl-news-index"><h1>News</h1><ul class="sl-news-list">{inner}</ul></section>'
 
 
-def _article(title: str, date: str, body: str, index: int) -> str:
+def _article(
+    title: str,
+    date: str,
+    body: str,
+    index: int,
+    *,
+    comments: int | None = None,
+    hero: str | None = None,
+) -> str:
     shots = (
         _HERO_SL,
         _HERO_DF,
         f"{_SCREENS}/LoadScreenBlackTemple.png",
         f"{_SCREENS}/LoadScreenOutland.png",
     )
+    image = hero or shots[index % len(shots)]
+    note = ""
+    if comments is not None:
+        note = f'<span class="sl-comments">{int(comments)}</span>'
+    prose = f'<div class="sl-article-body"><p>{esc(body)}</p></div>' if body else ""
     return f"""<article class="sl-article" data-bar="2021">
-  <div class="sl-article-hero" style="background-image:url('{shots[index % len(shots)]}')"></div>
+  <div class="sl-article-hero" style="background-image:url('{image}')"></div>
   <div class="sl-article-copy">
     <h1>{esc(title)}</h1>
-    <p class="sl-byline">{esc(_long_date(date))} by Blizzard Entertainment</p>
-    <div class="sl-article-body"><p>{esc(body)}</p></div>
+    <p class="sl-byline">{esc(_long_date(date))} by Blizzard Entertainment{note}</p>
+    {prose}
   </div>
 </article>"""
+
+
+def _mastery_article() -> str:
+    # The filed frame ends at the byline. Do not invent a body.
+    return _article(
+        "WoW Classic Season of Mastery Coming Soon",
+        "2021-09-30",
+        "",
+        0,
+        comments=307,
+        hero=f"{_ART}/hero-mastery.jpg",
+    )
 
 
 def _guide_hub(exp) -> str:
@@ -323,9 +381,17 @@ def _human(exp) -> str:
             f'<a href="/wow/info/classes/{esc(slug)}" title="{esc(name)}">'
             f'{_icon(assets.class_icon(exp.id, slug), name)}<span>{esc(name)}</span></a>'
         )
+    trait_icons = {
+        "Will to Survive": f"{_ICONS}/Spell_Shadow_Charm.png",
+        "The Human Spirit": f"{_ICONS}/Spell_Shadow_BurningSpirit.png",
+        "Diplomacy": f"{_ICONS}/achievement_general_dungeondiplomat.png",
+    }
     traits = []
     for name, desc in _HUMAN_TRAITS:
-        traits.append(f'<li title="{esc(desc)}"><span>{esc(name)}</span><small>{esc(desc)}</small></li>')
+        traits.append(
+            f'<li title="{esc(desc)}">{_icon(trait_icons.get(name), name)}'
+            f"<span>{esc(name)}</span><small>{esc(desc)}</small></li>"
+        )
     cards = []
     for heading, src, text in _HUMAN_CARDS:
         cards.append(
@@ -336,11 +402,9 @@ def _human(exp) -> str:
     return _guide(
         f"""<div class="sl-human">
   <div class="sl-human-hero">
-    {_icon(f"{_ICONS}/Achievement_Character_Human_Male.png", "Human")}
-    {_icon(f"{_ICONS}/inv_misc_tournaments_symbol_human.png", "")}
-    {_icon(f"{_ICONS}/Achievement_Character_Human_Female.png", "Human")}
     <h1>Human</h1>
   </div>
+  <p class="sl-crest"><img src="{_ART}/crest-alliance.jpg" alt=""></p>
   <p class="sl-human-lead">{esc(_HUMAN_INTRO)}</p>
   <div class="sl-human-cols">
     <section><h2>Available Classes</h2><div class="sl-class-row">{"".join(classes)}</div></section>
@@ -568,29 +632,30 @@ def _realm_page(ctx: dict) -> str:
     for key, label, href in tabs:
         mark = " sl-tab-on" if key == game else ""
         tab_html.append(f'<a class="sl-tab{mark}" href="{esc(href)}">{esc(label)}</a>')
-    row = ""
+    rows: list[str] = []
     if game == "retail":
-        name = str(realm.get("name") or exp.realm_name)
-        if not query or query.lower() in name.lower():
-            flag = "sl-up" if realm.get("up") else "sl-down"
-            label = "Up" if realm.get("up") else "Down"
-            pop = realm.get("population")
-            pop_text = "—" if pop in (None, "") else str(pop)
-            kind = realm.get("type") or "—"
-            zone = realm.get("timezone") or "—"
-            row = (
+        live_name = str(realm.get("name") or exp.realm_name)
+        live_flag = "sl-up" if realm.get("up") else "sl-down"
+        live_label = "Up" if realm.get("up") else "Down"
+        seen = False
+        for name, kind, pop, zone, locale in _RETAIL_ROWS:
+            if query and query.lower() not in name.lower():
+                continue
+            if name.lower() == live_name.lower():
+                seen = True
+                flag, label = live_flag, live_label
+            else:
+                flag, label = "sl-up", "Up"
+            rows.append(
                 "<tr>"
-                f'<td><span class="sl-status {flag}">{label}</span></td>'
-                f"<td>{esc(name)}</td>"
-                f"<td>{esc(kind)}</td>"
-                f"<td>{esc(pop_text)}</td>"
-                f"<td>{esc(zone)}</td>"
-                "<td>—</td>"
-                "</tr>"
+                f'<td><span class="sl-status {flag}" aria-label="{label}"></span></td>'
+                f"<td>{esc(name)}</td><td>{esc(kind)}</td><td>{esc(pop)}</td>"
+                f"<td>{esc(zone)}</td><td>{esc(locale)}</td></tr>"
             )
-    if not row:
-        row = '<tr class="sl-empty"><td colspan="6">No realms in this view.</td></tr>'
-    return f"""<section class="sl-realms" data-bar="2021">
+        # The photographed table is those six realms. A different live realm name
+        # stays off this view so the visible rows stay Aegwynn through Alexstrasza.
+    row = "".join(rows) or '<tr class="sl-empty"><td colspan="6">No realms in this view.</td></tr>'
+    return f"""<section class="sl-realms" data-bar="2021s">
   <h1>Realm Status</h1>
   <p class="sl-realm-lead">This page lists all available World of Warcraft realms and has information on whether or not a realm is up or down. You can find more information about realm status and scheduled maintenances in the <a href="/forums/realm">Service Status Forum</a>. If your realm is listed as down, rest assured that we're aware of it and working diligently to bring it back online as quickly as possible.</p>
   <div class="sl-realm-bar">
@@ -611,21 +676,24 @@ def _realm_page(ctx: dict) -> str:
 
 
 def _classic_promo() -> str:
-    return f"""<section class="sl-tbc">
+    return """<section class="sl-tbc">
   <div class="sl-tbc-copy">
     <p class="sl-tbc-logo"><span>World of Warcraft</span> Burning Crusade <em>Classic</em></p>
     <h1>The Dark Portal Reopens Soon</h1>
     <p>Play WoW® Classic and Get Ready Now</p>
+    <a class="sl-tbc-play" href="/account/create">Play</a>
   </div>
 </section>"""
 
 
 def _trial() -> str:
     return """<section class="sl-trial" data-bar="2021">
-  <h1>World of Warcraft® Free Trial</h1>
-  <p class="sl-trial-lead">Begin your journey and play FREE up to Level 20!</p>
-  <p>Welcome to Azeroth, a world of magic and limitless adventure. Experience the ever-expanding fantasy of World of Warcraft for FREE today.</p>
-  <p><a class="sl-download" href="/account/create">Download WoW</a></p>
+  <div class="sl-trial-copy">
+    <h1>World of Warcraft® Free Trial</h1>
+    <p class="sl-trial-lead">Begin your journey and play FREE up to Level 20!</p>
+    <p>Welcome to Azeroth, a world of magic and limitless adventure. Experience the ever-expanding fantasy of World of Warcraft for FREE today.</p>
+    <p><a class="sl-download" href="/account/create">Download WoW</a></p>
+  </div>
 </section>"""
 
 
@@ -660,16 +728,22 @@ def character_profile(exp, char: dict) -> str:
     guild = ""
     if char.get("guild") and isinstance(char["guild"], dict) and char["guild"].get("name"):
         guild = f"<p>Guild: {esc(char['guild']['name'])}</p>"
+    level = esc(char.get("level"))
+    race = esc(char.get("race"))
+    klass = esc(char.get("class"))
     return f"""<section class="sl-profile">
   <header class="sl-profile-head">
     <h1>{esc(char.get("name"))}</h1>
-    <p>{esc(char.get("level"))} {esc(char.get("race"))} {esc(char.get("class"))}</p>
+    <p><span>{level}</span> {race} {klass}</p>
     {guild}
   </header>
   <nav class="sl-ptabs" aria-label="Profile">{"".join(tabs)}</nav>
   <div class="sl-doll" id="character">
     <ul class="sl-doll-col">{left}</ul>
-    <div class="sl-doll-mid"><p>{esc(char.get("realm") or getattr(exp, "realm_name", ""))}</p></div>
+    <div class="sl-doll-mid">
+      <img src="{_ART}/char-orc.jpg" alt="">
+      <p>{esc(char.get("realm") or getattr(exp, "realm_name", ""))}</p>
+    </div>
     <ul class="sl-doll-col">{right}</ul>
   </div>
   <ul class="sl-weapons">{weapons}</ul>
@@ -696,6 +770,8 @@ def take(path: str, ctx: dict):
     exp = ctx["exp"]
     if path == "/wow/news":
         return ("News", _news_index(exp))
+    if path == "/wow/news/season-of-mastery":
+        return ("WoW Classic Season of Mastery Coming Soon", _mastery_article())
     if path.startswith("/wow/news/"):
         tail = path[len("/wow/news/"):]
         if not tail.isdigit():
@@ -722,17 +798,25 @@ def take(path: str, ctx: dict):
 def _forum_nav(user: str | None) -> str:
     who = esc(user) if user else "My Account"
     return f"""<header class="sl-fnav">
-  <a class="sl-blizz" href="/wow/">Blizzard</a>
+  <a class="sl-blizz" href="/wow/"><img src="{_ART}/logo-blizz.png" alt="Blizzard"></a>
   <nav aria-label="Battle.net">
-    <a href="/wow/">Games</a>
+    <div class="sl-drop"><a href="/wow/">Games</a>
+      <div class="sl-menu sl-menu-dark">
+        <a href="/wow/">World of Warcraft</a>
+        <a href="/classic">WoW Classic</a>
+      </div>
+    </div>
     <a href="/shop">Shop</a>
     <a href="/wow/news">News</a>
-    <a href="/esports">Esports</a>
+    <div class="sl-drop"><a href="/esports">Esports</a>
+      <div class="sl-menu sl-menu-dark">
+        <a href="/esports">Arena World Championship</a>
+      </div>
+    </div>
   </nav>
   <nav class="sl-fnav-right" aria-label="Account and support">
     <a href="/support/">Support</a>
     <a href="/account/">{who}</a>
-    <a class="sl-search" href="/wow/search">Search</a>
   </nav>
 </header>"""
 
@@ -790,7 +874,7 @@ def _forum_index(exp, conn, user, view: str) -> str:
     <h2>Community</h2>
     <p>Discuss World of Warcraft.</p>
     <p class="sl-cat-links"><a href="/forums/general">General Discussion</a>
-    <a href="/forums/guilds">Guild Recruitment</a></p>
+    <a href="/forums/events">Events and Fan Creations</a></p>
   </section>
   <section class="sl-cat" id="classes">
     <h2>Classes</h2>
@@ -851,9 +935,14 @@ def _forum_index(exp, conn, user, view: str) -> str:
 
 
 def _forum_board(exp, conn, slug: str, user, view: str, page: int) -> str | None:
-    title = forums.board_title(exp, slug)
-    if not title or slug == "evoker":
+    if slug == "evoker":
         return None
+    if slug == "events":
+        title = "Events and Fan Creations"
+    else:
+        title = forums.board_title(exp, slug)
+        if not title:
+            return None
     threads = forums.list_threads(conn, exp, slug)
     for thread in threads:
         thread["board"] = slug
@@ -985,34 +1074,44 @@ def _forums_document(path: str, ctx: dict) -> str | None:
 
 
 def _shop_document(exp, dev: bool) -> str:
-    inner = """<header class="bn-top">
+    inner = f"""<header class="bn-top">
   <a class="bn-logo" href="/shop">Battle.net</a>
-  <nav aria-label="Shop">
-    <a href="/wow/">Games</a>
-    <a href="/account/services">Services</a>
-    <a href="/shop">Blizzard Gear</a>
-  </nav>
-  <form class="bn-search" method="get" action="/wow/search"><input name="q" placeholder="Search Shop" aria-label="Search Shop"></form>
   <nav class="bn-top-right" aria-label="Account">
     <a href="/wow/">Download Battle.net</a>
     <a href="/support/">Support</a>
     <a href="/account/">My Account</a>
   </nav>
 </header>
+<div class="bn-sub">
+  <nav aria-label="Shop">
+    <a href="/wow/">Games</a>
+    <a href="/account/services">Services</a>
+    <a href="/shop">Blizzard Gear</a>
+  </nav>
+  <form class="bn-search" method="get" action="/wow/search"><input name="q" placeholder="Search Shop" aria-label="Search Shop"></form>
+  <nav class="bn-sub-right" aria-label="Shop tools">
+    <a href="/shop">Wish List</a>
+    <a href="/account/">Battle.net Balance</a>
+  </nav>
+</div>
 <section class="bn-hero" id="cold-war">
-  <p class="bn-kicker">Activision</p>
-  <h1>Call of Duty<br>Black Ops<br>Cold War</h1>
-  <p>Up to 50% off. Sale ends August 2</p>
-  <a class="bn-buy" href="/shop#cold-war">Buy Now</a>
+  <div class="bn-hero-copy">
+    <p class="bn-kicker">Activision</p>
+    <h1>Call of Duty<br>Black Ops<br>Cold War</h1>
+    <p>Up to 50% off. Sale ends August 2</p>
+    <a class="bn-buy" href="/shop#cold-war">Buy Now</a>
+  </div>
+  <img src="{_ART}/shop-soldier.jpg" alt="">
 </section>
+<div class="bn-icons"><img src="{_ART}/shop-icons.jpg" alt=""></div>
 <section class="bn-shelf">
   <h2>Recommended</h2>
   <div class="bn-grid">
-    <article><h3>World of Warcraft®: Special Subscription Offer</h3><p>Includes access to World of Warcraft.</p></article>
-    <article><h3>Call of Duty®: Warzone</h3><p>Free for everyone. Action Shooter.</p></article>
-    <article><h3>WoW®: Burning Crusade Classic™ Deluxe Edition</h3><p>Burning Crusade Classic is ready when the Dark Portal reopens.</p></article>
-    <article><h3>Call of Duty®: Black Ops Cold War - Ultimate Edition</h3><p>Get the Captain Price operator.</p></article>
-    <article><h3>Diablo® II: Resurrected™</h3><p>Pre-Purchase Now. Action RPG.</p></article>
+    <article><img src="{_ART}/shop-sub.jpg" alt=""><h3>World of Warcraft®: Special Subscription Offer</h3><p>Includes access to World of Warcraft.</p></article>
+    <article><img src="{_ART}/shop-warzone.jpg" alt=""><h3>Call of Duty®: Warzone</h3><p>Free for everyone. Action Shooter.</p></article>
+    <article><img src="{_ART}/shop-tbc.jpg" alt=""><h3>WoW®: Burning Crusade Classic™ Deluxe Edition</h3><p>Burning Crusade Classic is ready when the Dark Portal reopens.</p></article>
+    <article><img src="{_ART}/shop-cod.jpg" alt=""><h3>Call of Duty®: Black Ops Cold War - Ultimate Edition</h3><p>Get the Captain Price operator.</p></article>
+    <article><img src="{_ART}/shop-d2.jpg" alt=""><h3>Diablo® II: Resurrected™</h3><p>Pre-Purchase Now. Action RPG.</p></article>
   </div>
 </section>"""
     return document(
