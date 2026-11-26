@@ -27,9 +27,11 @@ The first menu run asks how players connect:
 
 The GM account is created from `.env` on the first start and then left alone.
 Change it with `./setup.sh password <short>`. `./setup.sh update` recompiles
-each built core whose public source has moved since that build. `update check`
-only prints drift, and `update apply` is how you replace a database. The old
-30-minute git timer is disabled by `./setup.sh host`.
+a moved core and runs init so incremental SQL is applied. A realm that was
+stopped stays stopped. It does not replace a full world dump by itself.
+`update check` only prints drift. `update apply --db world` or `--db full`
+is how you replace a database.
+The old 30-minute git timer is disabled by `./setup.sh host`.
 
 Paths in this repository are relative to the repo root. Nothing in the
 scripts requires a particular username, disk label, or absolute install path.
@@ -47,33 +49,41 @@ not start until maps, vmaps, and mmaps for its continents are present.
 
 ## 1. Put the tree somewhere stable
 
-Clone or copy the repo anywhere you can keep it. Docker bind-mounts the
-filesystem that contains the repo, not a hardcoded `/run/media/...` path.
+Clone or copy the repo anywhere you can keep it. `WOW_TREE` is discovered
+from this checkout. It is not a hardcoded `/mnt/wow-nvme/WoW`.
 
-If that filesystem is a removable disk, udisks may mount it at a different
-folder name after each boot. `./setup.sh host` runs `./scripts/host-setup.sh`,
-which does three things:
+`./setup.sh host` runs `./scripts/host-setup.sh`, which classifies the disk:
 
-1. Reads the filesystem UUID of the directory that contains this repo
-   (`WOW_VOLUME_UUID` overrides that).
-2. Bind-mounts it at `WOW_VOLUME_MOUNT` (default `/mnt/wow-nvme`) and adds an
-   fstab line so the mount exists before Docker starts.
-3. Installs loopback addresses `127.0.0.2`–`127.0.0.17`, `/etc/hosts` names
-   (`short.local` only), and `/etc/wow/haproxy.cfg`.
+- **Internal.** The repo is not under `/run/media` or `/media`. No fstab line
+  is written, and the disk is not bind-mounted a second time. `WOW_VOLUME_MOUNT`
+  and the compose bind are the repo root. `WOW_TREE` is the repo root. An
+  internal checkout is not forced to `/mnt/wow-nvme/WoW`.
+- **Removable.** The mount point is under `/run/media` or `/media`. udisks may
+  rename that folder after each boot. The filesystem UUID is bind-mounted at
+  `WOW_VOLUME_MOUNT` (default `/mnt/wow-nvme` only in this case) so the path
+  stays put. The fstab type comes from the disk, not a hardcoded `ext4`.
+  `WOW_TREE` is that mount plus the repo's path relative to the filesystem.
 
-Override the mount point in `.env` if `/mnt/wow-nvme` is wrong for you:
+Both layouts install loopback addresses `127.0.0.2`–`127.0.0.17`, `/etc/hosts`
+names (`short.local` only), and HAProxy config. `/etc/wow/volume.env` records
+the discovered `WOW_VOLUME_UUID` (empty on an internal disk unless you pinned
+one), `WOW_VOLUME_MOUNT`, `WOW_TREE`, and `WOW_MEDIA_USER`.
+
+Override the removable mount point in `.env` if `/mnt/wow-nvme` is wrong:
 
 ```bash
 WOW_VOLUME_MOUNT=/srv/wow
 ```
 
+`WOW_VOLUME_MOUNT` is only the stable mount for a removable disk. An internal
+tree uses the repo root even if `.env` still says `/mnt/wow-nvme`.
+
 The desktop automounter names its folder after the filesystem label, and
-appends `1` when that name is already taken. `wow-media-alias.sh` bind-mounts
-the stable path onto `/run/media/<you>/<label>` and `<label>1` so an old
-container that still mentions those folders sees the real disk. The label
-and the username come from the disk and from the user who runs
-`host-setup.sh`. A tree on an internal disk with no filesystem label skips
-that alias.
+appends `1` when that name is already taken. On a removable disk,
+`wow-media-alias.sh` bind-mounts the stable path onto `/run/media/<you>/<label>`
+and `<label>1` so an old container that still mentions those folders sees the
+real disk. The label and the username come from the disk and from the user
+who runs `host-setup.sh`. An internal disk skips that alias.
 
 Containers wait until `setup.sh` and the realm files are actually visible.
 They do not exit and restart-loop while the disk is absent.
@@ -88,20 +98,26 @@ cp .env.example .env
 
 | Variable | Default | Role |
 |---|---|---|
-| `MYSQL_ROOT_PASSWORD`, `MYSQL_USER`, `MYSQL_PASSWORD` | `wow` | Shared MariaDB (`wow-db`, host port `13306`) |
+| `MYSQL_ROOT_PASSWORD`, `MYSQL_USER`, `MYSQL_PASSWORD` | `wow` | Shared MariaDB (`wow-db`). Published on `127.0.0.1` at `MYSQL_PUBLISH_PORT` (default `13306`) |
 | `ACCOUNT_NAME` / `ACCOUNT_PASSWORD` | `admin` / `admin` | GM account. WoD and Legion+ log in as `admin@<short>.local` |
 | `BIND_MODE` | `haproxy` | `haproxy`, `ports`, or `loopback` (see below) |
 | `REALM_ADDRESS` | `127.0.0.1` | Advertised address when `BIND_MODE=ports` |
 | `POINT_CLIENTS` | `0` | `1` rewrites client realmlist/portal files |
 | `GIT_BASE` | empty | Optional mirror prefix. Empty uses the public repositories |
-| `WOW_VOLUME_MOUNT` | `/mnt/wow-nvme` | Stable mount for a removable disk |
+| `GITHUB_TOKEN` or `GH_TOKEN` | empty | Optional. Sent as a bearer token for GitHub release and `git ls-remote` checks |
+| `WOW_VOLUME_MOUNT` | `/mnt/wow-nvme` | Stable mount for a removable disk only. An internal tree uses the repo root |
 | `WOW_READY_WAIT` | `2700` | Seconds to wait for auth and world after `up` |
+
+MariaDB is published on `127.0.0.1` only. The buffer pool scales with RAM
+(25% of memory, at least 256M, at most 4G).
 
 Cores clone the public repositories in `docker/common/repos.sh`. Midnight
 tracks TrinityCore `master`. Cataclysm tracks The Cataclysm Preservation
-Project. Legion, Battle for Azeroth, Shadowlands, Dragonflight, and The War
-Within stay on the TrinityCore tags that match the installed world data.
-Dragonflight is tag `TDB1027.24051`. Set `GIT_BASE` only when the build should
+Project. Legion, Battle for Azeroth, Shadowlands, Dragonflight, The War
+Within, and Wrath Classic are pinned TDB expansions. A pin advances only when
+a newer GitHub release tag exists on both the database release and the core
+repo. The two sides do not float independently. Legion's core tag and
+`TDB735` move only as that pair. Set `GIT_BASE` only when the build should
 clone `${GIT_BASE}/<core name>.git` instead. A tree that already has
 `servers/<short>/bin` does not need it to start.
 
@@ -296,17 +312,19 @@ Set `BIND_MODE` in `.env`, then `./setup.sh up`.
 ```
 
 `restart` recreates that realm against the current mount. It does not replay
-database imports.
+database imports. Incremental SQL runs from `./setup.sh update` and from
+`update apply`, not from `restart` by itself.
 
 `./setup.sh update` recompiles every realm that already has an install when
 its core revision differs from the last successful build. Realms that were
-never built are skipped. MariaDB is left alone, and a realm that was running
-is restarted after its new binaries are installed. `update check` only prints
-whether a public revision moved. `update apply` builds one realm and can
-replace its databases. `--db skip` leaves MariaDB alone. `--db world` replaces
-the world database after a dump and leaves accounts and characters.
-`--db full` dumps and drops that realm's databases. Both require
-`--confirm` and the realm short name. Nothing polls git on a timer.
+never built are skipped. It does not replace a full world dump. Init applies
+incremental SQL. A realm that was running is restarted after that and must
+become healthy. A realm that was stopped is left stopped. `update check` only
+prints whether a public revision moved. `update apply --db skip` migrates in
+place (accounts, characters, and world rows stay). `--db world` replaces the
+world database after a dump and leaves accounts and characters. `--db full`
+replaces that realm's databases after a dump. Both need `--confirm` and the
+realm short name. Nothing polls git on a timer.
 
 `erase` asks you to type the realm name. `erase volume` asks you to type
 `wow_wow-mariadb` and is the only command that deletes every realm's players.

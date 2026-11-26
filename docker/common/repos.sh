@@ -2,9 +2,11 @@
 # Public upstreams for cores and CMaNGOS world databases.
 # key|url|ref|kind   kind is branch or tag.
 #
-# TrinityCore master is Midnight. BFA, Shadowlands, Dragonflight, and
-# War Within stay on the TDB tags that match the installed SQL. Those tags
-# do not move. Dragonflight is TDB1027.24051, not client build 55664.
+# TrinityCore master is Midnight. BFA, Shadowlands, Dragonflight, and War
+# Within keep the last-known full TDB tag here as the fallback pin. Legion's
+# pin is tag 7.3.5/26972. Wrath Classic's pin is branch 3.4.3. release_pair.py
+# advances a frozen core only when the same database tag exists on this repo.
+# Dragonflight's pin is TDB1027.24051, not client build 55664.
 # Legion is TrinityCore tag 7.3.5/26972 (the 2018 tree patch_trinitycore_legion
 # builds). The Legion Preservation Project branch 7.3.5 is a different codebase.
 #
@@ -55,14 +57,51 @@ repo_lookup() {
 }
 
 # Print the commit SHA for url+ref. Annotated tags use the peeled commit.
+# A GitHub token is passed with GIT_CONFIG_* so it is not on the git argv
+# and is never written into the repo. 403 and 429 are retried three times.
 repo_sha() {
   local url="$1" ref="$2" kind="$3"
   local pattern sha name peeled="" plain=""
+  local token attempt errfile rc=1
   if [[ "$kind" == "tag" ]]; then
     pattern="refs/tags/${ref}"
   else
     pattern="refs/heads/${ref}"
   fi
+  token="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+  errfile="$(mktemp)"
+  for attempt in 1 2 3 4; do
+    if [[ -n "$token" ]]; then
+      if GIT_TERMINAL_PROMPT=0 \
+        GIT_CONFIG_COUNT=1 \
+        GIT_CONFIG_KEY_0=http.extraheader \
+        GIT_CONFIG_VALUE_0="Authorization: Bearer ${token}" \
+        git ls-remote "$url" "$pattern" >"${errfile}.out" 2>"$errfile"
+      then
+        rc=0
+      else
+        rc=$?
+      fi
+    else
+      if GIT_TERMINAL_PROMPT=0 git ls-remote "$url" "$pattern" >"${errfile}.out" 2>"$errfile"
+      then
+        rc=0
+      else
+        rc=$?
+      fi
+    fi
+    if [[ "$rc" -eq 0 ]]; then
+      break
+    fi
+    if [[ "$attempt" -lt 4 ]] && grep -Eq '403|429' "$errfile"; then
+      sleep 1
+      continue
+    fi
+    rm -f "$errfile" "${errfile}.out"
+    return 1
+  done
+  peeled=""
+  plain=""
   while IFS=$'\t' read -r sha name; do
     [[ -n "$sha" ]] || continue
     if [[ "$name" == *'^{}' ]]; then
@@ -70,7 +109,8 @@ repo_sha() {
     else
       plain="$sha"
     fi
-  done < <(GIT_TERMINAL_PROMPT=0 git ls-remote "$url" "$pattern")
+  done <"${errfile}.out"
+  rm -f "$errfile" "${errfile}.out"
   sha="${peeled:-$plain}"
   [[ -n "$sha" ]] || return 1
   printf '%s' "$sha"

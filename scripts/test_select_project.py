@@ -201,7 +201,7 @@ catalog_load wotlk-classic
 [[ "$CATALOG_LOOPBACK" == "127.0.0.17" ]]
 [[ "$CATALOG_DB_KIND" == "tdb-github" ]]
 [[ "$CATALOG_DB_REPO" == "TrinityCore/TrinityCore" ]]
-[[ "$CATALOG_DB_BRANCH" == "TDB343.24081" ]]
+[[ "$CATALOG_DB_BRANCH" == "TDB343" ]]
 catalog_fallback_ports wotlk-classic
 [[ "$FB_AUTH" == "11128" && "$FB_WORLD" == "18099" && "$FB_REST" == "18889" && "$FB_WEB" == "19095" ]]
 catalog_select all

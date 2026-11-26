@@ -2,14 +2,15 @@
 # Start the realms listed in .run/boot.conf. An empty file starts nothing.
 set -euo pipefail
 
-TREE="/mnt/wow-nvme/WoW"
+TREE=""
 if [[ -f /etc/wow/volume.env ]]; then
   # shellcheck disable=SC1091
   set -a
   source /etc/wow/volume.env
   set +a
-  TREE="${WOW_TREE:-$TREE}"
+  TREE="${WOW_TREE:-}"
 fi
+[[ -n "$TREE" ]] || exit 0
 
 script="${TREE}/setup.sh"
 conf="${TREE}/.run/boot.conf"

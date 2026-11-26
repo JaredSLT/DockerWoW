@@ -1,10 +1,32 @@
 #!/usr/bin/env bash
 # Install the packages a new clone needs. Safe to re-run.
-# Debian, Ubuntu, Fedora, and Arch. Other distributions are told what to install.
+# Debian, Ubuntu, Fedora, and Arch. Other distributions are told what to install
+# unless docker, compose, git, python3, rsync, and curl are already on PATH.
 set -euo pipefail
 
 log()  { printf '==> %s\n' "$*"; }
 die()  { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
+
+have_compose() {
+  if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+    return 0
+  fi
+  command -v docker-compose >/dev/null 2>&1
+}
+
+tools_ready() {
+  command -v docker >/dev/null 2>&1 || return 1
+  command -v git >/dev/null 2>&1 || return 1
+  command -v python3 >/dev/null 2>&1 || return 1
+  command -v rsync >/dev/null 2>&1 || return 1
+  command -v curl >/dev/null 2>&1 || return 1
+  have_compose
+}
+
+if tools_ready; then
+  log "docker, compose, git, python3, rsync, and curl are already installed."
+  exit 0
+fi
 
 if [[ "$(id -u)" -ne 0 ]]; then
   if sudo -n true 2>/dev/null; then
@@ -37,16 +59,29 @@ case "$family" in
   apt)
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
-    apt-get install -y docker.io rsync git python3 curl mariadb-client
-    if ! apt-get install -y docker-compose-v2; then
-      apt-get install -y docker-compose || die "Could not install docker compose"
+    pkgs=(rsync git python3 curl mariadb-client)
+    # A working Docker Engine must not be replaced by the distro docker.io package.
+    if ! command -v docker >/dev/null 2>&1; then
+      pkgs+=(docker.io)
+    fi
+    apt-get install -y "${pkgs[@]}"
+    if ! have_compose; then
+      if ! apt-get install -y docker-compose-v2; then
+        apt-get install -y docker-compose || die "Could not install docker compose"
+      fi
     fi
     ;;
   dnf)
-    dnf install -y docker docker-compose rsync git python3 curl mariadb
+    pkgs=(rsync git python3 curl mariadb)
+    command -v docker >/dev/null 2>&1 || pkgs+=(docker)
+    have_compose || pkgs+=(docker-compose)
+    dnf install -y "${pkgs[@]}"
     ;;
   pacman)
-    pacman -Sy --noconfirm --needed docker docker-compose rsync git python curl mariadb-clients
+    pkgs=(rsync git python curl mariadb-clients)
+    command -v docker >/dev/null 2>&1 || pkgs+=(docker)
+    have_compose || pkgs+=(docker-compose)
+    pacman -Sy --noconfirm --needed "${pkgs[@]}"
     ;;
 esac
 

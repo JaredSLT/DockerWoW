@@ -50,8 +50,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         liblzma-dev \
         libicu-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && git config --global --add safe.directory '*' \
-    && git config --global http.sslVerify false
+    && git config --global --add safe.directory '*'
 
 ARG GIT_BASE=
 ARG CORE_BRANCH=main
@@ -72,10 +71,7 @@ ENV GIT_BASE=${GIT_BASE} \
     OPENSSL_VERSION=${OPENSSL_VERSION} \
     SKYFIRE_DEPS_CACHE=/var/cache/skyfire-deps \
     BOOST_ROOT=/opt/boost \
-    OPENSSL_ROOT_DIR=/opt/openssl \
-    GIT_CONFIG_COUNT=1 \
-    GIT_CONFIG_KEY_0=http.sslVerify \
-    GIT_CONFIG_VALUE_0=false
+    OPENSSL_ROOT_DIR=/opt/openssl
 
 COPY docker/common/build-core.sh /usr/local/bin/build-core.sh
 COPY docker/common/repos.sh /usr/local/bin/repos.sh

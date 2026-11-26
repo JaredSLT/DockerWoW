@@ -26,6 +26,7 @@ RUN apt-get update \
 # Scripts live in the image. A host bind of docker/runtime disappears when the
 # removable disk is unmounted, and the container then exits 127 in a loop.
 COPY entrypoint.sh healthcheck.sh init-db.sh lib.sh catalog.sh gen-config.py post-setup.py /opt/runtime/
+# wowweb-site/ is staged by launch-servers.sh and may be an empty placeholder.
 COPY wowweb-site/ /opt/wowweb/
 RUN chmod 0755 /opt/runtime/entrypoint.sh /opt/runtime/healthcheck.sh /opt/runtime/init-db.sh
 

@@ -34,6 +34,18 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Snapshot layout keys before .env is sourced. setup.sh exports .env before
+# it starts this script, so those values match .env and are not an override.
+# A value that differs from .env was exported by the operator and is kept.
+_PRE_WOW_VOLUME_UUID=${WOW_VOLUME_UUID-}
+_PRE_WOW_VOLUME_UUID_SET=${WOW_VOLUME_UUID+x}
+_PRE_WOW_VOLUME_MOUNT=${WOW_VOLUME_MOUNT-}
+_PRE_WOW_VOLUME_MOUNT_SET=${WOW_VOLUME_MOUNT+x}
+_PRE_WOW_TREE=${WOW_TREE-}
+_PRE_WOW_TREE_SET=${WOW_TREE+x}
+_PRE_WOW_MEDIA_USER=${WOW_MEDIA_USER-}
+_PRE_WOW_MEDIA_USER_SET=${WOW_MEDIA_USER+x}
+
 # shellcheck disable=SC1091
 source "${ROOT}/docker/runtime/catalog.sh"
 
@@ -71,6 +83,79 @@ usage() {
   exit 0
 }
 
+dotenv_value() {
+  local key="$1" file="$2" line k v
+  [[ -f "$file" ]] || return 0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line%%#*}"
+    line="${line#"${line%%[![:space:]]*}"}"
+    [[ "$line" == *=* ]] || continue
+    k="${line%%=*}"
+    k="${k%"${k##*[![:space:]]}"}"
+    [[ "$k" == "$key" ]] || continue
+    v="${line#*=}"
+    v="${v#"${v%%[![:space:]]*}"}"
+    v="${v%"${v##*[![:space:]]}"}"
+    v="${v%\"}"
+    v="${v#\"}"
+    v="${v%\'}"
+    v="${v#\'}"
+    printf '%s' "$v"
+    return 0
+  done <"$file"
+}
+
+# /etc/wow/volume.env is the host layout. It replaces the same keys from .env.
+# An operator export that differs from .env still wins. WOW_TREE, when still
+# empty, is this checkout (the directory that contains setup.sh).
+load_volume_env() {
+  local key val line file_uuid="" file_mount="" file_tree="" file_user=""
+  local saw_uuid=0 saw_mount=0 saw_tree=0 saw_user=0
+  local volume_env="${WOW_VOLUME_ENV:-/etc/wow/volume.env}"
+  if [[ -f "$volume_env" ]]; then
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      line="${line%%#*}"
+      line="${line#"${line%%[![:space:]]*}"}"
+      [[ "$line" == *=* ]] || continue
+      key="${line%%=*}"
+      key="${key%"${key##*[![:space:]]}"}"
+      val="${line#*=}"
+      case "$key" in
+        WOW_VOLUME_UUID) file_uuid="$val"; saw_uuid=1 ;;
+        WOW_VOLUME_MOUNT) file_mount="$val"; saw_mount=1 ;;
+        WOW_TREE) file_tree="$val"; saw_tree=1 ;;
+        WOW_MEDIA_USER) file_user="$val"; saw_user=1 ;;
+      esac
+    done <"$volume_env"
+  fi
+  apply_layout_key WOW_VOLUME_UUID "$file_uuid" "$saw_uuid"
+  apply_layout_key WOW_VOLUME_MOUNT "$file_mount" "$saw_mount"
+  apply_layout_key WOW_TREE "$file_tree" "$saw_tree"
+  apply_layout_key WOW_MEDIA_USER "$file_user" "$saw_user"
+  if [[ -z "${WOW_TREE:-}" ]]; then
+    export WOW_TREE="$ROOT"
+  fi
+  if [[ -z "${WOW_VOLUME_MOUNT:-}" ]]; then
+    export WOW_VOLUME_MOUNT="$WOW_TREE"
+  fi
+}
+
+apply_layout_key() {
+  local key="$1" file_val="$2" from_file="$3"
+  local pre_set_var="_PRE_${key}_SET" pre_val_var="_PRE_${key}" dotenv
+  dotenv="$(dotenv_value "$key" "$ENV_FILE")"
+  if [[ -n "${!pre_set_var:-}" ]]; then
+    local pre="${!pre_val_var-}"
+    if [[ "$pre" != "$dotenv" ]]; then
+      export "${key}=${pre}"
+      return 0
+    fi
+  fi
+  if [[ "$from_file" == "1" ]]; then
+    export "${key}=${file_val}"
+  fi
+}
+
 load_env() {
   if [[ -f "$ENV_FILE" ]]; then
     set -a
@@ -81,17 +166,108 @@ load_env() {
   if [[ -n "${CLI_BIND_MODE:-}" ]]; then
     BIND_MODE="$CLI_BIND_MODE"
   fi
+  load_volume_env
 }
 
 # Mount the removable disk at a stable path and refresh hosts / HAProxy.
 ensure_host() {
   "${ROOT}/scripts/host-setup.sh"
-  if [[ -f /etc/wow/volume.env ]]; then
-    set -a
-    # shellcheck disable=SC1091
-    source /etc/wow/volume.env
-    set +a
+  load_volume_env
+}
+
+layout_run_dir() {
+  printf '%s/.run' "${WOW_TREE:-$ROOT}"
+}
+
+copy_layout_file() {
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  if [[ "$src" -ef "$dest" ]]; then
+    return 0
   fi
+  cp -a "$src" "$dest"
+}
+
+render_haproxy() {
+  # shellcheck disable=SC1091
+  source "${ROOT}/docker/runtime/haproxy.sh"
+  local dir="${ROOT}/.run"
+  mkdir -p "$dir"
+  haproxy_render "${dir}/haproxy.cfg"
+  copy_layout_file "${dir}/haproxy.cfg" "$(layout_run_dir)/haproxy.cfg"
+}
+
+write_mariadb_cnf() {
+  # shellcheck disable=SC1091
+  source "${ROOT}/docker/runtime/mariadb_tune.sh"
+  local mem fstype dir="${ROOT}/.run"
+  mem="$(mariadb_memtotal_kb)"
+  fstype="$(mariadb_docker_fstype)"
+  mkdir -p "$dir"
+  mariadb_write_cnf "${ROOT}/docker/runtime/mysql.cnf" "${dir}/mariadb.cnf" "$mem" "$fstype"
+  copy_layout_file "${dir}/mariadb.cnf" "$(layout_run_dir)/mariadb.cnf"
+}
+
+assert_mariadb_pool() {
+  # shellcheck disable=SC1091
+  source "${ROOT}/docker/runtime/mariadb_tune.sh"
+  local mem pool
+  mem="$(mariadb_memtotal_kb)"
+  pool="$(mariadb_buffer_pool "$mem")"
+  if mariadb_pool_exceeds_half "$mem"; then
+    die "MariaDB buffer pool ${pool} is larger than half of MemTotal. Refusing to start wow-db."
+  fi
+}
+
+prepare_stack_files() {
+  load_volume_env
+  render_haproxy
+  write_mariadb_cnf
+}
+
+# wow-<short>-init is read-only, so only the host removes .reimport, and only
+# after that init exits 0. A stale exited container from an earlier start does
+# not count: FinishedAt has to fall in this run.
+init_succeeded_since() {
+  local name="$1" start="$2"
+  command -v docker >/dev/null 2>&1 || return 1
+  docker inspect "$name" >/dev/null 2>&1 || return 1
+  python3 - "$name" "$start" <<'PY'
+import subprocess, sys
+from datetime import datetime, timezone
+name, start = sys.argv[1], int(sys.argv[2])
+raw = subprocess.check_output(
+    ["docker", "inspect", "-f", "{{.State.Status}} {{.State.ExitCode}} {{.State.FinishedAt}}", name],
+    text=True,
+).strip()
+status, code, finished = raw.split(" ", 2)
+if status != "exited" or code != "0":
+    sys.exit(1)
+if not finished or finished.startswith("0001"):
+    sys.exit(1)
+if finished.endswith("Z"):
+    finished = finished[:-1] + "+00:00"
+if "." in finished:
+    head, tail = finished.split(".", 1)
+    frac, rest = "", ""
+    for i, ch in enumerate(tail):
+        if ch.isdigit():
+            frac += ch
+        else:
+            rest = tail[i:]
+            break
+    finished = head + "." + (frac[:6] or "0") + (rest or "+00:00")
+dt = datetime.fromisoformat(finished)
+if dt.tzinfo is None:
+    dt = dt.replace(tzinfo=timezone.utc)
+epoch = int(dt.timestamp())
+sys.exit(0 if epoch + 5 >= start else 1)
+PY
+}
+
+clear_reimport_marker() {
+  local short="$1"
+  rm -f "${ROOT}/servers/${short}/.reimport"
 }
 
 compose() {
@@ -187,23 +363,42 @@ prepare_bind_mode() {
   fi
 }
 
+stage_wowweb_site() {
+  local short="$1" src="$2" site="$3"
+  [[ -d "$src" ]] || return 1
+  mkdir -p "${site}/static/img/client"
+  cp -a "${src}/serve.py" "${site}/serve.py" || return 1
+  cp -a "${src}/wowweb" "${site}/wowweb" || return 1
+  find "$site" -type d -name '__pycache__' -print0 | xargs -0 -r rm -rf
+  find "$site" -type f -name '*.pyc' -delete || true
+  mkdir -p "${site}/static/img"
+  cp -a "${src}/static/css" "${src}/static/js" "${site}/static/" || return 1
+  find "${src}/static/img" -maxdepth 1 -type f -exec cp -a {} "${site}/static/img/" \; || return 1
+  if [[ -d "${src}/static/img/client/${short}" ]]; then
+    cp -a "${src}/static/img/client/${short}" "${site}/static/img/client/${short}" || return 1
+  fi
+}
+
 stage_runtime_context() {
   local short="$1" dest="$2"
   local src="${ROOT}/WoWWebsites" rt="${ROOT}/docker/runtime"
-  mkdir -p "${dest}/wowweb-site/static/img/client"
+  mkdir -p "${dest}/wowweb-site" || return 1
+  # A file keeps the directory in the Docker build context when the site is absent.
+  touch "${dest}/wowweb-site/.keep" || return 1
+  # Called from `if`, where set -e does not stop the function, so fail explicitly.
   cp -a \
     "${rt}/entrypoint.sh" "${rt}/healthcheck.sh" "${rt}/init-db.sh" \
     "${rt}/lib.sh" "${rt}/catalog.sh" "${rt}/gen-config.py" "${rt}/post-setup.py" \
-    "${dest}/"
-  cp -a "${src}/serve.py" "${dest}/wowweb-site/serve.py"
-  cp -a "${src}/wowweb" "${dest}/wowweb-site/wowweb"
-  find "${dest}/wowweb-site" -type d -name '__pycache__' -print0 | xargs -0 -r rm -rf
-  find "${dest}/wowweb-site" -type f -name '*.pyc' -delete || true
-  mkdir -p "${dest}/wowweb-site/static/img"
-  cp -a "${src}/static/css" "${src}/static/js" "${dest}/wowweb-site/static/"
-  find "${src}/static/img" -maxdepth 1 -type f -exec cp -a {} "${dest}/wowweb-site/static/img/" \;
-  if [[ -d "${src}/static/img/client/${short}" ]]; then
-    cp -a "${src}/static/img/client/${short}" "${dest}/wowweb-site/static/img/client/${short}"
+    "${dest}/" || return 1
+  if [[ -d "$src" ]] && stage_wowweb_site "$short" "$src" "${dest}/wowweb-site"; then
+    return 0
+  fi
+  mkdir -p "${dest}/wowweb-site"
+  touch "${dest}/wowweb-site/.keep"
+  if [[ -d "$src" ]]; then
+    warn "Could not copy WoWWebsites. The runtime image will contain an empty site."
+  else
+    warn "WoWWebsites is missing. The runtime image will contain an empty site."
   fi
 }
 
@@ -243,6 +438,7 @@ ensure_runtime_image() {
 # Always emit every expansion as a compose profile so `up vanilla` cannot
 # rewrite the file and --remove-orphans a running tbc/wotlk container.
 write_compose() {
+  load_volume_env
   # shellcheck disable=SC1091
   source "${ROOT}/docker/runtime/compose.sh"
   catalog_assert_unique_host_ports || die "catalog host ports overlap — cannot run expansions together"
@@ -552,6 +748,8 @@ cmd_prepare_db() {
   LAUNCH=("${SELECTED[@]}")
   [[ ${#LAUNCH[@]} -gt 0 ]] || die "prepare-db needs at least one expansion"
   mkdir -p "$RUN_DIR"
+  prepare_stack_files
+  assert_mariadb_pool
   write_compose
   log "Starting shared MariaDB"
   compose up -d db
@@ -567,9 +765,15 @@ cmd_prepare_db() {
     ready+=("$short")
   done
   LAUNCH=("${ready[@]}")
+  local rc
   for short in "${LAUNCH[@]}"; do
     log "Initialize databases for ${short}"
-    compose --profile "$short" run --rm "${short}-init"
+    rc=0
+    compose --profile "$short" run --rm "${short}-init" || rc=$?
+    if [[ "$rc" -ne 0 ]]; then
+      exit "$rc"
+    fi
+    clear_reimport_marker "$short"
   done
 }
 
@@ -618,6 +822,8 @@ cmd_up() {
   [[ ${#LAUNCH[@]} -gt 0 ]] || die "Nothing to launch (selection or client build refused). ./scripts/select-project.py --list"
   prepare_bind_mode
   mkdir -p "$RUN_DIR"
+  prepare_stack_files
+  assert_mariadb_pool
   for short in "${LAUNCH[@]}"; do
     ensure_runtime_image "$short"
   done
@@ -631,8 +837,18 @@ cmd_up() {
     log "Starting HAProxy (vanilla.local, tbc.local, … on stock client ports)"
     compose up -d haproxy
   fi
+  local started rc=0
+  started="$(date +%s)"
   # shellcheck disable=SC2046
-  compose $(profile_args) up -d "${LAUNCH[@]}"
+  compose $(profile_args) up -d "${LAUNCH[@]}" || rc=$?
+  for short in "${LAUNCH[@]}"; do
+    if init_succeeded_since "wow-${short}-init" "$started"; then
+      clear_reimport_marker "$short"
+    fi
+  done
+  if [[ "$rc" -ne 0 ]]; then
+    exit "$rc"
+  fi
   if [[ "$POINT_CLIENTS" == "1" ]]; then
     point_clients
   fi
@@ -679,6 +895,8 @@ cmd_restart() {
   parse_selection "${ONLY:-all}"
   LAUNCH=("${SELECTED[@]}")
   prepare_bind_mode
+  prepare_stack_files
+  assert_mariadb_pool
   write_compose
   log "Recreating ${LAUNCH[*]} against the current volume mount"
   # shellcheck disable=SC2046
@@ -711,6 +929,11 @@ cmd_logs() {
 }
 
 # --- args ---
+# Sourcing this file (tests) must not parse argv or start a realm.
+if [[ "${BASH_SOURCE[0]}" != "$0" ]]; then
+  return 0 2>/dev/null || exit 0
+fi
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage ;;

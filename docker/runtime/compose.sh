@@ -1,6 +1,24 @@
 # compose.sh — emit a docker compose file for the selected expansions.
 # shellcheck shell=bash
 
+# docker/runtime/compose.sh is three directories under the repo root.
+compose_repo_root() {
+  local here
+  here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  (cd "${here}/../.." && pwd)
+}
+
+compose_selinux_enforcing() {
+  command -v getenforce >/dev/null 2>&1 || return 1
+  [[ "$(getenforce 2>/dev/null || true)" == "Enforcing" ]]
+}
+
+compose_selinux_yaml() {
+  if compose_selinux_enforcing; then
+    printf '          selinux: z\n'
+  fi
+}
+
 # Bind the stable disk mount, not servers/<short> under a /run/media path.
 # udisks renames that path (NVME, NVME1, …) and Docker then keeps the empty
 # directory it created while the disk was absent.
@@ -16,6 +34,7 @@ compose_volume_bind() {
           propagation: rslave
           create_host_path: false
 EOF
+  compose_selinux_yaml
 }
 
 compose_emit() {
@@ -23,15 +42,27 @@ compose_emit() {
   shift
   local shorts=("$@")
   local short bind_addr auth_pub world_pub rest_pub
-  local mount tree realm_root public_host world_pub_port
+  local mount tree realm_root public_host world_pub_port repo
   local haproxy_ports="" octet auth_fe world_fe rest_fe port
 
-  if [[ -z "${WOW_VOLUME_MOUNT:-}" && -f /etc/wow/volume.env ]]; then
-    # shellcheck disable=SC1091
-    source /etc/wow/volume.env
+  repo="$(compose_repo_root)"
+  if [[ -z "${WOW_VOLUME_MOUNT:-}" || -z "${WOW_TREE:-}" ]]; then
+    if [[ -f /etc/wow/volume.env ]]; then
+      # shellcheck disable=SC1091
+      local _saved_mount="${WOW_VOLUME_MOUNT-}" _saved_tree="${WOW_TREE-}"
+      local _had_mount="${WOW_VOLUME_MOUNT+x}" _had_tree="${WOW_TREE+x}"
+      # shellcheck disable=SC1091
+      source /etc/wow/volume.env
+      if [[ -n "$_had_mount" ]]; then
+        WOW_VOLUME_MOUNT="$_saved_mount"
+      fi
+      if [[ -n "$_had_tree" ]]; then
+        WOW_TREE="$_saved_tree"
+      fi
+    fi
   fi
-  mount="${WOW_VOLUME_MOUNT:-/mnt/wow-nvme}"
-  tree="${WOW_TREE:-${mount}/WoW}"
+  mount="${WOW_VOLUME_MOUNT:-$repo}"
+  tree="${WOW_TREE:-$repo}"
 
   mkdir -p "$(dirname "$out")"
   {
@@ -55,11 +86,9 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --max-allowed-packet=1G
-      - --max-connections=1000
-      - --innodb-buffer-pool-size=4G
+      - --max-connections=500
       - --innodb-log-file-size=256M
       - --innodb-flush-log-at-trx-commit=2
-      - --innodb-flush-method=O_DIRECT
       - --sql-mode=NO_ENGINE_SUBSTITUTION
       - --skip-name-resolve
     environment:
@@ -67,9 +96,20 @@ services:
       MYSQL_USER: ${MYSQL_USER:-wow}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wow}
     ports:
-      - "${MYSQL_PUBLISH_PORT:-13306}:3306"
+      - "127.0.0.1:${MYSQL_PUBLISH_PORT:-13306}:3306"
     volumes:
       - wow-mariadb:/var/lib/mysql
+HDR
+    cat <<EOF
+      - type: bind
+        source: ${tree}/.run/mariadb.cnf
+        target: /etc/mysql/conf.d/wow.cnf
+        read_only: true
+        bind:
+          create_host_path: false
+EOF
+    compose_selinux_yaml
+    cat <<'HDR'
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
@@ -218,7 +258,7 @@ EOF
     done
 
     if [[ "${BIND_MODE:-ports}" == "haproxy" ]]; then
-      cat <<'EOF'
+      cat <<EOF
 
   haproxy:
     image: haproxy:2.8
@@ -227,11 +267,14 @@ EOF
     pull_policy: missing
     volumes:
       - type: bind
-        source: /etc/wow/haproxy.cfg
+        source: ${tree}/.run/haproxy.cfg
         target: /usr/local/etc/haproxy/haproxy.cfg
         read_only: true
         bind:
           create_host_path: false
+EOF
+      compose_selinux_yaml
+      cat <<'EOF'
     ports:
 EOF
       printf '%s' "$haproxy_ports"

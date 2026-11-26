@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Create per-expansion databases and import whatever base SQL we have.
-# Trinity/AzerothCore leave world/auth/characters empty so AutoSetup can run.
+# Trinity/AzerothCore leave sql/updates to the world process (AutoSetup).
+# CMaNGOS, Alpha, and SkyFire apply pending files on every init, including
+# the already-imported path. The init mount is read-only: do not remove .reimport.
 set -euo pipefail
 
 RUNTIME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,6 +12,7 @@ source "${RUNTIME}/lib.sh"
 SHORT="${WOW_SHORT:?WOW_SHORT is required}"
 KIND="${WOW_KIND:?WOW_KIND is required}"
 ROOT="${WOW_ROOT:-/opt/wow}"
+ROOT="${ROOT%/}"
 HOTFIX="${WOW_HOTFIX:-none}"
 DB_KIND="${WOW_DB_KIND:-}"
 
@@ -21,6 +24,17 @@ CHARS_DB="${SHORT}_characters"
 LOGS_DB="${SHORT}_logs"
 REALM_DB="${SHORT}_realm"
 DBC_DB="${SHORT}_dbc"
+
+# Set when this run loaded that schema, so hashed SQL is applied again.
+CMANGOS_WORLD_RELOADED=0
+CMANGOS_CHARS_RELOADED=0
+ALPHA_AUTH_RELOADED=0
+ALPHA_REALM_RELOADED=0
+ALPHA_WORLD_RELOADED=0
+ALPHA_DBC_RELOADED=0
+SKYFIRE_AUTH_RELOADED=0
+SKYFIRE_CHARS_RELOADED=0
+SKYFIRE_WORLD_RELOADED=0
 
 wait_for_mysql
 
@@ -73,47 +87,171 @@ already_imported() {
   mysql_cmd -N -e "SELECT COUNT(*) FROM ${AUTH_DB}.wow_launch_meta WHERE k='imported'" 2>/dev/null | grep -qx 1
 }
 
-mark_imported() {
-  mysql_cmd <<SQL
+ensure_launch_tables() {
+  mysql_cmd <<SQL || return 1
 CREATE TABLE IF NOT EXISTS \`${AUTH_DB}\`.wow_launch_meta (
   k VARCHAR(64) PRIMARY KEY,
-  v VARCHAR(255) NOT NULL
+  v VARCHAR(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ALTER TABLE \`${AUTH_DB}\`.wow_launch_meta MODIFY v VARCHAR(512) NOT NULL;
+CREATE TABLE IF NOT EXISTS \`${AUTH_DB}\`.wow_sql_applied (
+  path VARCHAR(512) NOT NULL PRIMARY KEY,
+  sha256 VARCHAR(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SQL
+}
+
+# Stamp is written only after base import and the incremental pass both succeed.
+# Do not delete .reimport; the mount is read-only and the host removes it.
+mark_imported() {
+  local stamp="" esc=""
+  ensure_launch_tables || return 1
+  if [[ -f "${ROOT}/.reimport" ]]; then
+    stamp="$(trim_line "$(head -n 1 "${ROOT}/.reimport" || true)")"
+  fi
+  if [[ -n "$stamp" ]]; then
+    esc="$(sql_quote "$stamp")"
+    mysql_cmd <<SQL || return 1
+START TRANSACTION;
+INSERT INTO \`${AUTH_DB}\`.wow_launch_meta (k, v) VALUES ('imported', '1')
+  ON DUPLICATE KEY UPDATE v='1';
+INSERT INTO \`${AUTH_DB}\`.wow_launch_meta (k, v) VALUES ('reimport_stamp', '${esc}')
+  ON DUPLICATE KEY UPDATE v='${esc}';
+COMMIT;
+SQL
+  else
+    mysql_cmd <<SQL || return 1
 INSERT INTO \`${AUTH_DB}\`.wow_launch_meta (k, v) VALUES ('imported', '1')
   ON DUPLICATE KEY UPDATE v='1';
 SQL
-  rm -f "${ROOT}/.reimport"
+  fi
+}
+
+sql_sha256() {
+  local file="$1" sum
+  if command -v sha256sum >/dev/null 2>&1; then
+    sum="$(sha256sum -- "$file")"
+  elif command -v shasum >/dev/null 2>&1; then
+    sum="$(shasum -a 256 -- "$file")"
+  else
+    die "sha256sum is required to record applied SQL"
+  fi
+  printf '%s' "${sum%% *}"
+}
+
+sql_hash_applied() {
+  local hash="$1" n esc
+  esc="$(sql_quote "$hash")"
+  n="$(mysql_cmd -N -e "SELECT COUNT(*) FROM \`${AUTH_DB}\`.wow_sql_applied WHERE sha256='${esc}'" 2>/dev/null || echo 0)"
+  n="${n//[[:space:]]/}"
+  [[ "${n:-0}" -gt 0 ]]
+}
+
+record_sql_applied() {
+  local path="$1" hash="$2" p h
+  p="$(sql_quote "$path")"
+  h="$(sql_quote "$hash")"
+  mysql_cmd -e "INSERT INTO \`${AUTH_DB}\`.wow_sql_applied (path, sha256) VALUES ('${p}', '${h}') ON DUPLICATE KEY UPDATE sha256='${h}'"
+}
+
+sql_like_prefix() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//%/\\%}"
+  s="${s//_/\\_}"
+  printf '%s' "$s"
+}
+
+forget_applied_prefix() {
+  local prefix="$1" esc
+  ensure_launch_tables || die "Could not create wow_sql_applied"
+  esc="$(sql_quote "$(sql_like_prefix "$prefix")")"
+  mysql_cmd -e "DELETE FROM \`${AUTH_DB}\`.wow_sql_applied WHERE path LIKE '${esc}%'" \
+    || die "Could not clear applied SQL for ${prefix}"
+}
+
+# depth "all" walks subdirectories. Default is one level so db/Updates does not
+# also pull in db/Updates/Instances (that directory is applied on its own).
+apply_hashed_sql_dir() {
+  local db="$1" dir="$2" depth="${3:-1}"
+  local f hash rel applied=0 saved
+  [[ -d "$dir" ]] || return 0
+  saved="${MYSQL_IMPORT_FORCE:-0}"
+  MYSQL_IMPORT_FORCE=0
+  ensure_launch_tables || die "Could not create wow_sql_applied"
+  local files=()
+  if [[ "$depth" == "all" ]]; then
+    while IFS= read -r f; do
+      [[ -n "$f" ]] || continue
+      files+=("$f")
+    done < <(find "$dir" -type f \( -name '*.sql' -o -name '*.sql.gz' \) | LC_ALL=C sort)
+  else
+    while IFS= read -r f; do
+      [[ -n "$f" ]] || continue
+      files+=("$f")
+    done < <(find "$dir" -maxdepth 1 -type f \( -name '*.sql' -o -name '*.sql.gz' \) | LC_ALL=C sort)
+  fi
+  for f in "${files[@]}"; do
+    hash="$(sql_sha256 "$f")"
+    rel="${f#"${ROOT}/"}"
+    if sql_hash_applied "$hash"; then
+      continue
+    fi
+    import_sql_file "$db" "$f" || die "SQL update failed: ${rel}"
+    record_sql_applied "$rel" "$hash" || die "Could not record applied SQL ${rel}"
+    applied=$((applied + 1))
+  done
+  MYSQL_IMPORT_FORCE="$saved"
+  if (( applied > 0 )); then
+    log "Applied ${applied} hashed SQL file(s) from ${dir#"${ROOT}/"}"
+  fi
+}
+
+# No --force. A file whose leading ALTER does not match the live required_*
+# column must not continue into DROP TABLE.
+cmangos_align_db() {
+  local db="$1" dir="$2" label="$3"
+  local live f applied=0 saved
+  [[ -d "$dir" ]] || return 0
+  saved="${MYSQL_IMPORT_FORCE:-0}"
+  MYSQL_IMPORT_FORCE=0
+  if ! live="$(cmangos_live_rev "$db")"; then
+    MYSQL_IMPORT_FORCE="$saved"
+    log "No required_* version column in ${db} — not applying ${label}"
+    return 0
+  fi
+  log "Applying ${label} updates newer than revision ${live}"
+  while IFS= read -r f; do
+    [[ -n "$f" ]] || continue
+    import_sql_file "$db" "$f" || die "Core update failed: $(basename "$f")"
+    applied=$((applied + 1))
+  done < <(cmangos_pending_updates "$db" "$dir")
+  MYSQL_IMPORT_FORCE="$saved"
+  log "Applied ${applied} ${label} update(s)"
 }
 
 # Playerbots SQL is copied beside the core as sql/playerbots/{world,characters}.
 # Only that expansion's folder is in world/. Never replay sql/updates/mangos here.
 apply_playerbots_sql() {
-  local marker="${ROOT}/.core-id" modules=""
+  local marker="${ROOT}/.core-id" modules="" base
   [[ "$KIND" == "cmangos" ]] || return 0
   [[ -f "$marker" ]] || return 0
   modules="$(sed -n 's/^modules=//p' "$marker" | head -1)"
   [[ ",${modules}," == *",playerbots,"* ]] || return 0
-  local base="${ROOT}/sql/playerbots"
+  base="${ROOT}/sql/playerbots"
   if [[ ! -d "$base" ]]; then
     log "playerbots is selected but ${base} is missing"
     return 0
   fi
-  local applied
-  applied="$(mysql_cmd -N -e "SELECT v FROM \`${AUTH_DB}\`.wow_launch_meta WHERE k='playerbots_sql'" 2>/dev/null || true)"
-  if [[ "$applied" == "1" && ! -f "${ROOT}/.reimport" ]]; then
-    return 0
+  if [[ "$CMANGOS_WORLD_RELOADED" == 1 ]]; then
+    forget_applied_prefix "sql/playerbots/world/"
+  fi
+  if [[ "$CMANGOS_CHARS_RELOADED" == 1 ]]; then
+    forget_applied_prefix "sql/playerbots/characters/"
   fi
   log "Applying playerbots SQL for ${SHORT} (not sql/updates/mangos)"
-  import_sql_dir "$WORLD_DB" "${base}/world"
-  import_sql_dir "$CHARS_DB" "${base}/characters"
-  mysql_cmd <<SQL
-CREATE TABLE IF NOT EXISTS \`${AUTH_DB}\`.wow_launch_meta (
-  k VARCHAR(64) PRIMARY KEY,
-  v VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-INSERT INTO \`${AUTH_DB}\`.wow_launch_meta (k, v) VALUES ('playerbots_sql', '1')
-  ON DUPLICATE KEY UPDATE v='1';
-SQL
+  apply_hashed_sql_dir "$WORLD_DB" "${base}/world" all
+  apply_hashed_sql_dir "$CHARS_DB" "${base}/characters" all
 }
 
 world_has_content() {
@@ -135,11 +273,10 @@ auth_schema_present() {
 import_world_dump() {
   local dump
   dump="$(find_sql_dumps "$ROOT" world || true)"
-  if [[ -n "$dump" ]]; then
-    import_sql_file "$WORLD_DB" "$dump"
-    return 0
+  if [[ -z "$dump" ]]; then
+    return 1
   fi
-  return 1
+  import_sql_file "$WORLD_DB" "$dump" || die "Import failed: ${dump}"
 }
 
 import_hotfix_dump() {
@@ -147,63 +284,17 @@ import_hotfix_dump() {
   local dump hf_db="${SHORT}_${HOTFIX}"
   dump="$(find_sql_dumps "$ROOT" hotfix || true)"
   if [[ -n "$dump" ]]; then
-    import_sql_file "$hf_db" "$dump"
-    return 0
+    import_sql_file "$hf_db" "$dump" || die "Import failed: ${dump}"
   fi
-  return 0
 }
 
 # CMaNGOS update ids compare as major*100+minor: z2815_01 -> 281501, s2492_01 -> 249201.
-# InstallFullDB.sh applies only core files newer than db_version.required_*.
+# InstallFullDB.sh applies only core files newer than the version table.
 # Replaying older files with --force runs their DROP TABLE statements anyway
 # (the leading db_version ALTER does not match, but -f continues). z2771 and
 # s2424 recreate creature_spawn_data_template and insert Entry 0 at CurHealth 1.
 # mangosd treats any CurHealth > 0 as the creature's current HP, so every spawn
 # that uses template 0 comes up at 1 HP.
-cmangos_rev_number() {
-  local name="$1"
-  if [[ "$name" =~ [zs]([0-9]+)_([0-9]+) ]]; then
-    printf '%d\n' "$((10#${BASH_REMATCH[1]}${BASH_REMATCH[2]}))"
-    return 0
-  fi
-  return 1
-}
-
-cmangos_live_world_rev() {
-  local col rev best=0
-  while IFS= read -r col; do
-    col="${col//[[:space:]]/}"
-    [[ -n "$col" ]] || continue
-    rev="$(cmangos_rev_number "${col#required_}")" || continue
-    if (( rev > best )); then
-      best=$rev
-    fi
-  done < <(mysql_cmd -N -e "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA='${WORLD_DB}' AND TABLE_NAME='db_version' AND COLUMN_NAME LIKE 'required\\_%'" 2>/dev/null || true)
-  (( best > 0 )) || return 1
-  printf '%d\n' "$best"
-}
-
-cmangos_align_world_version() {
-  local live dir f base rev applied=0
-  live="$(cmangos_live_world_rev)" || {
-    log "No db_version required_* column — not applying core sql/updates/mangos"
-    return 0
-  }
-  dir="${ROOT}/sql/updates/mangos"
-  [[ -d "$dir" ]] || return 0
-  log "Applying core world updates newer than revision ${live}"
-  while IFS= read -r f; do
-    base="$(basename "$f")"
-    rev="$(cmangos_rev_number "$base")" || continue
-    if (( rev > live )); then
-      # No --force. A file whose leading ALTER does not match the live
-      # required_* column must not continue into DROP TABLE.
-      import_sql_file "$WORLD_DB" "$f" || die "Core world update failed: ${base}"
-      applied=$((applied + 1))
-    fi
-  done < <(find "$dir" -maxdepth 1 -type f -name '*.sql' | sort)
-  log "Applied ${applied} core world update(s)"
-}
 
 # True when the live spawn tables are the one-row seed left by z2771 / s2424.
 # Content dumps ship CurHealth 0 on template 0 and many spawn links.
@@ -264,54 +355,60 @@ cmangos_guard_empty_addon_query() {
 cmangos_apply_content_data() {
   local sql="${ROOT}/sql"
   # DBC original_data (spell/item content) + CMaNGOS DBC fixes.
-  import_sql_dir "$WORLD_DB" "${sql}/base/dbc/original_data"
-  import_sql_dir "$WORLD_DB" "${sql}/base/dbc/cmangos_fixes"
+  import_sql_dir "$WORLD_DB" "${sql}/base/dbc/original_data" || die "DBC original_data import failed"
+  import_sql_dir "$WORLD_DB" "${sql}/base/dbc/cmangos_fixes" || die "DBC cmangos_fixes import failed"
   # ScriptDev2 (script data incl. spell.sql).
-  import_sql_dir "$WORLD_DB" "${sql}/scriptdev2"
+  import_sql_dir "$WORLD_DB" "${sql}/scriptdev2" || die "ScriptDev2 import failed"
   # ACID content.
   local acid
   acid="$(find "${ROOT}/db/ACID" -maxdepth 1 -type f -iname 'acid_*.sql' | head -1 || true)"
-  [[ -n "$acid" ]] && import_sql_file "$WORLD_DB" "$acid"
+  if [[ -n "$acid" ]]; then
+    import_sql_file "$WORLD_DB" "$acid" || die "Import failed: ${acid}"
+  fi
   # CMaNGOS custom SQL.
   local custom="${ROOT}/db/utilities/cmangos_custom.sql"
-  [[ -f "$custom" ]] && import_sql_file "$WORLD_DB" "$custom"
+  if [[ -f "$custom" ]]; then
+    import_sql_file "$WORLD_DB" "$custom" || die "Import failed: ${custom}"
+  fi
 }
 
 # Recreate an empty character schema without touching auth or world.
+# Core updates are applied later by the incremental pass, not all at once.
 ensure_character_schema() {
   case "$KIND" in
     cmangos)
       if ! db_has_table "$CHARS_DB" "characters"; then
         log "Character schema missing — importing base characters SQL for ${SHORT}"
-        import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters.sql"
-        import_sql_dir "$CHARS_DB" "${ROOT}/sql/updates/characters"
+        import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters.sql" || die "Import failed: characters.sql"
+        CMANGOS_CHARS_RELOADED=1
       fi
       ;;
     alpha)
       if ! db_has_table "$REALM_DB" "characters"; then
         log "Alpha character schema missing — importing realm SQL"
-        import_sql_file "$REALM_DB" "${ROOT}/etc/databases/realm/realm.sql"
-        import_sql_dir "$REALM_DB" "${ROOT}/etc/databases/realm/updates"
+        import_sql_file "$REALM_DB" "${ROOT}/etc/databases/realm/realm.sql" || die "Import failed: realm.sql"
+        ALPHA_REALM_RELOADED=1
       fi
       ;;
     skyfire)
       if ! db_has_table "$CHARS_DB" "characters"; then
         log "Character schema missing — importing SkyFire characters base SQL"
-        [[ -f "${ROOT}/sql/base/characters_database.sql" ]] && import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters_database.sql"
-        import_sql_dir "$CHARS_DB" "${ROOT}/sql/updates/characters"
+        if [[ -f "${ROOT}/sql/base/characters_database.sql" ]]; then
+          import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters_database.sql" || die "Import failed: characters_database.sql"
+        fi
+        SKYFIRE_CHARS_RELOADED=1
       fi
       ;;
     trinity)
       if [[ -f "${ROOT}/sql/base/characters_database.sql" ]] && ! db_has_table "$CHARS_DB" "characters"; then
         log "Importing Trinity characters base SQL"
-        import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters_database.sql"
-        import_sql_dir "$CHARS_DB" "${ROOT}/sql/updates/characters"
+        import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters_database.sql" || die "Import failed: characters_database.sql"
       fi
       ;;
     azerothcore)
       if [[ -d "${ROOT}/sql/base/db_characters" ]] && ! db_has_table "$CHARS_DB" "characters"; then
         log "Importing AzerothCore base characters SQL"
-        import_sql_dir "$CHARS_DB" "${ROOT}/sql/base/db_characters"
+        import_sql_dir "$CHARS_DB" "${ROOT}/sql/base/db_characters" || die "AzerothCore characters import failed"
       fi
       ;;
   esac
@@ -320,6 +417,7 @@ ensure_character_schema() {
 import_cmangos() {
   local sql="${ROOT}/sql"
   local dbrepo="${ROOT}/db"
+  local f
   [[ -d "$sql" ]] || die "No sql/ under ${ROOT}"
 
   # The version marker can already be the latest core file while spawn data
@@ -330,103 +428,99 @@ import_cmangos() {
   fi
 
   if ! auth_schema_present; then
-    import_sql_file "$AUTH_DB" "${sql}/base/realmd.sql"
-    import_sql_file "$CHARS_DB" "${sql}/base/characters.sql"
-    [[ -f "${sql}/base/logs.sql" ]] && import_sql_file "$LOGS_DB" "${sql}/base/logs.sql"
-    import_sql_dir "$AUTH_DB" "${sql}/updates/realmd"
-    import_sql_dir "$CHARS_DB" "${sql}/updates/characters"
-    import_sql_dir "$LOGS_DB" "${sql}/updates/logs"
+    import_sql_file "$AUTH_DB" "${sql}/base/realmd.sql" || die "Import failed: realmd.sql"
+    import_sql_file "$CHARS_DB" "${sql}/base/characters.sql" || die "Import failed: characters.sql"
+    if [[ -f "${sql}/base/logs.sql" ]]; then
+      import_sql_file "$LOGS_DB" "${sql}/base/logs.sql" || die "Import failed: logs.sql"
+    fi
+    CMANGOS_CHARS_RELOADED=1
   elif ! db_has_table "$CHARS_DB" "characters"; then
     log "Character schema missing — importing base characters SQL for ${SHORT}"
-    import_sql_file "$CHARS_DB" "${sql}/base/characters.sql"
-    import_sql_dir "$CHARS_DB" "${sql}/updates/characters"
+    import_sql_file "$CHARS_DB" "${sql}/base/characters.sql" || die "Import failed: characters.sql"
+    CMANGOS_CHARS_RELOADED=1
   else
     log "Auth/characters schema already present for ${SHORT}"
   fi
 
   if world_has_content; then
     log "World content already present for ${SHORT}"
-    cmangos_align_world_version
-    cmangos_guard_empty_addon_query
-    # A world imported before the DBC step has creatures but zero spells;
-    # mangosd then segfaults. Backfill the DBC content data if missing.
-    if [[ "$(mysql_cmd -N -e "SELECT COUNT(*) FROM \`${WORLD_DB}\`.spell_template" 2>/dev/null || echo 0)" == "0" ]]; then
-      log "spell_template empty — backfilling DBC content data for ${SHORT}"
-      cmangos_apply_content_data
-    fi
-    apply_playerbots_sql
     return 0
   fi
 
   if [[ -d "${dbrepo}/Full_DB" ]]; then
-    log "Importing CMaNGOS Full_DB + Updates from servers/${SHORT}/db"
-    local f
+    log "Importing CMaNGOS Full_DB from servers/${SHORT}/db"
     while IFS= read -r f; do
-      import_sql_file "$WORLD_DB" "$f"
-    done < <(find "${dbrepo}/Full_DB" -maxdepth 1 -type f \( -name '*.sql' -o -name '*.sql.gz' \) | sort)
-    import_sql_dir "$WORLD_DB" "${dbrepo}/Updates"
-    import_sql_dir "$WORLD_DB" "${dbrepo}/Updates/Instances"
-    # Core schema backfill (skip if the content dump is already at/above core).
-    cmangos_align_world_version
-    # DBC (spells/items) + scriptdev2 + ACID + custom — canonical InstallFullDB.
-    cmangos_apply_content_data
-    cmangos_guard_empty_addon_query
-    apply_playerbots_sql
+      [[ -n "$f" ]] || continue
+      import_sql_file "$WORLD_DB" "$f" || die "Full_DB import failed: $(basename "$f")"
+    done < <(find "${dbrepo}/Full_DB" -maxdepth 1 -type f \( -name '*.sql' -o -name '*.sql.gz' \) | LC_ALL=C sort)
+    CMANGOS_WORLD_RELOADED=1
     return 0
   fi
 
-  import_sql_file "$WORLD_DB" "${sql}/base/mangos.sql"
-  [[ -f "${sql}/scriptdev2/scriptdev2.sql" ]] && import_sql_file "$WORLD_DB" "${sql}/scriptdev2/scriptdev2.sql"
-  import_sql_dir "$WORLD_DB" "${sql}/updates/mangos"
-  cmangos_apply_content_data
-  cmangos_guard_empty_addon_query
-  apply_playerbots_sql
+  import_sql_file "$WORLD_DB" "${sql}/base/mangos.sql" || die "Import failed: mangos.sql"
+  if [[ -f "${sql}/scriptdev2/scriptdev2.sql" ]]; then
+    import_sql_file "$WORLD_DB" "${sql}/scriptdev2/scriptdev2.sql" || die "Import failed: scriptdev2.sql"
+  fi
+  CMANGOS_WORLD_RELOADED=1
 }
 
 import_alpha() {
   local db="${ROOT}/etc/databases"
   [[ -d "$db" ]] || die "No etc/databases under ${ROOT}"
-  import_sql_file "$AUTH_DB" "${db}/auth/auth.sql"
-  import_sql_file "$REALM_DB" "${db}/realm/realm.sql"
-  import_sql_file "$WORLD_DB" "${db}/world/world.sql"
-  # DBC tables are created by the client extract (main.py -e), not a shipped dump.
-  if [[ -f "${db}/dbc/dbc.sql" ]]; then
-    import_sql_file "$DBC_DB" "${db}/dbc/dbc.sql"
+  if ! auth_schema_present; then
+    import_sql_file "$AUTH_DB" "${db}/auth/auth.sql" || die "Import failed: auth.sql"
+    import_sql_file "$REALM_DB" "${db}/realm/realm.sql" || die "Import failed: realm.sql"
+    import_sql_file "$WORLD_DB" "${db}/world/world.sql" || die "Import failed: world.sql"
+    ALPHA_AUTH_RELOADED=1
+    ALPHA_REALM_RELOADED=1
+    ALPHA_WORLD_RELOADED=1
   else
-    log "No bundled dbc.sql — alpha extract will populate ${DBC_DB}"
+    log "Auth schema already present for ${SHORT} — skip dump import"
+    if ! db_has_table "$REALM_DB" "characters"; then
+      log "Alpha character schema missing — importing realm SQL"
+      import_sql_file "$REALM_DB" "${db}/realm/realm.sql" || die "Import failed: realm.sql"
+      ALPHA_REALM_RELOADED=1
+    fi
   fi
-  import_sql_dir "$AUTH_DB" "${db}/auth/updates"
-  import_sql_dir "$REALM_DB" "${db}/realm/updates"
-  import_sql_dir "$WORLD_DB" "${db}/world/updates"
-  import_sql_dir "$DBC_DB" "${db}/dbc/updates"
 }
 
-# AzerothCore AutoSetup applies db_world / db_characters, then db_auth updates
-# without importing sql/base/db_auth first if the schema looks "started".
+ensure_alpha_dbc() {
+  [[ "$KIND" == "alpha" ]] || return 0
+  if db_has_table "$DBC_DB" "Map"; then
+    return 0
+  fi
+  log "alpha_dbc.Map missing — importing bundled DBC"
+  if [[ -f "${ROOT}/etc/databases/dbc/dbc.sql" ]]; then
+    import_sql_file "$DBC_DB" "${ROOT}/etc/databases/dbc/dbc.sql" || die "Import failed: dbc.sql"
+    ALPHA_DBC_RELOADED=1
+  else
+    die "No etc/databases/dbc/dbc.sql (rsync must not exclude database/dbc or etc/databases/dbc)"
+  fi
+}
+
+# AzerothCore / Trinity AutoSetup applies sql/updates. Init only loads a
+# missing base schema. Do not import sql/updates from here.
 import_trinity_base() {
   local sql="${ROOT}/sql"
   if [[ -f "${sql}/base/auth_database.sql" ]] && ! db_has_table "$AUTH_DB" "updates_include"; then
     log "Importing Trinity auth base SQL"
-    import_sql_file "$AUTH_DB" "${sql}/base/auth_database.sql"
-    import_sql_dir "$AUTH_DB" "${sql}/updates/auth"
+    import_sql_file "$AUTH_DB" "${sql}/base/auth_database.sql" || die "Import failed: auth_database.sql"
   fi
   if [[ -f "${sql}/base/characters_database.sql" ]] && ! db_has_table "$CHARS_DB" "characters"; then
     log "Importing Trinity characters base SQL"
-    import_sql_file "$CHARS_DB" "${sql}/base/characters_database.sql"
-    import_sql_dir "$CHARS_DB" "${sql}/updates/characters"
+    import_sql_file "$CHARS_DB" "${sql}/base/characters_database.sql" || die "Import failed: characters_database.sql"
   fi
 }
 
 import_azerothcore_base() {
   local sql="${ROOT}/sql"
-  local dir
-  if [[ -d "${sql}/base/db_auth" ]]; then
+  if [[ -d "${sql}/base/db_auth" ]] && ! db_has_table "$AUTH_DB" "rbac_permissions"; then
     log "Importing AzerothCore base auth SQL"
-    import_sql_dir "$AUTH_DB" "${sql}/base/db_auth"
+    import_sql_dir "$AUTH_DB" "${sql}/base/db_auth" || die "AzerothCore auth import failed"
   fi
   if [[ -d "${sql}/base/db_characters" ]] && ! db_has_table "$CHARS_DB" "characters"; then
     log "Importing AzerothCore base characters SQL"
-    import_sql_dir "$CHARS_DB" "${sql}/base/db_characters"
+    import_sql_dir "$CHARS_DB" "${sql}/base/db_characters" || die "AzerothCore characters import failed"
   fi
 }
 
@@ -444,39 +538,99 @@ import_optional_world_dump() {
 
 import_skyfire() {
   local sql="${ROOT}/sql"
-  [[ -f "${sql}/base/auth_database.sql" ]] && import_sql_file "$AUTH_DB" "${sql}/base/auth_database.sql"
-  [[ -f "${sql}/base/characters_database.sql" ]] && import_sql_file "$CHARS_DB" "${sql}/base/characters_database.sql"
-  [[ -f "${sql}/base/stored_procs.sql" ]] && import_sql_file "$WORLD_DB" "${sql}/base/stored_procs.sql" || true
-  import_sql_dir "$AUTH_DB" "${sql}/updates/auth"
-  import_sql_dir "$CHARS_DB" "${sql}/updates/characters"
+  if ! auth_schema_present; then
+    if [[ -f "${sql}/base/auth_database.sql" ]]; then
+      import_sql_file "$AUTH_DB" "${sql}/base/auth_database.sql" || die "Import failed: auth_database.sql"
+    fi
+    SKYFIRE_AUTH_RELOADED=1
+  else
+    log "Auth schema already present for ${SHORT}"
+  fi
+  if ! db_has_table "$CHARS_DB" "characters"; then
+    log "Character schema missing — importing SkyFire characters base SQL"
+    if [[ -f "${sql}/base/characters_database.sql" ]]; then
+      import_sql_file "$CHARS_DB" "${sql}/base/characters_database.sql" || die "Import failed: characters_database.sql"
+    fi
+    SKYFIRE_CHARS_RELOADED=1
+  fi
+  if [[ -f "${sql}/base/stored_procs.sql" ]]; then
+    import_sql_file "$WORLD_DB" "${sql}/base/stored_procs.sql" || die "Import failed: stored_procs.sql"
+  fi
   if world_has_content; then
     log "World content already present for ${SHORT}"
     return 0
   fi
   if import_world_dump; then
-    import_sql_dir "$WORLD_DB" "${sql}/updates/world"
+    SKYFIRE_WORLD_RELOADED=1
     return 0
   fi
-  local world_dump
-  world_dump="$(find "$sql" -maxdepth 2 -type f \( -iname '*world*.sql' -o -iname 'SFDB*.sql' \) ! -path '*/old/*' ! -path '*/updates/*' ! -path '*/dev/*' | head -1 || true)"
-  if [[ -n "$world_dump" ]]; then
-    import_sql_file "$WORLD_DB" "$world_dump"
-    import_sql_dir "$WORLD_DB" "${sql}/updates/world"
+  warn "No SkyFire world dump found — ${SHORT} will start without creature/quest data"
+}
+
+cmangos_apply_incremental() {
+  cmangos_align_db "$WORLD_DB" "${ROOT}/sql/updates/mangos" "core world"
+  cmangos_align_db "$CHARS_DB" "${ROOT}/sql/updates/characters" "core characters"
+  cmangos_align_db "$AUTH_DB" "${ROOT}/sql/updates/realmd" "core realmd"
+  cmangos_align_db "$LOGS_DB" "${ROOT}/sql/updates/logs" "core logs"
+  if [[ "$CMANGOS_WORLD_RELOADED" == 1 ]]; then
+    forget_applied_prefix "db/Updates/"
+  fi
+  apply_hashed_sql_dir "$WORLD_DB" "${ROOT}/db/Updates"
+  apply_hashed_sql_dir "$WORLD_DB" "${ROOT}/db/Updates/Instances"
+}
+
+alpha_apply_incremental() {
+  if [[ "$ALPHA_AUTH_RELOADED" == 1 ]]; then
+    forget_applied_prefix "etc/databases/auth/updates/"
+  fi
+  if [[ "$ALPHA_REALM_RELOADED" == 1 ]]; then
+    forget_applied_prefix "etc/databases/realm/updates/"
+  fi
+  if [[ "$ALPHA_WORLD_RELOADED" == 1 ]]; then
+    forget_applied_prefix "etc/databases/world/updates/"
+  fi
+  if [[ "$ALPHA_DBC_RELOADED" == 1 ]]; then
+    forget_applied_prefix "etc/databases/dbc/updates/"
+  fi
+  apply_hashed_sql_dir "$AUTH_DB" "${ROOT}/etc/databases/auth/updates"
+  apply_hashed_sql_dir "$REALM_DB" "${ROOT}/etc/databases/realm/updates"
+  apply_hashed_sql_dir "$WORLD_DB" "${ROOT}/etc/databases/world/updates"
+  apply_hashed_sql_dir "$DBC_DB" "${ROOT}/etc/databases/dbc/updates"
+}
+
+skyfire_apply_one() {
+  local db="$1" dir="$2" label="$3"
+  if cmangos_live_rev "$db" >/dev/null 2>&1; then
+    cmangos_align_db "$db" "$dir" "$label"
   else
-    warn "No SkyFire world dump found — ${SHORT} will start without creature/quest data"
-    import_sql_dir "$WORLD_DB" "${sql}/updates/world"
+    apply_hashed_sql_dir "$db" "$dir"
   fi
 }
 
-if [[ "$KIND" == "alpha" ]] && ! db_has_table "$DBC_DB" "Map"; then
-  log "alpha_dbc.Map missing — importing bundled DBC"
-  if [[ -f "${ROOT}/etc/databases/dbc/dbc.sql" ]]; then
-    import_sql_file "$DBC_DB" "${ROOT}/etc/databases/dbc/dbc.sql"
-    import_sql_dir "$DBC_DB" "${ROOT}/etc/databases/dbc/updates"
-  else
-    die "No etc/databases/dbc/dbc.sql"
+skyfire_apply_incremental() {
+  if [[ "$SKYFIRE_AUTH_RELOADED" == 1 ]]; then
+    forget_applied_prefix "sql/updates/auth/"
   fi
-fi
+  if [[ "$SKYFIRE_CHARS_RELOADED" == 1 ]]; then
+    forget_applied_prefix "sql/updates/characters/"
+  fi
+  if [[ "$SKYFIRE_WORLD_RELOADED" == 1 ]]; then
+    forget_applied_prefix "sql/updates/world/"
+  fi
+  skyfire_apply_one "$AUTH_DB" "${ROOT}/sql/updates/auth" "skyfire auth"
+  skyfire_apply_one "$CHARS_DB" "${ROOT}/sql/updates/characters" "skyfire characters"
+  skyfire_apply_one "$WORLD_DB" "${ROOT}/sql/updates/world" "skyfire world"
+}
+
+cmangos_backfill_spells() {
+  local n
+  n="$(mysql_cmd -N -e "SELECT COUNT(*) FROM \`${WORLD_DB}\`.spell_template" 2>/dev/null || echo 0)"
+  n="${n//[[:space:]]/}"
+  if [[ "${n:-0}" == "0" ]]; then
+    log "spell_template empty — backfilling DBC content data for ${SHORT}"
+    cmangos_apply_content_data
+  fi
+}
 
 if [[ "$DB_KIND" == "vmangos" || "$DB_KIND" == "mangosthree" ]]; then
   if [[ -f "${ROOT}/.reimport" ]]; then
@@ -489,23 +643,45 @@ if [[ "$DB_KIND" == "vmangos" || "$DB_KIND" == "mangosthree" ]]; then
   die "${SHORT}: ${DB_KIND} database import is not wired. Refusing to apply another core's SQL into this slot."
 fi
 
-reimport_requested=0
+run_base=0
 if [[ -f "${ROOT}/.reimport" ]]; then
-  reimport_requested=1
-  log "Reimport marker present for ${SHORT}. Schema already on disk will be loaded again."
+  if reimport_selects_importer "${ROOT}/.reimport"; then
+    log "Reimport stamp for ${SHORT} does not match the database. Base SQL will be imported."
+    run_base=1
+  else
+    log "Reimport stamp for ${SHORT} already matches. Skipping base SQL."
+    run_base=0
+  fi
+elif ! { already_imported && world_has_content; }; then
+  run_base=1
 fi
 
-if [[ "$reimport_requested" -eq 0 ]] && already_imported && world_has_content; then
-  if [[ "$KIND" == "cmangos" ]] && cmangos_spawn_tables_wiped && [[ -d "${ROOT}/db/Full_DB" ]]; then
-    log "CMaNGOS world for ${SHORT} is missing spawn data — reimporting Full_DB"
-    import_cmangos
-    mark_imported || true
-    log "Database init complete for ${SHORT}"
-    exit 0
-  fi
+# Spawn-table wipe is repaired even when the reimport stamp already matches.
+if [[ "$KIND" == "cmangos" ]] && cmangos_spawn_tables_wiped && [[ -d "${ROOT}/db/Full_DB" ]]; then
+  log "CMaNGOS world for ${SHORT} is missing spawn data — reimporting Full_DB"
+  run_base=1
+fi
+
+if [[ "$run_base" -eq 1 ]]; then
+  case "$KIND" in
+    cmangos) import_cmangos ;;
+    alpha) import_alpha ;;
+    skyfire) import_skyfire ;;
+    azerothcore)
+      import_azerothcore_base
+      import_optional_world_dump
+      ;;
+    trinity)
+      import_trinity_base
+      import_optional_world_dump
+      log "${KIND} will apply remaining auth/characters/world updates on first worldserver start"
+      ;;
+    *)
+      die "Unknown WOW_KIND=${KIND}"
+      ;;
+  esac
+else
   log "Databases for ${SHORT} already imported — skip dump import"
-  # A character wipe drops only that database. World content is still present,
-  # so this branch is the one that runs on the next start.
   ensure_character_schema
   if [[ "$KIND" == "azerothcore" ]] && ! db_has_table "$AUTH_DB" "rbac_permissions"; then
     log "AzerothCore auth base missing — importing sql/base/db_auth"
@@ -513,71 +689,31 @@ if [[ "$reimport_requested" -eq 0 ]] && already_imported && world_has_content; t
   fi
   if [[ "$KIND" == "trinity" ]] && ! db_has_table "$AUTH_DB" "updates_include"; then
     log "Trinity auth base missing — importing sql/base/auth_database.sql"
-    # Partial auth schemas (e.g. motd already present) must not abort the import.
-    MYSQL_IMPORT_FORCE=1 import_trinity_base
+    import_trinity_base
   fi
-  if [[ "$KIND" == "cmangos" ]]; then
-    cmangos_align_world_version
-    cmangos_guard_empty_addon_query
-    apply_playerbots_sql
-    if [[ "$(mysql_cmd -N -e "SELECT COUNT(*) FROM \`${WORLD_DB}\`.spell_template" 2>/dev/null || echo 0)" == "0" ]]; then
-      log "spell_template empty — backfilling DBC content data for ${SHORT}"
-      cmangos_apply_content_data
-    fi
-  fi
-  log "Database init complete for ${SHORT}"
-  exit 0
 fi
 
+ensure_alpha_dbc
+
 case "$KIND" in
-  cmangos)     import_cmangos ;;
+  cmangos)
+    cmangos_apply_incremental
+    cmangos_backfill_spells
+    cmangos_guard_empty_addon_query
+    apply_playerbots_sql
+    ;;
   alpha)
-    if auth_schema_present; then
-      log "Auth schema already present for ${SHORT} — skip dump import"
-      if ! db_has_table "$REALM_DB" "characters"; then
-        log "Alpha character schema missing — importing realm SQL"
-        import_sql_file "$REALM_DB" "${ROOT}/etc/databases/realm/realm.sql"
-        import_sql_dir "$REALM_DB" "${ROOT}/etc/databases/realm/updates"
-      fi
-    else
-      import_alpha
-    fi
-    if ! db_has_table "$DBC_DB" "Map"; then
-      log "alpha_dbc.Map missing — importing bundled DBC"
-      if [[ -f "${ROOT}/etc/databases/dbc/dbc.sql" ]]; then
-        import_sql_file "$DBC_DB" "${ROOT}/etc/databases/dbc/dbc.sql"
-        import_sql_dir "$DBC_DB" "${ROOT}/etc/databases/dbc/updates"
-      else
-        die "No etc/databases/dbc/dbc.sql (rsync must not exclude database/dbc or etc/databases/dbc)"
-      fi
-    fi
+    alpha_apply_incremental
     ;;
   skyfire)
-    if auth_schema_present; then
-      log "Auth schema already present for ${SHORT}"
-      if ! db_has_table "$CHARS_DB" "characters"; then
-        log "Character schema missing — importing SkyFire characters base SQL"
-        [[ -f "${ROOT}/sql/base/characters_database.sql" ]] && import_sql_file "$CHARS_DB" "${ROOT}/sql/base/characters_database.sql"
-        import_sql_dir "$CHARS_DB" "${ROOT}/sql/updates/characters"
-      fi
-      import_world_dump || true
-    else
-      import_skyfire
-    fi
+    skyfire_apply_incremental
     ;;
-  azerothcore)
-    import_azerothcore_base
-    import_optional_world_dump
-    ;;
-  trinity)
-    import_trinity_base
-    import_optional_world_dump
-    log "${KIND} will apply remaining auth/characters/world updates on first worldserver start"
+  trinity|azerothcore)
     ;;
   *)
     die "Unknown WOW_KIND=${KIND}"
     ;;
 esac
 
-mark_imported || true
+mark_imported || die "Could not record import for ${SHORT}"
 log "Database init complete for ${SHORT}"

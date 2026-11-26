@@ -19,6 +19,8 @@ ROOT="$(cd "${RUNTIME}/../.." && pwd)"
 source "${RUNTIME}/catalog.sh"
 # shellcheck disable=SC1091
 source "${ROOT}/docker/common/repos.sh"
+# shellcheck disable=SC1091
+source "${RUNTIME}/lib.sh"
 
 GIT_BASE="${GIT_BASE:-}"
 FORCE="${FORCE:-0}"
@@ -56,6 +58,48 @@ has_world_dump() {
   return 1
 }
 
+# --force retires the world/hotfix dumps find_sql_dumps would choose.
+# Files already under sql/dumps/old stay there.
+retire_sql_dumps() {
+  local short="$1"
+  local root dumps f dest base
+  root="${ROOT}/servers/${short}"
+  dumps="$(dumps_dir "$short")"
+  [[ -d "$dumps" ]] || return 0
+  mkdir -p "${dumps}/old"
+  while IFS= read -r f; do
+    [[ -n "$f" && -f "$f" ]] || continue
+    case "$f" in
+      "${dumps}/old/"*) continue ;;
+      "${dumps}/"*) ;;
+      *) continue ;;
+    esac
+    base="$(basename "$f")"
+    dest="${dumps}/old/${base}"
+    if [[ -e "$dest" ]]; then
+      dest="${dumps}/old/$(date +%s%N)-${base}"
+    fi
+    log "Retiring ${f#"${ROOT}/"} -> servers/${short}/sql/dumps/old/"
+    mv -- "$f" "$dest"
+  done < <(
+    list_sql_dump_candidates "$root" world || true
+    list_sql_dump_candidates "$root" hotfix || true
+  )
+}
+
+skyfire_dump_present() {
+  local dumps="$1" f
+  [[ -d "$dumps" ]] || return 1
+  while IFS= read -r f; do
+    [[ -n "$f" ]] || continue
+    return 0
+  done < <(find "$dumps" -maxdepth 1 -type f \( \
+      -iname 'SFDB*.sql' -o -iname 'SFDB*.sql.gz' -o -iname 'SFDB*.zip' \
+      -o -iname '*world*.sql' -o -iname '*world*.sql.gz' \
+    \))
+  return 1
+}
+
 download() {
   local url="$1" dest="$2"
   local tmp="${dest}.part"
@@ -83,6 +127,15 @@ extract_archive() {
         7z x -y -o"$outdir" "$archive"
       else
         die "Need unrar or 7z to extract $(basename "$archive")"
+      fi
+      ;;
+    *.zip)
+      if command -v unzip >/dev/null; then
+        unzip -o "$archive" -d "$outdir"
+      elif command -v 7z >/dev/null; then
+        7z x -y -o"$outdir" "$archive"
+      else
+        die "Need unzip or 7z to extract $(basename "$archive")"
       fi
       ;;
     *)
@@ -143,6 +196,9 @@ download_github_assets() {
     rm -f "$list"
     return 1
   fi
+  if [[ "$FORCE" -eq 1 ]] && grep -q $'\t' "$list"; then
+    retire_sql_dumps "$short"
+  fi
   while IFS=$'\t' read -r url name; do
     [[ -n "$url" && -n "$name" ]] || continue
     got=1
@@ -169,6 +225,9 @@ unpack_wod() {
      && find "$dumps" -maxdepth 1 -type f -iname '*hotfix*.sql' | grep -q .; then
     log "WoD dumps already unpacked in sql/dumps"
     return 0
+  fi
+  if [[ "$FORCE" -eq 1 ]]; then
+    retire_sql_dumps "$short"
   fi
   local f
   for f in "${base}"/*; do
@@ -228,16 +287,44 @@ fetch_one() {
       unpack_wod "$short"
       ;;
     skyfire)
-      local dest="${ROOT}/servers/${short}/sql/dumps"
-      mkdir -p "$dest"
-      if ! ls "${dest}"/*world*.sql "${dest}"/SFDB*.sql >/dev/null 2>&1; then
-        log "${short}: downloading SkyFire SFDB full world dump from GitHub"
-        local zip="/tmp/sfdb-${short}.zip"
-        curl -fsSL -o "$zip" \
-          'https://github.com/ProjectSkyfire/SkyFire_548/releases/download/sf_db_26/SFDB_full_548_26.002_2026_008_18_Release.zip'
-        unzip -o "$zip" -d "$dest"
-        rm -f "$zip"
+      sf_dumps="$(dumps_dir "$short")"
+      mkdir -p "$sf_dumps"
+      if [[ "$FORCE" -eq 0 ]] && skyfire_dump_present "$sf_dumps"; then
+        log "${short}: SkyFire dump already present"
+        return 0
       fi
+      log "${short}: downloading SkyFire SFDB_full assets"
+      sf_list="$(mktemp)"
+      sf_rc=0
+      python3 "$TDB_PY" --assets ProjectSkyfire/SkyFire_548 SFDB_full >"$sf_list" || sf_rc=$?
+      if [[ "$sf_rc" -ne 0 ]]; then
+        rm -f "$sf_list"
+        if [[ "$sf_rc" -eq 2 ]]; then
+          die "${short}: no SFDB_full asset from github_tdb.py --assets ProjectSkyfire/SkyFire_548 SFDB_full. Not using a hardcoded URL."
+        fi
+        die "${short}: github_tdb.py --assets ProjectSkyfire/SkyFire_548 SFDB_full failed (exit ${sf_rc}). Not using a hardcoded URL."
+      fi
+      if ! grep -q $'\t' "$sf_list"; then
+        rm -f "$sf_list"
+        die "${short}: github_tdb.py --assets returned no SkyFire files. Not using a hardcoded URL."
+      fi
+      if [[ "$FORCE" -eq 1 ]]; then
+        retire_sql_dumps "$short"
+      fi
+      sf_got=0
+      while IFS=$'\t' read -r sf_url sf_name; do
+        [[ -n "$sf_url" && -n "$sf_name" ]] || continue
+        sf_got=1
+        sf_out="${sf_dumps}/${sf_name}"
+        if [[ -f "$sf_out" && "$FORCE" -eq 0 ]]; then
+          log "Have ${sf_out#"${ROOT}/"}"
+          continue
+        fi
+        download "$sf_url" "$sf_out"
+        extract_archive "$sf_out" "$sf_dumps"
+      done <"$sf_list"
+      rm -f "$sf_list"
+      [[ "$sf_got" -eq 1 ]] || die "${short}: github_tdb.py --assets returned no SkyFire files. Not using a hardcoded URL."
       ;;
     *)
       warn "${short}: unknown db kind ${CATALOG_DB_KIND}"

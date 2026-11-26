@@ -23,6 +23,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -723,6 +724,39 @@ def _mysql_client() -> tuple[str, str, str, str, str]:
     return host, port, user, password, password
 
 
+def _cnf_quote(value: str) -> str:
+    escaped = str(value).replace("\\", "\\\\").replace('"', '\\"').replace("\r", "").replace("\n", "")
+    return f'"{escaped}"'
+
+
+def _client_defaults_file(host: str, port: str, user: str, password: str) -> Path:
+    """Mode-0600 client defaults. Caller deletes the file."""
+    fd, name = tempfile.mkstemp(prefix="wow-my-", suffix=".cnf")
+    path = Path(name)
+    try:
+        os.fchmod(fd, 0o600)
+        payload = (
+            "[client]\n"
+            f"host={_cnf_quote(host)}\n"
+            f"port={_cnf_quote(port)}\n"
+            f"user={_cnf_quote(user)}\n"
+            f"password={_cnf_quote(password)}\n"
+        )
+        os.write(fd, payload.encode())
+    except Exception:
+        path.unlink(missing_ok=True)
+        raise
+    finally:
+        os.close(fd)
+    return path
+
+
+def _mysql_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.pop("MYSQL_PWD", None)
+    return env
+
+
 def dump_databases(names: list[str], dest: Path) -> list[tuple[str, Path]]:
     """Dump the named databases into dest. Raise SelectionError before any drop.
 
@@ -735,38 +769,42 @@ def dump_databases(names: list[str], dest: Path) -> list[tuple[str, Path]]:
     host, port, user, password, _pwd = _mysql_client()
     dest.mkdir(parents=True, exist_ok=True)
     dumped: list[tuple[str, Path]] = []
-    for name in names:
-        outfile = dest / f"{name}.sql"
-        cmd = [
-            dump_bin,
-            "-h",
-            host,
-            "-P",
-            port,
-            "-u",
-            user,
-            "--single-transaction",
-            "--routines",
-            "--databases",
-            name,
-        ]
-        child_env = os.environ.copy()
-        child_env["MYSQL_PWD"] = password
-        with outfile.open("wb") as handle:
-            result = subprocess.run(cmd, stdout=handle, stderr=subprocess.PIPE, env=child_env)
-        if result.returncode != 0:
-            err = result.stderr.decode("utf-8", errors="replace")
-            if "Unknown database" in err or "ERROR 1049" in err:
+    defaults = _client_defaults_file(host, port, user, password)
+    try:
+        child_env = _mysql_env()
+        for name in names:
+            outfile = dest / f"{name}.sql"
+            cmd = [
+                dump_bin,
+                f"--defaults-extra-file={defaults}",
+                "-h",
+                host,
+                "-P",
+                port,
+                "-u",
+                user,
+                "--single-transaction",
+                "--routines",
+                "--databases",
+                name,
+            ]
+            with outfile.open("wb") as handle:
+                result = subprocess.run(cmd, stdout=handle, stderr=subprocess.PIPE, env=child_env)
+            if result.returncode != 0:
+                err = result.stderr.decode("utf-8", errors="replace")
+                if "Unknown database" in err or "ERROR 1049" in err:
+                    outfile.unlink(missing_ok=True)
+                    print(f"{name}: not present, nothing to dump")
+                    continue
                 outfile.unlink(missing_ok=True)
-                print(f"{name}: not present, nothing to dump")
-                continue
-            outfile.unlink(missing_ok=True)
-            raise SelectionError(f"{name}: mysqldump failed. No databases were dropped.\n{err}")
-        if outfile.stat().st_size <= 0:
-            outfile.unlink(missing_ok=True)
-            raise SelectionError(f"{name}: dump is empty. No databases were dropped.")
-        dumped.append((name, outfile))
-    return dumped
+                raise SelectionError(f"{name}: mysqldump failed. No databases were dropped.\n{err}")
+            if outfile.stat().st_size <= 0:
+                outfile.unlink(missing_ok=True)
+                raise SelectionError(f"{name}: dump is empty. No databases were dropped.")
+            dumped.append((name, outfile))
+        return dumped
+    finally:
+        defaults.unlink(missing_ok=True)
 
 
 def drop_databases(names: list[str]) -> int:
@@ -776,28 +814,42 @@ def drop_databases(names: list[str]) -> int:
         print("mysql is required. No databases were dropped.", file=sys.stderr)
         return 1
     host, port, user, password, _pwd = _mysql_client()
-    child_env = os.environ.copy()
-    child_env["MYSQL_PWD"] = password
-    dropped: list[str] = []
-    for name in names:
-        result = subprocess.run(
-            [mysql_bin, "-h", host, "-P", port, "-u", user, "-e", f"DROP DATABASE `{name}`"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            env=child_env,
-        )
-        if result.returncode != 0:
-            print(result.stderr.decode("utf-8", errors="replace"), file=sys.stderr)
-            already = ", ".join(dropped) or "none"
-            print(
-                f"Stopped after a failed DROP. Databases already dropped: {already}.",
-                file=sys.stderr,
+    defaults = _client_defaults_file(host, port, user, password)
+    try:
+        child_env = _mysql_env()
+        dropped: list[str] = []
+        for name in names:
+            result = subprocess.run(
+                [
+                    mysql_bin,
+                    f"--defaults-extra-file={defaults}",
+                    "-h",
+                    host,
+                    "-P",
+                    port,
+                    "-u",
+                    user,
+                    "-e",
+                    f"DROP DATABASE `{name}`",
+                ],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=child_env,
             )
-            return 1
-        dropped.append(name)
-    if dropped:
-        print("Dropped: " + ", ".join(dropped))
-    return 0
+            if result.returncode != 0:
+                print(result.stderr.decode("utf-8", errors="replace"), file=sys.stderr)
+                already = ", ".join(dropped) or "none"
+                print(
+                    f"Stopped after a failed DROP. Databases already dropped: {already}.",
+                    file=sys.stderr,
+                )
+                return 1
+            dropped.append(name)
+        if dropped:
+            print("Dropped: " + ", ".join(dropped))
+        return 0
+    finally:
+        defaults.unlink(missing_ok=True)
 
 
 def reimport(short: str) -> int:

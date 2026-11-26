@@ -2,7 +2,6 @@
 Description=Rebuild a WoW realm when its public git revision moves
 After=docker.service network-online.target
 Wants=network-online.target
-ConditionPathIsMountPoint=/mnt/wow-nvme
 
 [Service]
 Type=oneshot

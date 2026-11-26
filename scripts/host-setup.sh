@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# Pin the removable WoW disk to a stable mount and install the host pieces
-# the stack needs before Docker starts: loopback aliases, /etc/hosts names,
-# and the HAProxy config on the root filesystem.
-#
-# Safe to re-run. Privileged steps re-exec through sudo.
+# Pin a removable WoW disk to a stable mount, or record an internal checkout
+# without a second mount of that disk. Installs loopback aliases, /etc/hosts
+# names, and the HAProxy config. Safe to re-run. Privileged steps re-exec
+# through sudo (passwordless when that works, prompting otherwise).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -28,31 +27,76 @@ load_env() {
   fi
 }
 
-if [[ "$(id -u)" -ne 0 ]]; then
-  exec sudo -n -- "$0" "$@"
-fi
+# findmnt TARGET is the filesystem that holds the repo, not a parent path
+# we invent. /run/media and /media are the removable automount roots.
+host_target_is_removable() {
+  local target="$1"
+  [[ "$target" == /run/media || "$target" == /run/media/* || "$target" == /media || "$target" == /media/* ]]
+}
 
-load_env
-
-# Owner of the tree, or the user who invoked sudo. Never a fixed account name.
-if [[ -n "${WOW_MEDIA_USER:-}" ]]; then
-  MEDIA_USER="$WOW_MEDIA_USER"
-elif [[ -n "${SUDO_USER:-}" && "$SUDO_USER" != "root" ]]; then
-  MEDIA_USER="$SUDO_USER"
-else
-  MEDIA_USER="$(stat -c '%U' "$ROOT" 2>/dev/null || true)"
-  if [[ -z "$MEDIA_USER" || "$MEDIA_USER" == "root" ]]; then
-    MEDIA_USER="$(id -un)"
+# MOUNT plus the repo's path relative to the filesystem that holds it.
+# Never appends a fixed directory name.
+host_tree_on_mount() {
+  local repo="$1" target="$2" mount="$3" rel
+  mount="${mount%/}"
+  if [[ "$target" != "/" ]]; then
+    target="${target%/}"
   fi
-fi
-MOUNT="${WOW_VOLUME_MOUNT:-/mnt/wow-nvme}"
-
-discover_uuid() {
-  if [[ -n "${WOW_VOLUME_UUID:-}" ]]; then
-    printf '%s' "$WOW_VOLUME_UUID"
+  if [[ "$repo" == "$target" ]]; then
+    printf '%s' "$mount"
     return 0
   fi
-  findmnt -n -o UUID -T "$ROOT"
+  if [[ "$target" == "/" ]]; then
+    printf '%s/%s' "$mount" "${repo#/}"
+    return 0
+  fi
+  if [[ "$repo" != "$target"/* ]]; then
+    printf '%s' "$repo"
+    return 0
+  fi
+  rel="${repo#"$target"/}"
+  printf '%s/%s' "$mount" "$rel"
+}
+
+# Classify a checkout. Sets HOST_LAYOUT, HOST_UUID, HOST_MOUNT, HOST_TREE,
+# HOST_FSTYPE, and HOST_FSTAB. HOST_FSTAB is empty on an internal disk.
+# The mount preference is only used for a removable disk. An internal disk
+# always binds the repo root and does not write an fstab line.
+# Arguments: REPO TARGET FSTYPE [UUID] [REMOVABLE_MOUNT]
+host_classify_layout() {
+  local repo="$1" target="$2" fstype="$3" uuid="${4:-}" mount_pref="${5-}"
+  HOST_FSTYPE="$fstype"
+  if host_target_is_removable "$target"; then
+    HOST_LAYOUT="removable"
+    HOST_UUID="$uuid"
+    if [[ -n "$mount_pref" ]]; then
+      HOST_MOUNT="$mount_pref"
+    else
+      HOST_MOUNT="/mnt/wow-nvme"
+    fi
+    HOST_TREE="$(host_tree_on_mount "$repo" "$target" "$HOST_MOUNT")"
+    HOST_FSTAB="UUID=${HOST_UUID} ${HOST_MOUNT} ${fstype} nosuid,nodev,nofail,x-systemd.device-timeout=15s,x-systemd.before=docker.service 0 2"
+  else
+    HOST_LAYOUT="internal"
+    # Empty unless the operator pinned a UUID. No fstab and no disk bind.
+    HOST_UUID="$uuid"
+    HOST_MOUNT="$repo"
+    HOST_TREE="$repo"
+    HOST_FSTAB=""
+  fi
+}
+
+resolve_media_user() {
+  if [[ -n "${WOW_MEDIA_USER:-}" ]]; then
+    MEDIA_USER="$WOW_MEDIA_USER"
+  elif [[ -n "${SUDO_USER:-}" && "$SUDO_USER" != "root" ]]; then
+    MEDIA_USER="$SUDO_USER"
+  else
+    MEDIA_USER="$(stat -c '%U' "$ROOT" 2>/dev/null || true)"
+    if [[ -z "$MEDIA_USER" || "$MEDIA_USER" == "root" ]]; then
+      MEDIA_USER="$(id -un)"
+    fi
+  fi
 }
 
 uuid_mounted_at() {
@@ -70,42 +114,29 @@ mount_uuid_matches() {
 
 ensure_mount() {
   local uuid src
-  uuid="$(discover_uuid)"
+  uuid="$HOST_UUID"
   [[ -n "$uuid" ]] || die "Could not find the filesystem UUID for ${ROOT}"
-  WOW_VOLUME_UUID="$uuid"
-  mkdir -p "$MOUNT"
-  if mountpoint -q "$MOUNT"; then
-    mount_uuid_matches "$MOUNT" "$uuid" \
-      || die "${MOUNT} is already mounted with a different filesystem"
+  mkdir -p "$HOST_MOUNT"
+  if mountpoint -q "$HOST_MOUNT"; then
+    mount_uuid_matches "$HOST_MOUNT" "$uuid" \
+      || die "${HOST_MOUNT} is already mounted with a different filesystem"
   else
     src="$(uuid_mounted_at "$uuid")"
-    if [[ -n "$src" && "$src" != "$MOUNT" ]]; then
-      log "Bind-mounting ${src} onto ${MOUNT}"
-      mount --bind "$src" "$MOUNT"
+    if [[ -n "$src" && "$src" != "$HOST_MOUNT" ]]; then
+      log "Bind-mounting ${src} onto ${HOST_MOUNT}"
+      mount --bind "$src" "$HOST_MOUNT"
     elif [[ -z "$src" ]]; then
-      log "Mounting UUID ${uuid} onto ${MOUNT}"
-      mount "UUID=${uuid}" "$MOUNT"
+      log "Mounting UUID ${uuid} onto ${HOST_MOUNT}"
+      mount "UUID=${uuid}" "$HOST_MOUNT"
     fi
   fi
-  mount --make-rshared "$MOUNT"
-  mount_uuid_matches "$MOUNT" "$uuid" || die "${MOUNT} does not hold UUID ${uuid}"
-}
-
-tree_on_mount() {
-  local fs_target rel
-  fs_target="$(findmnt -n -o TARGET -T "$ROOT")"
-  rel="${ROOT#"$fs_target"}"
-  if mount_uuid_matches "$ROOT" "$WOW_VOLUME_UUID"; then
-    printf '%s' "$ROOT"
-    return 0
-  fi
-  printf '%s' "${MOUNT}${rel}"
+  mount --make-rshared "$HOST_MOUNT"
+  mount_uuid_matches "$HOST_MOUNT" "$uuid" || die "${HOST_MOUNT} does not hold UUID ${uuid}"
 }
 
 write_fstab() {
-  local line
-  line="UUID=${WOW_VOLUME_UUID} ${MOUNT} ext4 nosuid,nodev,nofail,x-systemd.device-timeout=15s,x-systemd.before=docker.service 0 2"
-  python3 - /etc/fstab "$line" <<'PY'
+  [[ -n "${HOST_FSTAB:-}" ]] || return 0
+  python3 - /etc/fstab "$HOST_FSTAB" <<'PY'
 import pathlib, sys
 path, line = sys.argv[1], sys.argv[2]
 block = f"# BEGIN wow-volume\n{line}\n# END wow-volume\n"
@@ -122,7 +153,7 @@ else:
     text += "\n" + block
 file.write_text(text, encoding="utf-8")
 PY
-  log "fstab mounts UUID ${WOW_VOLUME_UUID} at ${MOUNT} before docker"
+  log "fstab mounts UUID ${HOST_UUID} at ${HOST_MOUNT} (${HOST_FSTYPE}) before docker"
 }
 
 install_unit() {
@@ -131,16 +162,16 @@ install_unit() {
 }
 
 # The unit files in the repo use the default mount path. Rewrite them for
-# whatever WOW_VOLUME_MOUNT this host actually uses.
+# whatever mount this removable disk actually uses.
 write_mount_units() {
   local mount_unit
-  mount_unit="$(systemd-escape --path --suffix=mount "$MOUNT")"
+  mount_unit="$(systemd-escape --path --suffix=mount "$HOST_MOUNT")"
   cat > /etc/systemd/system/wow-volume-share.service <<EOF
 [Unit]
 Description=Share the WoW volume mount into Docker containers
 After=${mount_unit}
 Before=docker.service
-ConditionPathIsMountPoint=${MOUNT}
+ConditionPathIsMountPoint=${HOST_MOUNT}
 
 [Service]
 Type=oneshot
@@ -167,8 +198,18 @@ EOF
   chmod 0644 /etc/systemd/system/wow-volume-share.service /etc/systemd/system/wow-media-alias.service
 }
 
-install_host_files() {
-  local ips short
+install_haproxy_cfg() {
+  local cfg="$1" dest="/etc/wow/haproxy.cfg"
+  if [[ -d "$dest" ]]; then
+    if [[ -n "$(ls -A "$dest")" ]]; then
+      die "${dest} is a directory and is not empty"
+    fi
+    rmdir "$dest"
+  fi
+  install -m 0644 "$cfg" "$dest"
+}
+
+install_scripts() {
   install -d -m 0755 /etc/wow /usr/local/sbin
   install -m 0755 "${HOST_DIR}/wow-loopback.sh" /usr/local/sbin/wow-loopback.sh
   install -m 0755 "${HOST_DIR}/wow-volume-share.sh" /usr/local/sbin/wow-volume-share.sh
@@ -176,22 +217,20 @@ install_host_files() {
   install -m 0755 "${HOST_DIR}/wow-git-update.sh" /usr/local/sbin/wow-git-update.sh
   install -m 0755 "${HOST_DIR}/wow-backup.sh" /usr/local/sbin/wow-backup.sh
   install -m 0755 "${HOST_DIR}/wow-realms.sh" /usr/local/sbin/wow-realms.sh
-  install_unit wow-loopback.service
-  install_unit wow-git-update.service
-  install_unit wow-git-update.timer
-  install_unit wow-backup.service
-  install_unit wow-realms.service
-  write_backup_timer
-  write_mount_units
+}
 
+write_volume_env() {
   cat > /etc/wow/volume.env <<EOF
-WOW_VOLUME_UUID=${WOW_VOLUME_UUID}
-WOW_VOLUME_MOUNT=${MOUNT}
-WOW_TREE=${WOW_TREE}
+WOW_VOLUME_UUID=${HOST_UUID}
+WOW_VOLUME_MOUNT=${HOST_MOUNT}
+WOW_TREE=${HOST_TREE}
 WOW_MEDIA_USER=${MEDIA_USER}
 EOF
   chmod 0644 /etc/wow/volume.env
+}
 
+write_loopback_ips() {
+  local ips short
   ips="$(mktemp)"
   while IFS= read -r short; do
     catalog_load "$short"
@@ -199,17 +238,28 @@ EOF
   done < <(catalog_shorts) >"$ips"
   install -m 0644 "$ips" /etc/wow/loopback.ips
   rm -f "$ips"
+}
 
+write_haproxy() {
   local cfg
   cfg="$(mktemp)"
   haproxy_render "$cfg"
-  if [[ -d /etc/wow/haproxy.cfg ]]; then
-    die "/etc/wow/haproxy.cfg is a directory (Docker created it). Remove it and re-run."
-  fi
-  install -m 0644 "$cfg" /etc/wow/haproxy.cfg
+  install_haproxy_cfg "$cfg"
   mkdir -p "${ROOT}/.run"
   install -m 0644 "$cfg" "${ROOT}/.run/haproxy.cfg"
   rm -f "$cfg"
+}
+
+install_systemd_units() {
+  install_unit wow-loopback.service
+  install_unit wow-git-update.service
+  install_unit wow-git-update.timer
+  install_unit wow-backup.service
+  install_unit wow-realms.service
+  write_backup_timer
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    write_mount_units
+  fi
 }
 
 write_hosts() {
@@ -224,7 +274,6 @@ write_hosts() {
     done < <(catalog_shorts)
     echo "# END wow-realms"
   } >"$tmp"
-  rows="$(cat "$tmp")"
   python3 - /etc/hosts "$tmp" <<'PY'
 import pathlib, sys
 hosts = pathlib.Path(sys.argv[1])
@@ -266,8 +315,15 @@ EOF
 }
 
 enable_units() {
+  local boot_list=""
   systemctl daemon-reload
-  systemctl enable wow-loopback.service wow-volume-share.service wow-media-alias.service >/dev/null
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    systemctl enable wow-loopback.service wow-volume-share.service wow-media-alias.service >/dev/null
+  else
+    systemctl disable --now wow-volume-share.service >/dev/null 2>&1 || true
+    systemctl disable --now wow-media-alias.service >/dev/null 2>&1 || true
+    systemctl enable wow-loopback.service >/dev/null
+  fi
   # Updates are manual. A timer that rebuilds a live realm stays installed and disabled.
   systemctl disable --now wow-git-update.timer >/dev/null 2>&1 || true
   if [[ "${BACKUP_SCHEDULE:-off}" == "on" ]]; then
@@ -275,7 +331,6 @@ enable_units() {
   else
     systemctl disable --now wow-backup.timer >/dev/null 2>&1 || true
   fi
-  boot_list=""
   if [[ -f "${ROOT}/.run/boot.conf" ]]; then
     boot_list="$(tr -d '[:space:]' < "${ROOT}/.run/boot.conf")"
   fi
@@ -285,17 +340,80 @@ enable_units() {
     systemctl disable wow-realms.service >/dev/null 2>&1 || true
   fi
   systemctl start wow-loopback.service
-  systemctl start wow-volume-share.service || warn "volume share service did not start"
   /usr/local/sbin/wow-loopback.sh
-  /usr/local/sbin/wow-media-alias.sh
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    systemctl start wow-volume-share.service || warn "volume share service did not start"
+    /usr/local/sbin/wow-media-alias.sh
+  fi
 }
 
-ensure_mount
-WOW_TREE="$(tree_on_mount)"
-[[ -f "${WOW_TREE}/setup.sh" ]] || die "No setup.sh under ${WOW_TREE} after mounting ${MOUNT}"
-log "WoW tree is ${WOW_TREE}"
-write_fstab
-install_host_files
-write_hosts
-enable_units
-log "Removable volume is mounted at ${MOUNT}"
+apply_without_systemd() {
+  /usr/local/sbin/wow-loopback.sh
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    /usr/local/sbin/wow-volume-share.sh || warn "volume share did not start"
+    /usr/local/sbin/wow-media-alias.sh || warn "media alias did not start"
+  fi
+  log "Boot persistence needs systemd. Loopback addresses, /etc/hosts, and HAProxy config were written."
+}
+
+classify_this_tree() {
+  local target fstype uuid=""
+  target="$(findmnt -n -o TARGET -T "$ROOT")"
+  [[ -n "$target" ]] || die "Could not find the mount that holds ${ROOT}"
+  fstype="$(findmnt -n -o FSTYPE -T "$ROOT")"
+  [[ -n "$fstype" ]] || die "Could not find the filesystem type for ${ROOT}"
+  if host_target_is_removable "$target"; then
+    uuid="${WOW_VOLUME_UUID:-}"
+    if [[ -z "$uuid" ]]; then
+      uuid="$(findmnt -n -o UUID -T "$ROOT")"
+    fi
+    host_classify_layout "$ROOT" "$target" "$fstype" "$uuid" "${WOW_VOLUME_MOUNT:-}"
+  else
+    # Do not discover a UUID for an internal disk. Record one only when pinned.
+    host_classify_layout "$ROOT" "$target" "$fstype" "${WOW_VOLUME_UUID:-}"
+  fi
+}
+
+main() {
+  if [[ "$(id -u)" -ne 0 ]]; then
+    if sudo -n true 2>/dev/null; then
+      exec sudo -n -- "$0" "$@"
+    fi
+    exec sudo -- "$0" "$@"
+  fi
+
+  load_env
+  resolve_media_user
+  classify_this_tree
+
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    ensure_mount
+    write_fstab
+  fi
+
+  [[ -f "${HOST_TREE}/setup.sh" ]] || die "No setup.sh under ${HOST_TREE}"
+  log "WoW tree is ${HOST_TREE} (${HOST_LAYOUT})"
+
+  install_scripts
+  write_volume_env
+  write_loopback_ips
+  write_haproxy
+  write_hosts
+
+  if command -v systemctl >/dev/null 2>&1; then
+    install_systemd_units
+    enable_units
+  else
+    apply_without_systemd
+  fi
+
+  if [[ "$HOST_LAYOUT" == "removable" ]]; then
+    log "Removable volume is mounted at ${HOST_MOUNT}"
+  else
+    log "Internal disk. No fstab entry and no extra bind mount."
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi

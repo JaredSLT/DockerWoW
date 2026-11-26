@@ -302,7 +302,50 @@ parse_setup_args() {
 }
 
 realm_was_running() {
+  if [[ "${WOW_FAKE_RUNNING+x}" == x ]]; then
+    [[ "$WOW_FAKE_RUNNING" == 1 ]]
+    return
+  fi
+  if [[ "${WOW_FAKE_HEALTH+x}" == x ]]; then
+    return 0
+  fi
   docker inspect -f '{{.State.Running}}' "wow-$1" 2>/dev/null | grep -qx true
+}
+
+# Fake health or running never calls the docker daemon.
+realm_became_healthy() {
+  local short="$1" status i
+  if [[ "${WOW_FAKE_HEALTH+x}" == x || "${WOW_FAKE_RUNNING+x}" == x ]]; then
+    [[ "${WOW_FAKE_HEALTH:-healthy}" == healthy ]]
+    return
+  fi
+  for ((i = 0; i < 60; i++)); do
+    status="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "wow-${short}" 2>/dev/null || true)"
+    case "$status" in
+      healthy) return 0 ;;
+      unhealthy) return 1 ;;
+    esac
+    sleep 2
+  done
+  return 1
+}
+
+stop_realm_for_update() {
+  local short="$1"
+  if [[ "${WOW_FAKE_RUNNING+x}" == x || "${WOW_FAKE_HEALTH+x}" == x ]]; then
+    log "Stopping wow-${short}"
+    return 0
+  fi
+  "${ROOT}/scripts/launch-servers.sh" stop "$short" || true
+}
+
+start_realm_after_update() {
+  local short="$1"
+  if [[ "${WOW_FAKE_RUNNING+x}" == x || "${WOW_FAKE_HEALTH+x}" == x ]]; then
+    log "Starting wow-${short}"
+    return 0
+  fi
+  "${ROOT}/scripts/launch-servers.sh" up "$short"
 }
 
 cmd_core() {
@@ -365,24 +408,29 @@ cmd_update() {
       local was=0
       if [[ "$db" != "skip" ]]; then
         [[ "$confirm" == "$only" ]] || die "Refusing. Pass --confirm ${only}"
-        realm_was_running "$only" && was=1
-        "${ROOT}/scripts/launch-servers.sh" stop "$only" || true
-      else
-        realm_was_running "$only" && was=1
       fi
-      "$updater" --catch-up "$only"
+      if realm_was_running "$only"; then
+        was=1
+        stop_realm_for_update "$only"
+      fi
+      # Core catch-up does not fetch a dump and does not restart. SQL apply
+      # is prepare-db. The pair is stamped only after that succeeds.
+      "$updater" --catch-up "$only" --no-fetch --no-restart
       if [[ "$db" == "world" ]]; then
+        "${ROOT}/docker/runtime/fetch-db.sh" --force "$only"
         "${OPS[@]}" world-drop "$only" --confirm "$only"
-        "${ROOT}/scripts/launch-servers.sh" prepare-db "$only"
       elif [[ "$db" == "full" ]]; then
+        "${ROOT}/docker/runtime/fetch-db.sh" --force "$only"
         "${OPS[@]}" erase databases "$only" --confirm "$only"
-        "${ROOT}/scripts/launch-servers.sh" prepare-db "$only"
       fi
-      # skip leaves the restart to update-from-git.sh. world and full were
-      # stopped first, so bring the realm back only when it had been up.
-      if [[ "$db" != "skip" && "$was" -eq 1 ]]; then
-        "${ROOT}/scripts/launch-servers.sh" up "$only"
+      "${ROOT}/scripts/launch-servers.sh" prepare-db "$only"
+      if [[ "$was" -eq 1 ]]; then
+        start_realm_after_update "$only"
+        if ! realm_became_healthy "$only"; then
+          die "${only}: restarted core is not healthy. Database revision was not recorded."
+        fi
       fi
+      "$updater" --stamp "$only"
       ;;
     *) die "usage: ./setup.sh update [check|apply] ..." ;;
   esac

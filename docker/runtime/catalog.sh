@@ -34,14 +34,14 @@ cata|The-Cataclysm-Preservation-Project|trinity|wow-the-cataclysm-preservation-p
 mop|SkyFire_548|skyfire|wow-skyfire-548|World-of-Warcraft-5.4.8|legacy|authserver|worldserver|3724|8085|0|127.0.0.7|4|none|Mists of Pandaria|||skyfire
 wod|WodCore-Reforged|trinity|wow-wodcore-reforged|World-of-Warcraft-6.2.3|legacy|authserver|worldserver|1119|8085|0|127.0.0.8|5|hotfix|Warlords of Draenor|||wod
 legion|TrinityCore-Legion|trinity|wow-trinitycore-legion|World-of-Warcraft-7.3.5|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.9|6|hotfixes|Legion|TrinityCore/TrinityCore|TDB735|tdb-github
-bfa|TrinityCore-BFA|trinity|wow-trinitycore-bfa|World-of-Warcraft-8.3.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.10|7|hotfixes|Battle for Azeroth|TrinityCore/TrinityCore|TDB837.20101|tdb-github
-shadowlands|TrinityCore-Shadowlands|trinity|wow-trinitycore-shadowlands|World-of-Warcraft-9.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.11|8|hotfixes|Shadowlands|TrinityCore/TrinityCore|TDB927.22111|tdb-github
-dragonflight|TrinityCore-Dragonflight|trinity|wow-trinitycore-dragonflight|World-of-Warcraft-10.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.12|9|hotfixes|Dragonflight|TrinityCore/TrinityCore|TDB1027.24051|tdb-github
-warwithin|TrinityCore-WarWithin|trinity|wow-trinitycore-warwithin|World-of-Warcraft-11.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.13|10|hotfixes|The War Within|TrinityCore/TrinityCore|TDB1127.26011|tdb-github
+bfa|TrinityCore-BFA|trinity|wow-trinitycore-bfa|World-of-Warcraft-8.3.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.10|7|hotfixes|Battle for Azeroth|TrinityCore/TrinityCore|TDB837|tdb-github
+shadowlands|TrinityCore-Shadowlands|trinity|wow-trinitycore-shadowlands|World-of-Warcraft-9.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.11|8|hotfixes|Shadowlands|TrinityCore/TrinityCore|TDB927|tdb-github
+dragonflight|TrinityCore-Dragonflight|trinity|wow-trinitycore-dragonflight|World-of-Warcraft-10.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.12|9|hotfixes|Dragonflight|TrinityCore/TrinityCore|TDB1027|tdb-github
+warwithin|TrinityCore-WarWithin|trinity|wow-trinitycore-warwithin|World-of-Warcraft-11.2.7|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.13|10|hotfixes|The War Within|TrinityCore/TrinityCore|TDB1127|tdb-github
 midnight|TrinityCore|trinity|wow-trinitycore|World-of-Warcraft-12.x.x|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.14|11|hotfixes|Midnight|TrinityCore/TrinityCore|TDB1210|tdb-github
 cata-classic|TrinityCore-Cata-Classic|trinity|wow-trinitycore-cata-classic|World-of-Warcraft-4.4.2|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.15|3|hotfixes|Cataclysm Classic|TrinityCore/TrinityCore|cata_classic|bundled
 classic-era|TrinityCore-Classic|trinity|wow-trinitycore-classic|World-of-Warcraft-Classic|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.16|0|hotfixes|Classic Era|||bundled
-wotlk-classic|TrinityCore-WotLK-Classic|trinity|wow-trinitycore-wotlk-classic|World-of-Warcraft-3.4.3|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.17|2|hotfixes|Wrath Classic|TrinityCore/TrinityCore|TDB343.24081|tdb-github
+wotlk-classic|TrinityCore-WotLK-Classic|trinity|wow-trinitycore-wotlk-classic|World-of-Warcraft-3.4.3|bnet|bnetserver|worldserver|1119|8085|8081|127.0.0.17|2|hotfixes|Wrath Classic|TrinityCore/TrinityCore|TDB343|tdb-github
 EOF
 }
 

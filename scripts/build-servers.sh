@@ -196,7 +196,7 @@ build_core() {
 
   [[ -f "$dockerfile" ]] || die "Missing Dockerfile: $dockerfile"
 
-  local rev url ref kind short modules
+  local rev url ref kind short modules alt
   short="$(install_short_for "$name")"
   assert_builds_selected_core "$name"
   modules=""
@@ -214,7 +214,22 @@ build_core() {
     ref="$REPO_REF"
     kind="$REPO_KIND"
   fi
-  rev="$(repo_sha "$url" "$ref" "$kind")" || die "Cannot resolve ${ref} from ${url}"
+  # Paired tag or branch from release_pair.py. repos.sh stays the fallback pin.
+  if [[ -n "${WOW_CORE_REF:-}" ]]; then
+    ref="$WOW_CORE_REF"
+    if [[ -n "${WOW_CORE_KIND:-}" ]]; then
+      kind="$WOW_CORE_KIND"
+    fi
+  fi
+  if ! rev="$(repo_sha "$url" "$ref" "$kind")"; then
+    alt="tag"
+    [[ "$kind" == "tag" ]] && alt="branch"
+    if [[ -n "${WOW_CORE_REF:-}" && -z "${WOW_CORE_KIND:-}" ]] && rev="$(repo_sha "$url" "$ref" "$alt")"; then
+      kind="$alt"
+    else
+      die "Cannot resolve ${ref} from ${url}"
+    fi
+  fi
   BUILT_CORE_REV="$rev"
   if [[ -n "$modules" ]]; then
     BUILT_CORE_REV="${rev}+${modules}"

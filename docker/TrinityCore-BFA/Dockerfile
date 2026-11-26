@@ -47,8 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zlib1g-dev \
         liblzma-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && git config --global --add safe.directory '*' \
-    && git config --global http.sslVerify false
+    && git config --global --add safe.directory '*'
 
 ARG GIT_BASE=
 ARG CORE_BRANCH=TDB837.20101
@@ -65,10 +64,7 @@ ENV GIT_BASE=${GIT_BASE} \
     SRC_ROOT=/src \
     BUILD_ROOT=/build \
     BOOST_ROOT= \
-    OPENSSL_ROOT_DIR= \
-    GIT_CONFIG_COUNT=1 \
-    GIT_CONFIG_KEY_0=http.sslVerify \
-    GIT_CONFIG_VALUE_0=false
+    OPENSSL_ROOT_DIR=
 
 COPY docker/common/build-core.sh /usr/local/bin/build-core.sh
 COPY docker/common/repos.sh /usr/local/bin/repos.sh

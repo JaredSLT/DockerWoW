@@ -93,6 +93,106 @@ def world_safe(project) -> bool:
     )
 
 
+def assert_core_reimport_allowed(db_kind: str) -> None:
+    """Refuse a full reimport before any dump or drop.
+
+    vmangos, mangosthree, none, and an empty db_kind have no importer.
+    keep is still rejected by world_safe inside decide_core_action.
+    """
+    if (db_kind or "") in UNSAFE_WORLD:
+        raise OpsError("the core has no importer. Nothing was dropped.")
+
+
+def effective_access(env: dict[str, str] | None = None) -> str:
+    found = read_env() if env is None else env
+    mode = found.get("ACCESS", "")
+    if mode:
+        return mode
+    if found.get("BIND_MODE") == "ports":
+        return "ports"
+    return "loopback"
+
+
+def weak_password_names(env: dict[str, str] | None = None) -> list[str]:
+    found = read_env() if env is None else env
+    names: list[str] = []
+    if found.get("MYSQL_PASSWORD", "wow") in {"wow", "admin"}:
+        names.append("MYSQL_PASSWORD")
+    if found.get("ACCOUNT_PASSWORD", "admin") in {"wow", "admin"}:
+        names.append("ACCOUNT_PASSWORD")
+    return names
+
+
+def refuse_published_access(env: dict[str, str] | None = None) -> None:
+    names = weak_password_names(env)
+    if not names:
+        return
+    joined = " and ".join(names)
+    raise OpsError(
+        f"Refusing to publish ports while {joined} is wow or admin. Change the password first."
+    )
+
+
+def volume_tree_status(path: Path | None = None) -> tuple[bool, str]:
+    """True when volume.env is absent or its WOW_TREE is this checkout."""
+    target = path if path is not None else Path("/etc/wow/volume.env")
+    if not target.is_file():
+        return True, ""
+    tree = read_env(target).get("WOW_TREE", "")
+    if not tree:
+        return False, "WOW_TREE is empty"
+    recorded = Path(tree)
+    if recorded.resolve() == ROOT.resolve():
+        return True, tree
+    try:
+        if recorded.exists() and ROOT.exists() and os.path.samefile(recorded, ROOT):
+            return True, tree
+    except OSError:
+        pass
+    return False, f"{tree} is not {ROOT}"
+
+
+def mariadb_tune_report() -> dict[str, str]:
+    """Pool and flush method from docker/runtime/mariadb_tune.sh."""
+    script = ROOT / "docker" / "runtime" / "mariadb_tune.sh"
+    proc = subprocess.run(
+        ["bash", str(script), "--print"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    found: dict[str, str] = {}
+    for line in proc.stdout.splitlines():
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        found[key] = value
+    found["_rc"] = str(proc.returncode)
+    return found
+
+
+def memtotal_kb() -> int:
+    path = Path("/proc/meminfo")
+    if not path.is_file():
+        return 0
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if line.startswith("MemTotal:"):
+            parts = line.split()
+            if len(parts) >= 2 and parts[1].isdigit():
+                return int(parts[1])
+    return 0
+
+
+def resource_warnings(mem_kb: int, free_bytes: int) -> list[str]:
+    """Names of tight resources. Under 2GB RAM or under 20GB free on the repo."""
+    found: list[str] = []
+    if mem_kb < 2 * 1024 * 1024:
+        found.append("memory")
+    if free_bytes < 20 * 1024**3:
+        found.append("disk")
+    return found
+
+
 def read_env(path: Path | None = None) -> dict[str, str]:
     target = path or ENV_FILE
     found: dict[str, str] = {}
@@ -224,13 +324,21 @@ def mysql_base() -> list[str]:
     ]
 
 
+def _mysql_defaults():
+    """Mode-0600 client defaults. Caller deletes the file. No MYSQL_PWD."""
+    mod = load_selector()
+    host, port, user, password, _pwd = mod._mysql_client()
+    return mod._client_defaults_file(host, port, user, password), mod._mysql_env()
+
+
 def mysql_query(sql: str) -> tuple[bool, str]:
-    env = read_env()
-    child = os.environ.copy()
-    child["MYSQL_PWD"] = env.get("MYSQL_PASSWORD", "wow")
+    try:
+        defaults, child = _mysql_defaults()
+    except (OSError, OpsError) as exc:
+        return False, str(exc)
     try:
         result = subprocess.run(
-            [*mysql_base(), "-e", sql],
+            [*mysql_base(), f"--defaults-extra-file={defaults}", "-e", sql],
             capture_output=True,
             text=True,
             env=child,
@@ -238,6 +346,8 @@ def mysql_query(sql: str) -> tuple[bool, str]:
         )
     except (OSError, subprocess.TimeoutExpired, OpsError) as exc:
         return False, str(exc)
+    finally:
+        defaults.unlink(missing_ok=True)
     if result.returncode != 0:
         return False, result.stderr.strip() or result.stdout.strip()
     return True, result.stdout.strip()
@@ -335,6 +445,64 @@ def cmd_doctor() -> int:
         "mysqldump",
     )
     check(shutil.which("sudo") is not None, "sudo")
+    print("Host")
+    arch = subprocess.run(["uname", "-m"], capture_output=True, text=True, check=False)
+    machine = arch.stdout.strip()
+    check(machine == "x86_64", "cpu", f"{machine or 'unknown'} is not x86_64")
+    try:
+        info = subprocess.run(
+            ["docker", "info"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=20,
+        )
+        info_ok = info.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        info_ok = False
+    check(info_ok, "docker info")
+    vol = Path("/etc/wow/volume.env")
+    if vol.is_file():
+        tree_ok, tree_detail = volume_tree_status(vol)
+        check(tree_ok, "WOW_TREE", tree_detail)
+    else:
+        check(True, "WOW_TREE", "no /etc/wow/volume.env yet")
+    tune = mariadb_tune_report()
+    pool = tune.get("pool", "")
+    flush = tune.get("flush", "")
+    check(bool(pool) and tune.get("_rc") == "0", "mariadb buffer pool", pool or "could not size the pool")
+    check(bool(flush), "mariadb flush method", flush or "unknown")
+    mem_kb = int(tune["memtotal_kb"]) if tune.get("memtotal_kb", "").isdigit() else memtotal_kb()
+    free_bytes = shutil.disk_usage(ROOT).free
+    strict = os.environ.get("WOW_DOCTOR_STRICT") == "1"
+    tight = set(resource_warnings(mem_kb, free_bytes))
+    mem_detail = f"{mem_kb // 1024}MB MemTotal" if mem_kb else "MemTotal unreadable"
+    disk_detail = f"{free_bytes // (1024 ** 3)}GB free"
+    if "memory" in tight:
+        if strict:
+            check(False, "memory", mem_detail + " is under 2GB")
+        else:
+            print(f"  {'warn':8} memory — {mem_detail} is under 2GB")
+    else:
+        check(True, "memory", mem_detail)
+    if "disk" in tight:
+        if strict:
+            check(False, "disk", disk_detail + " is under 20GB")
+        else:
+            print(f"  {'warn':8} disk — {disk_detail} is under 20GB")
+    else:
+        check(True, "disk", disk_detail)
+    env_for_access = read_env()
+    access = effective_access(env_for_access)
+    weak = weak_password_names(env_for_access)
+    if weak:
+        detail = " and ".join(weak) + " is wow or admin"
+        if access in {"ports", "public"}:
+            check(False, "passwords", detail)
+        else:
+            print(f"  {'warn':8} passwords — {detail}. Loopback does not publish them.")
+    else:
+        check(True, "passwords")
     print("Config")
     check(ENV_FILE.is_file(), ".env", "copy .env.example if this is a new tree")
     env = read_env()
@@ -411,6 +579,8 @@ def cmd_core_set(short: str, project_id: str, on_data: str, modules: list[str] |
         current.kind == project.kind,
         world_safe(project),
     )
+    if action == "reimport":
+        assert_core_reimport_allowed(project.db_kind)
     if os.environ.get("WOW_CORE_DRY") == "1":
         print(action)
         return 0
@@ -528,6 +698,7 @@ def cmd_access_set(mode: str, address: str, rows: list[tuple[str, str, str]]) ->
         print("Players on this machine use vanilla.local and the other loopback names.")
         return 0
     if mode == "ports":
+        refuse_published_access()
         if not valid_ipv4(address):
             raise OpsError("--address must be an IPv4 address")
         update_env({"ACCESS": "ports", "BIND_MODE": "ports", "REALM_ADDRESS": address})
@@ -535,6 +706,7 @@ def cmd_access_set(mode: str, address: str, rows: list[tuple[str, str, str]]) ->
         print("Run ./setup.sh list to see those ports. Websites use the site port on that address.")
         return 0
     if mode == "public":
+        refuse_published_access()
         if not rows:
             raise OpsError("public access needs at least one short=hostname,ip row")
         write_access(rows)
@@ -782,29 +954,28 @@ def cmd_backup_restore(short: str, stamp: str, confirm: str) -> int:
     binary = shutil.which("mysql") or shutil.which("mariadb")
     if not binary:
         raise OpsError("mysql client is required. Nothing was restored.")
-    env = read_env()
-    child = os.environ.copy()
-    child["MYSQL_PWD"] = env.get("MYSQL_PASSWORD", "wow")
-    for sql in files:
-        print(f"restoring {sql.name}")
-        with sql.open("rb") as handle:
-            result = subprocess.run(
-                [
-                    binary,
-                    "--protocol=TCP",
-                    "-h",
-                    "127.0.0.1",
-                    "-P",
-                    env.get("MYSQL_PUBLISH_PORT", "13306"),
-                    "-u",
-                    env.get("MYSQL_USER", "wow"),
-                ],
-                stdin=handle,
-                env=child,
-                check=False,
-            )
-        if result.returncode != 0:
-            raise OpsError(f"restore stopped at {sql.name}. {short} was left stopped.")
+    try:
+        defaults, child = _mysql_defaults()
+    except (OSError, OpsError) as exc:
+        raise OpsError(str(exc)) from exc
+    try:
+        for sql in files:
+            print(f"restoring {sql.name}")
+            with sql.open("rb") as handle:
+                result = subprocess.run(
+                    [
+                        binary,
+                        f"--defaults-extra-file={defaults}",
+                        "--protocol=TCP",
+                    ],
+                    stdin=handle,
+                    env=child,
+                    check=False,
+                )
+            if result.returncode != 0:
+                raise OpsError(f"restore stopped at {sql.name}. {short} was left stopped.")
+    finally:
+        defaults.unlink(missing_ok=True)
     print(f"{short} was restored and left stopped. Start it with ./setup.sh up {short}")
     return 0
 
